@@ -43,6 +43,13 @@ td button{background:none;border:0;color:var(--bad);cursor:pointer;font-size:1re
 .ok{border-color:var(--ok)}.warn{border-color:var(--warn)}.bad{border-color:var(--bad)}
 h3{font:700 .95rem "Trebuchet MS",sans-serif;margin:14px 0 4px}td button[data-m],td button[data-rr]{color:var(--acc)}.big{font-size:2rem;font-weight:700}
 small,.mute{color:var(--mute)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.choice{border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;background:var(--bg)}
+.choice button{margin-left:6px}
+.cardtag{display:inline-block;padding:2px 6px;border:1px solid var(--line);border-radius:12px;font-size:.72rem;margin:2px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice{border:1px solid var(--line);border-radius:6px;padding:8px;margin:6px 0;background:var(--bg)}.cardtag{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:2px 7px;margin:2px;font-size:.75rem;color:var(--mute)}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -62,6 +69,14 @@ small,.mute{color:var(--mute)}
 <label>Requête Scryfall de synergie (facultatif)</label><input id="p_q" placeholder='ex. t:elemental o:"enters"'>
 <label>Coût du commandant (MV)</label><input id="p_cmc" type="number" value="3" min="0">
 <label>Nombre de terrains visé</label><input id="p_lands" type="number" value="36" min="20" max="45">
+<div class="box" style="margin-top:12px;padding:12px"><b>Mode de construction</b>
+<label><select id="p_mode"><option value="auto" selected>Automatique — couverture dynamique</option><option value="advanced">Avancé — paramètres de couverture</option></select></label>
+<div id="advanced_params" style="display:none">
+<label>Couverture critique <input id="a_crit" type="number" value="85" min="50" max="100"> %</label>
+<label>Couverture importante <input id="a_imp" type="number" value="70" min="40" max="100"> %</label>
+<label>Poids du tour 2 <input id="a_t2" type="number" value="1.35" min="0.5" max="3" step="0.05"></label>
+<label>Poids de la polyvalence <input id="a_poly" type="number" value="1.2" min="0.5" max="3" step="0.05"></label>
+</div></div>
 <small class="mute">Tout se sauvegarde automatiquement dans ce navigateur.</small></div></section>
 
 <section id="build"><div class="box"><h2>Construire une première version</h2>
@@ -70,6 +85,12 @@ small,.mute{color:var(--mute)}
 <small class="mute">Synergie = ce qui reste pour atteindre 99.</small><br>
 <button class="go" id="b_go">Construire</button><div id="b_log" style="margin-top:10px"></div></div>
 <div class="box"><h2>Résultat (<span id="b_n">0</span> / 99)</h2><div class="tw"><table><thead><tr><th>Nom</th><th>MV</th><th>Type</th><th>Rôle</th><th>Pourquoi</th></tr></thead><tbody id="b_tb"></tbody></table></div></div></section>
+<section id="architecture"><div class="box"><h2>Architecture du deck</h2>
+<div id="arch_summary"></div><div class="grid2"><div><h3>Besoins</h3><div id="arch_needs"></div></div><div><h3>Couverture temporelle</h3><div id="arch_temporal"></div></div></div>
+<div class="box"><h3>Plan de jeu</h3><div id="arch_plan"></div></div></div></section>
+<section id="optimiser"><div class="box"><h2>Optimiser</h2><small class="mute">Le Lab propose. Rien n'est appliqué automatiquement.</small>
+<div class="row"><div><label>Besoin</label><select id="op_cat"></select></div><div><label>Action</label><select id="op_action"><option value="plus">Ajouter / améliorer</option><option value="minus">Retirer</option></select></div></div>
+<button class="go" id="op_go">Analyser</button><div id="op_out" style="margin-top:12px"></div></div></section>
 <section id="construction">
 <div class="box"><h2>Ajouter une carte</h2>
 <div class="row"><div style="flex:3 1 180px"><label>Nom</label><input id="c_n"></div>
@@ -82,7 +103,7 @@ small,.mute{color:var(--mute)}
 <small class="mute">Colle ici une liste exportée depuis Moxfield ou Archidekt (Export → texte), ou une carte par ligne : <b>1 Sol Ring</b>. Les cartes sont vérifiées automatiquement sur Scryfall après l'import. Les terrains de base sans coût sont comptés en Terrain si tu écris le type.</small>
 <textarea id="imp" placeholder="1 Sol Ring ; 1 ; Artefact ; Ramp&#10;10 Mountain ; 0 ; Terrain ; Autre"></textarea>
 <button class="go sec" id="impgo">Importer</button></div>
-<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_s"><option value="n">Tri : nom</option><option value="c">Tri : MV</option><option value="t">Tri : type</option></select></div><small class="mute">Verr. = ne pas proposer au retrait. GC = Game Changer (à cocher toi-même).</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>MV</th><th>Type</th><th>Rôle</th><th>Verr.</th><th>GC</th><th>Réserve</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
+<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_s"><option value="n">Tri : nom</option><option value="c">Tri : MV</option><option value="t">Tri : type</option></select></div><small class="mute">Verr. = ne pas proposer au retrait. GC = Game Changer (à cocher toi-même).</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>MV</th><th>Type</th><th>Rôle</th><th>Fonctions</th><th>Source</th><th>Verr.</th><th>GC</th><th>Réserve</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
 </section>
 
 <section id="decklist"><div class="box"><h2>Decklist</h2><div id="dl_info" class="mute"></div>
@@ -121,12 +142,26 @@ small,.mute{color:var(--mute)}
 <script>
 const TYPES=["Terrain","Créature","Artefact","Enchantement","Éphémère","Rituel","Planeswalker","Autre"];
 const ROLES=["Ramp","Pioche","Interaction","Protection","Balayage","Synergie","Wincon","Autre"];
-const TABS=[["projet","Projet"],["build","Première version"],["construction","Construction"],["decklist","Decklist"],["diagnostic","Diagnostic"],["probas","Probabilités"],["simu","Simulation"],["reserve","Réserve"],["classif","Classification"],["rapport","Rapport"],["export","Sauvegarde"]];
+const FUNCTIONS=["Ramp","Fixing","Réduction de coût","Pioche","Sélection","Tutor","Interaction","Protection","Récupération","ETB","Sacrifice","Cast trigger","Production","Doublement","Copie","Amplification","Développement","Combo","Payoff","Finisher","Autre"];
+const NEED_LEVELS=["Critique","Élevé","Moyen","Flexible"];
+const TABS=[["projet","Projet"],["build","Première version"],["architecture","Architecture"],["construction","Construction"],["optimiser","Optimiser"],["decklist","Decklist"],["diagnostic","Diagnostic"],["probas","Probabilités"],["simu","Simulation"],["reserve","Réserve"],["classif","Classification"],["rapport","Rapport"],["export","Sauvegarde"]];
 const TARGETS={Ramp:[8,12],Pioche:[8,12],Interaction:[6,10],Balayage:[2,4],Protection:[3,6]};
-let S={p:{},cards:[]};
+let S={p:{},cards:[],res:[],architecture:null,analysis:null};
+function normalizeState(){
+  S.p=S.p||{}; S.cards=S.cards||[]; S.res=S.res||[];
+  S.architecture=S.architecture||null; S.analysis=S.analysis||null;
+  S.cards.forEach(c=>{
+    c.functions=c.functions||[]; c.primaryFunction=c.primaryFunction||c.r||"Autre";
+    c.secondaryFunctions=c.secondaryFunctions||[]; c.conditionalFunctions=c.conditionalFunctions||[];
+    c.functionalConditions=c.functionalConditions||[]; c.strategyTags=c.strategyTags||[];
+    c.relationships=c.relationships||[]; c.synergies=c.synergies||[];
+    c.communityData=c.communityData||{}; c.classification=c.classification||{};
+    c.functionSource=c.functionSource||"auto"; c.manualFunctions=!!c.manualFunctions;
+  });
+}
 const $=id=>document.getElementById(id);
-const PF=["p_cmd","p_col","p_br","p_vol","p_str","p_pri","p_obj","p_lands","p_cmc","p_q","p_theme"];
-function load(){try{const r=localStorage.getItem("cdl");if(r)S=JSON.parse(r)}catch(e){}}
+const PF=["p_cmd","p_col","p_br","p_vol","p_str","p_pri","p_obj","p_lands","p_cmc","p_q","p_theme","p_mode","a_crit","a_imp","a_t2","a_poly"];
+function load(){try{const r=localStorage.getItem("cdl");if(r)S=JSON.parse(r)}catch(e){} normalizeState()}
 function save(){try{localStorage.setItem("cdl",JSON.stringify(S))}catch(e){}}
 function opt(sel,arr){sel.innerHTML=arr.map(x=>`<option>${x}</option>`).join("")}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
@@ -136,12 +171,12 @@ function addCard(c){const f=S.cards.find(x=>x.n.toLowerCase()===c.n.toLowerCase(
 function render(){
   fillThemes();PF.forEach(k=>{const v=S.p[k];if(v!==undefined&&$(k).value!==String(v))$(k).value=v});
   $("cnt").textContent=total();
-  $("tb").innerHTML=rows().map(({c,i})=>`<tr><td>${c.q}</td><td>${esc(c.n)}</td><td>${c.c}</td><td>${c.t}</td><td>${c.r}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button data-m="${i}" title="Vers la Réserve">→ R</button></td><td><button data-d="${i}" aria-label="Supprimer">✕</button></td></tr>`).join("")||`<tr><td colspan="9" class="mute">Aucune carte.</td></tr>`;
+  $("tb").innerHTML=rows().map(({c,i})=>`<tr><td>${c.q}</td><td>${esc(c.n)}</td><td>${c.c}</td><td>${c.t}</td><td>${c.r}</td><td>${(c.functions||[]).map(x=>`<span class="cardtag">${esc(x)}</span>`).join("")}</td><td>${esc(c.functionSource||"auto")}</td><td><button data-f="${i}" title="Modifier les fonctions">ƒ</button></td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button data-m="${i}" title="Vers la Réserve">→ R</button></td><td><button data-d="${i}" aria-label="Supprimer">✕</button></td></tr>`).join("")||`<tr><td colspan="12" class="mute">Aucune carte.</td></tr>`;
   const t=total();
   const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
   $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\nDeck\n`:"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
-  bt();diag();probas();fillObj();res();cls();rep2();
+  bt();diag();probas();fillObj();res();cls();rep2(); if(document.getElementById("architecture")){try{renderArchitecture()}catch(e){}} if(document.getElementById("op_cat")){const cur=$("op_cat").value;$("op_cat").innerHTML=needModel().map(n=>`<option>${esc(n.id)}</option>`).join("");if(cur)$("op_cat").value=cur}
   $("ex").value=JSON.stringify(S);
 }
 function diag(){
@@ -256,6 +291,65 @@ async function loadEdh(){const sl=slug(S.cmd.name),d=await edhGet("commanders/"+
 function fillThemes(){const e=S.edh,sel=$("p_theme");
   sel.innerHTML='<option value="">(aucun)</option>'+(e?e.themes.slice(0,30).map(t=>`<option value="${esc(t.s)}">${esc(t.n)} — ${t.c} decks</option>`).join(""):"");
   if(e&&Object.keys(e.cards).length)$("edh_info").innerHTML=`EDHREC : ${Object.keys(e.cards).length} cartes, ${e.themes.length} thèmes. Les plus joués : ${e.themes.slice(0,6).map(t=>esc(t.n)+" ("+t.c+")").join(", ")}`}
+const FUNCTION_RULES=[
+  ["Ramp",/\badd\s*\{[WUBRGC]|add one mana|search your library for (?:a|an|up to).*basic land/i],
+  ["Fixing",/any color|one mana of any color|mana of any color|basic land type/i],
+  ["Réduction de coût",/spells? you cast.*costs?|costs? \{\d+\} less|cost less/i],
+  ["Pioche",/draw (?:a|two|three|four|five|cards?)/i],
+  ["Sélection",/scry \d+|look at the top \d+|surveil \d+|exile the top/i],
+  ["Tutor",/search your library for/i],
+  ["Interaction",/destroy target|exile target|counter target|return target .* to its owner|gets -\d+\/-\d+/i],
+  ["Protection",/hexproof|indestructible|phase out|protection from|ward \{/i],
+  ["Récupération",/return .* from your graveyard|return target .* card from your graveyard|reanimate/i],
+  ["ETB",/enters the battlefield|enters the battlefield under your control/i],
+  ["Sacrifice",/sacrifice (?:a|an|another|target)|whenever .* is sacrificed/i],
+  ["Cast trigger",/whenever you cast|when you cast/i],
+  ["Production",/create (?:a|one|two|three|four) (?:\w+ )?token|create .* Treasure|create .* Food|create .* Clue/i],
+  ["Doublement",/double (?:that|the|your)|twice that many|double the number/i],
+  ["Copie",/copy target|copy that spell|create a token that's a copy/i],
+  ["Amplification",/creatures you control get \+|gets \+\d+\/\+\d+|you control get \+/i],
+  ["Développement",/play an additional land|put a land .* battlefield|you may play .* land/i],
+  ["Combo",/infinite|whenever .* untaps|you may repeat|win the game/i],
+  ["Payoff",/whenever .* enters|whenever .* dies|whenever you cast|whenever you sacrifice/i],
+  ["Finisher",/each opponent loses|additional combat|double strike|trample|you win the game/i]
+];
+function inferFunctions(c){
+  if(c.manualFunctions&&c.functions?.length)return c.functions;
+  const text=(c.oracleText||c.o||c.w||""); const out=[];
+  FUNCTION_RULES.forEach(([f,re])=>{if(re.test(text))out.push(f)});
+  if(c.r&&c.r!=="Autre")out.push(c.r);
+  const uniq=[...new Set(out)]; c.functions=uniq.length?uniq:["Autre"]; c.primaryFunction=c.primaryFunction||c.functions[0];
+  c.secondaryFunctions=c.functions.filter(f=>f!==c.primaryFunction).slice(0,3); c.functionSource="auto"; return c.functions;
+}
+function enrichCard(c){inferFunctions(c); c.strategyTags=c.strategyTags||[]; c.relationships=c.relationships||[]; c.synergies=c.synergies||[]; return c}
+function enrichAll(){S.cards.forEach(enrichCard);S.res.forEach(enrichCard)}
+function strategyTokens(){return (S.p.p_str||"").toLowerCase().split(/[,;]/).map(x=>x.trim()).filter(Boolean)}
+function needModel(){const st=strategyTokens(), n=[
+  {id:"Access mana",level:"Critique",fn:["Ramp","Fixing","Développement"]},
+  {id:"Ressources",level:"Élevé",fn:["Pioche","Sélection","Tutor"]},
+  {id:"Synergie stratégique",level:st.length?"Critique":"Élevé",fn:["ETB","Production","Cast trigger","Réduction de coût","Amplification","Doublement"]},
+  {id:"Interaction",level:"Élevé",fn:["Interaction"]},
+  {id:"Protection / résilience",level:"Élevé",fn:["Protection","Récupération"]},
+  {id:"Conversion",level:"Élevé",fn:["Combo","Payoff","Finisher"]}
+];
+  if(st.some(x=>/etb|entre en jeu/.test(x)))n.find(x=>x.id==="Synergie stratégique").fn.push("ETB");
+  if(st.some(x=>/element|élémentaire/.test(x)))n.push({id:"Densité de type",level:"Critique",fn:["Autre"]});
+  return n;
+}
+function countFunction(fn){return S.cards.reduce((a,c)=>a+((c.functions||[]).includes(fn)?c.q:0),0)}
+function coverage(fn,turn=5){const relevant=S.cards.filter(c=>(c.functions||[]).includes(fn)); const k=relevant.reduce((a,c)=>a+c.q,0); if(!k)return 0; const seen=7+Math.max(0,turn-1); return pAtLeast1(99,k,seen)}
+function polyvalence(c){const f=c.functions||[]; if(!f.length)return 0; return Math.min(1,(f.length/4))*0.7+Math.min(1,(c.secondaryFunctions||[]).length/3)*0.3}
+function marginalValue(c,need){const fs=c.functions||[];const direct=need.fn.filter(f=>fs.includes(f)).length;const cov=need.fn.reduce((a,f)=>a+coverage(f,need.level==="Critique"?3:5),0)/Math.max(1,need.fn.length);const poly=polyvalence(c);const rel=(c.relationships||[]).length;const sat=Math.min(1,need.fn.reduce((a,f)=>a+countFunction(f),0)/18);return direct*3+cov*2+poly*2+Math.min(1,rel/4)-sat}
+function architecture(){enrichAll();const needs=needModel();const rows=needs.map(n=>{const fs=n.fn;const present=fs.reduce((a,f)=>a+countFunction(f),0);const cov=Math.min(1,fs.reduce((a,f)=>a+coverage(f,n.level==="Critique"?3:5),0)/Math.max(1,fs.length));return {...n,present,coverage:cov}});const plan=["Access","Setup","Generation","Exploitation","Conversion","Victory"];S.architecture={needs:rows,plan,generatedAt:new Date().toISOString()};return S.architecture}
+function renderArchitecture(){const a=architecture();$("arch_summary").innerHTML=`<div class="grid2"><div class="choice"><b>Couverture critique</b><br>${Math.round(a.needs.filter(n=>n.level==="Critique").reduce((x,n)=>x+n.coverage,0)/Math.max(1,a.needs.filter(n=>n.level==="Critique").length)*100)}%</div><div class="choice"><b>Couverture globale</b><br>${Math.round(a.needs.reduce((x,n)=>x+n.coverage,0)/a.needs.length*100)}%</div></div>`;
+$("arch_needs").innerHTML=a.needs.map(n=>`<div class="choice"><b>${esc(n.id)}</b> <span class="cardtag">${n.level}</span><br>${Math.round(n.coverage*100)}% · ${n.present} carte(s) · ${n.fn.join(", ")}</div>`).join("");
+$("arch_temporal").innerHTML=[2,3,5].map(t=>`<div class="choice"><b>T${t}</b><br>Accès mana ${Math.round(coverage("Ramp",t)*100)}% · Ressources ${Math.round(coverage("Pioche",t)*100)}%</div>`).join("");
+$("arch_plan").innerHTML=a.plan.map((p,i)=>`<span class="cardtag">${i+1}. ${p}</span>`).join(" → "); save();}
+function editFunctions(i){const c=S.cards[i];const raw=prompt("Fonctions séparées par des virgules",(c.functions||[]).join(", "));if(raw===null)return;c.functions=raw.split(",").map(x=>x.trim()).filter(Boolean);c.primaryFunction=c.functions[0]||"Autre";c.secondaryFunctions=c.functions.slice(1);c.manualFunctions=true;c.functionSource="manuel";save();render()}
+function buildAnalysis(){enrichAll();const a=architecture();const warnings=[];a.needs.forEach(n=>{const target=n.level==="Critique"?.85:n.level==="Élevé"?.7:.5;if(n.coverage<target)warnings.push(`${n.id} sous la couverture cible (${Math.round(n.coverage*100)}%).`)});S.analysis={warnings,coherence:Math.round((a.needs.reduce((x,n)=>x+n.coverage,0)/a.needs.length)*100)};return S.analysis}
+async function optimize(){enrichAll();const needId=$("op_cat").value;const action=$("op_action").value;const need=needModel().find(n=>n.id===needId)||needModel()[0];const out=$("op_out");
+ if(action==="minus"){const cand=S.cards.filter(c=>!c.l&&!/Terrain/.test(c.t)).map(c=>({c,v:marginalValue(c,need)})).sort((a,b)=>a.v-b.v).slice(0,5);out.innerHTML=`<h3>Cartes candidates au retrait</h3>`+cand.map(x=>`<div class="choice"><b>${esc(x.c.n)}</b> · ${esc(x.c.mc||String(x.c.c))}<br>Impact marginal estimé : ${x.v.toFixed(2)}<br><small>${(x.c.functions||[]).join(", ")}</small></div>`).join("")||"<div class='msg'>Aucune candidate.</div>";return}
+ out.innerHTML='<div class="msg">Recherche de candidats compatibles…</div>';try{const {out:sq}=stratQ();let lists=[];for(const [lab,q] of sq)lists.push(...await sfs(`f:commander id<=${S.cmd?.ci?.join("")||S.p.p_col||"c"} ${q}`));lists.push(...await sfs(`f:commander id<=${S.cmd?.ci?.join("")||S.p.p_col||"c"} -t:land`));const existing=new Set(S.cards.map(c=>c.n));const scored=lists.filter(c=>!existing.has(c.name)&&c.legalities.commander==="legal").map(c=>{const x={n:c.name,c:c.cmc,t:tmap(c.type_line),r:"Autre",functions:[],oracleText:c.oracle_text,mc:c.mana_cost||""};enrichCard(x);return {c,score:marginalValue(x,need)}}).sort((a,b)=>b.score-a.score).slice(0,5);out.innerHTML=`<h3>${esc(need.id)} — propositions</h3>`+scored.map(x=>`<div class="choice"><b>${esc(x.c.name)}</b> · ${esc(x.c.mana_cost||"")} · MV ${x.c.cmc}<br>Score contextuel ${x.score.toFixed(2)}<br><small>${esc(x.c.type_line)} · ${(inferFunctions({oracleText:x.c.oracle_text,functions:[]})||[]).join(", ")}</small></div>`).join("")||"<div class='msg warn'>Aucun candidat trouvé.</div>"}catch(e){out.innerHTML=`<div class="msg bad">Erreur : ${esc(e.message)}</div>`}}
 async function build(){
   const log=$("b_log"),btn=$("b_go");let L="";const say=(c,t)=>{L+=`<div class="msg ${c}">${t}</div>`;log.innerHTML=L};
   if(!S.p.p_cmd){alert("Renseigne d'abord le commandant dans l'onglet Projet.");return}
@@ -283,7 +377,7 @@ async function build(){
     const sc=c=>10-Math.log10(c.edhrec_rank||60000)*2-(/vitesse/.test(pri)?c.cmc*.3:0)-(/budget/.test(pri)?(+(c.prices&&(c.prices.eur||c.prices.usd))||0)*.05:0)+1.5*Math.max(0,rs(c).size-1)+(eMap[c.name]?eMap[c.name].pct/12+eMap[c.name].syn/10:0);
     const pick=(list,role,n,lab)=>{let k=0;list.filter(c=>!taken.has(c.name)&&c.legalities.commander==="legal"&&!/Land/.test(c.type_line)).map(c=>[c,sc(c)]).sort((a,b)=>b[1]-a[1]).forEach(([c])=>{
       if(k>=n||(c.game_changer&&gc>=maxGC))return;const oth=[...rs(c)].filter(x=>x!==role);
-      S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:role,g:!!c.game_changer,mc:c.mana_cost||"",w:`${role}${lab?" ("+lab+")":""} · rang EDHREC ${c.edhrec_rank||"n/d"} · MV ${c.cmc}${oth.length?" · aussi "+oth.join(", "):""}${eMap[c.name]?" · EDHREC "+eMap[c.name].pct+"%"+(eMap[c.name].syn?" (synergie "+(eMap[c.name].syn>0?"+":"")+eMap[c.name].syn+")":""):""}${c.game_changer?" · Game Changer":""}`});
+      S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:role,g:!!c.game_changer,mc:c.mana_cost||"",oracleText:c.oracle_text||"",w:`${role}${lab?" ("+lab+")":""} · rang EDHREC ${c.edhrec_rank||"n/d"} · MV ${c.cmc}${oth.length?" · aussi "+oth.join(", "):""}${eMap[c.name]?" · EDHREC "+eMap[c.name].pct+"%"+(eMap[c.name].syn?" (synergie "+(eMap[c.name].syn>0?"+":"")+eMap[c.name].syn+")":""):""}${c.game_changer?" · Game Changer":""}`});
       taken.add(c.name);if(c.game_changer)gc++;k++});return k};
     const need=r=>Math.max(0,tg[r]-cnt("r",r));
     pick(lists.Ramp,"Ramp",need("Ramp"));pick(lists.Pioche,"Pioche",need("Pioche"));
@@ -302,7 +396,7 @@ async function build(){
       else{const txt=[...S.cards.map(c=>c.mc||""),S.cmd.mc].join(""),wt=cols.map(x=>1+(txt.match(new RegExp("\\{"+x+"\\}","g"))||[]).length),tot=wt.reduce((a,c)=>a+c,0),al=wt.map(x=>Math.floor(rest*x/tot));
         let left=rest-al.reduce((a,c)=>a+c,0);for(let i=0;left>0;i=(i+1)%al.length,left--)al[i]++;
         cols.forEach((x,i)=>{if(al[i])S.cards.push({q:al[i],n:BAS[x],c:0,t:"Terrain",r:"Autre",g:false,mc:"",w:W})})}}
-    save();render();
+    enrichAll();buildAnalysis();save();render();
     [["Terrain","Terrains"],["Ramp","Ramp"],["Pioche","Pioche"],["Synergie","Synergie"],["Wincon","Wincon"],["Interaction","Interaction"],["Protection","Protection"]].forEach(([k,l])=>{const g=k==="Terrain"?cnt("t","Terrain"):cnt("r",k);say(g>=tg[k]?"ok":"warn",`${l} : ${g} / ${tg[k]}`)});
     if(unk.length)say("warn","Stratégie non reconnue : "+esc(unk.join(", "))+". Utilise la requête Scryfall de synergie dans Projet.");
     say(total()===99?"ok":"warn",`Terminé : ${total()} / 99 cartes. Regarde Diagnostic, puis verrouille ce que tu gardes.`);
@@ -328,19 +422,19 @@ function init(){
     addCard({q:+$("c_q").value||1,n,c:+$("c_c").value||0,t:$("c_t").value,r:$("c_r").value});
     $("c_n").value="";$("c_q").value=1;save();render();$("c_n").focus()};
   $("c_n").addEventListener("keydown",e=>{if(e.key==="Enter")$("add").click()});
-  $("tb").onclick=e=>{const d=e.target.dataset;if(d.d!==undefined){S.cards.splice(+d.d,1);save();render()}else if(d.m!==undefined)toRes(+d.m)};
+  $("tb").onclick=e=>{const d=e.target.dataset;if(d.f!==undefined){editFunctions(+d.f);return}if(d.d!==undefined){S.cards.splice(+d.d,1);save();render()}else if(d.m!==undefined)toRes(+d.m)};
   $("tb").onchange=e=>{const d=e.target.dataset;if(d.l!==undefined)S.cards[+d.l].l=e.target.checked;if(d.g!==undefined)S.cards[+d.g].g=e.target.checked;save();render()};
   $("f_t").innerHTML='<option value="">Tous types</option>'+TYPES.map(x=>`<option>${x}</option>`).join("");
   $("f_q").oninput=e=>{F.q=e.target.value.toLowerCase();render()};$("f_t").onchange=e=>{F.t=e.target.value;render()};$("f_s").onchange=e=>{F.s=e.target.value;render()};
   $("rs").onclick=e=>{const d=e.target.dataset;if(d.rr!==undefined)restore(+d.rr);else if(d.rx!==undefined&&confirm("Supprimer définitivement cette carte ?")){S.res.splice(+d.rx,1);save();render()}};
-  $("b_go").onclick=build;$("v_go").onclick=verify;$("p_load").onclick=()=>loadCmd().catch(e=>{$("cmd_info").textContent="Erreur : "+e.message});$("s_go").onclick=()=>{simu();rep2()};
+  $("b_go").onclick=build;$("op_go").onclick=optimize;$("v_go").onclick=verify;$("p_load").onclick=()=>loadCmd().catch(e=>{$("cmd_info").textContent="Erreur : "+e.message});$("s_go").onclick=()=>{simu();rep2()};
   $("impgo").onclick=()=>{if(parse($("imp").value)){$("imp").value="";save();render();verify()}};
   $("cp").onclick=()=>copy($("dl"),$("cpm"));
   ["pb_g","pb_k","pb_pl"].forEach(id=>$(id).addEventListener("input",probas));
   $("exc").onclick=()=>copy($("ex"));
   $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.cards){S=o;S.p=S.p||{};S.res=S.res||[];save();render()}}catch(e){alert("Texte de sauvegarde invalide.")}};
   $("exz").onclick=()=>{if(confirm("Tout effacer ?")){S={p:{},cards:[],res:[]};save();PF.forEach(k=>{$(k).value=""});render()}};
-  nav("projet");
+  $("p_mode").addEventListener("change",()=>{$("advanced_params").style.display=$("p_mode").value==="advanced"?"block":"none"});nav("projet");
 }
 init();
 </script>
