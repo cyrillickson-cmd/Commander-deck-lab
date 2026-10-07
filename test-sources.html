@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test des sources</title>
+<style>body{font:16px/1.5 sans-serif;margin:16px;background:#14181f;color:#e9edf2}button{font-size:1rem;padding:10px 16px;border:0;border-radius:6px;background:#3fb8a5;color:#14181f;font-weight:700}
+.r{margin:10px 0;padding:10px;border-left:4px solid #888;background:#1d232d;word-break:break-all;font-size:.85rem}.ok{border-color:#5cc47a}.ko{border-color:#e5604d}</style></head>
+<body><h2>Test des sources</h2><p>Appuie sur le bouton et envoie-moi une capture du résultat.</p>
+<button id="go">Lancer le test</button><div id="out"></div>
+<script>
+const T=[["Scryfall","https://api.scryfall.com/cards/named?fuzzy=sol+ring"],
+["EDHREC","https://json.edhrec.com/pages/commanders/atraxa-praetors-voice.json"],
+["Archidekt","https://archidekt.com/api/decks/v3/?name=atraxa&pageSize=1"],
+["Moxfield","https://api2.moxfield.com/v2/decks/search?pageNumber=1&pageSize=1&sortType=updated&sortDirection=Descending&fmt=commander"]];
+document.getElementById("go").onclick=async()=>{const o=document.getElementById("out");o.innerHTML="";
+for(const [n,u] of T){const d=document.createElement("div");d.className="r";d.textContent=n+" : test en cours…";o.appendChild(d);
+try{const r=await fetch(u);const t=await r.text();d.className="r "+(r.ok?"ok":"ko");d.textContent=n+" : "+(r.ok?"OK":"ERREUR")+" (code "+r.status+") — "+t.slice(0,90)}
+catch(e){d.className="r ko";d.textContent=n+" : BLOQUÉ par le navigateur ("+e.message+")"}}};
+</script></body></html>
