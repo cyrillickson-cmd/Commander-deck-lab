@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Commander Deck Lab</title>
+<title>Commander Deck Lab — Projets</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#14181f;--panel:#1d232d;--line:#2e3744;--ink:#e9edf2;--mute:#8d99a8;--acc:#3fb8a5;--warn:#e8a23a;--bad:#e5604d;--ok:#5cc47a}
@@ -14,13 +14,13 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
 h1,h2,nav button,label,th{font-family:"Trebuchet MS",Verdana,sans-serif}
-header{padding:20px 16px 8px;max-width:900px;margin:auto}
+header{padding:20px 16px 8px;max-width:1100px;margin:auto}
 h1{margin:0;font-size:1.7rem;letter-spacing:.5px}
 header p{margin:2px 0 0;color:var(--mute)}
-nav{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:900px;margin:auto}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:1100px;margin:auto;position:sticky;top:0;z-index:20;background:var(--bg)}
 nav button{flex:none;background:var(--panel);color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:8px 14px;font-size:.9rem;cursor:pointer}
 nav button.on{color:var(--bg);background:var(--acc);border-color:var(--acc);font-weight:700}
-main{max-width:900px;margin:auto;padding:8px 16px 48px}
+main{max-width:1100px;margin:auto;padding:8px 16px 48px}
 section{display:none}section.on{display:block}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:14px}
 h2{margin:0 0 10px;font-size:1.1rem}
@@ -43,12 +43,42 @@ td button{background:none;border:0;color:var(--bad);cursor:pointer;font-size:1re
 .ok{border-color:var(--ok)}.warn{border-color:var(--warn)}.bad{border-color:var(--bad)}
 h3{font:700 .95rem "Trebuchet MS",sans-serif;margin:14px 0 4px}td button[data-m],td button[data-rr]{color:var(--acc)}.big{font-size:2rem;font-weight:700}
 small,.mute{color:var(--mute)}
+.topbar{max-width:1100px;margin:0 auto;padding:8px 16px 4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.topbar .spacer{flex:1 1 auto}.pill{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font:600 .82rem "Trebuchet MS",sans-serif;color:var(--ink);background:var(--panel)}
+.topbar button,.project-actions button,.home-actions button,.compare-actions button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:8px 11px;cursor:pointer;font:600 .85rem "Trebuchet MS",sans-serif}
+.topbar button.active{border-color:var(--acc);color:var(--acc)}
+#home{display:none}#home.on{display:block}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.project-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px;min-width:0}
+.project-card h3{margin:0 0 6px;font-size:1.05rem}.project-card p{margin:5px 0}.project-actions,.home-actions,.compare-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.project-card.archived{opacity:.78;border-style:dashed}.project-card .project-meta{font-size:.82rem;color:var(--mute)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.compare-panel{min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-wrap:anywhere}
+.compare-panel h3{margin-top:0}.compare-panel ul{padding-left:20px}.empty{padding:18px;border:1px dashed var(--line);border-radius:8px;color:var(--mute)}
+.step-intro{color:var(--mute);margin:0 0 12px}.home-heading{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+@media(max-width:620px){.compare-grid{grid-template-columns:1fr}.topbar{gap:6px}.topbar button{padding:7px 9px}header{padding-top:14px}h1{font-size:1.45rem}}
+
 </style>
 </head>
 <body>
-<header><h1>Commander Deck Lab</h1><p>Le Lab conseille, tu décides, le Lab recalcule.</p></header>
+<header><h1>Commander Deck Lab</h1><p>Le Lab propose, tu décides, le Lab recalcule.</p></header>
+<div class="topbar" id="topbar">
+  <button id="home_btn">⌂ Projets</button><span id="active_project_label" class="pill">Aucun projet ouvert</span><span class="spacer"></span>
+  <span id="bracket_badge" class="pill">Bracket —</span>
+  <button data-shortcut="decklist">Decklist</button><button data-shortcut="reserve">Réserve</button><button data-shortcut="export">Sauvegarde</button>
+</div>
 <nav id="nav"></nav>
 <main>
+<section id="home" class="on">
+  <div class="box">
+    <div class="home-heading"><div><h2>Mes projets</h2><p class="step-intro">Un projet indépendant par commandant. Créer ou ouvrir un projet ne modifie pas les autres.</p></div><div class="home-actions"><button id="new_project_btn">＋ Nouveau projet</button><button id="toggle_archived_btn">Afficher les archives</button></div></div>
+    <div id="project_list" class="home-grid"></div>
+  </div>
+  <div class="box">
+    <h2>Comparer deux versions</h2><p class="step-intro">Choisis deux projets pour comparer leur configuration et les cartes présentes dans leurs decks.</p>
+    <div class="row"><div><label>Version A</label><select id="compare_a"></select></div><div><label>Version B</label><select id="compare_b"></select></div></div>
+    <div class="compare-actions"><button id="compare_btn">Comparer</button></div><div id="compare_result" style="margin-top:12px"></div>
+  </div>
+</section>
 
 <section id="projet"><div class="box"><h2>Projet</h2>
 <label>Commandant</label><input id="p_cmd" placeholder="Cendreline, l'illimitée"><button class="go sec" id="p_load">Charger depuis Scryfall</button><div id="cmd_info" class="mute"></div>
@@ -88,7 +118,7 @@ small,.mute{color:var(--mute)}
 <textarea id="dl" readonly style="min-height:300px"></textarea>
 <button class="go" id="cp">Copier la decklist</button> <small id="cpm"></small></div></section>
 
-<section id="diagnostic"><div class="box"><h2>Diagnostic</h2><div id="dg_msgs"></div></div>
+<section id="diagnostic"><div class="box"><h2>Architecture du deck</h2><p class="step-intro">Cette étape expose les indicateurs déjà présents dans le Lab. Le moteur de recommandations et les modifications avec aperçu avant/après seront ajoutés dans un jalon ultérieur. Ici, aucune carte n’est modifiée automatiquement.</p><div id="dg_msgs"></div></div>
 <div class="box"><h2>Courbe de mana (hors terrains)</h2><div id="dg_curve"></div></div>
 <div class="box"><h2>Types</h2><div id="dg_types"></div></div>
 <div class="box"><h2>Rôles</h2><div id="dg_roles"></div></div></section>
@@ -111,25 +141,67 @@ small,.mute{color:var(--mute)}
 <section id="classif"><div class="box"><h2>Classification</h2><div id="cl"></div></div></section>
 <section id="rapport"><div class="box"><h2>Rapport</h2><div id="rp"></div></div></section>
 <section id="export"><div class="box"><h2>Sauvegarde</h2>
-<small class="mute">Copie ce texte pour garder tout le projet, ou colle-le pour le restaurer.</small>
+<small class="mute">Exporte le projet ouvert (réglages, deck, Réserve et données du commandant). L’import crée un nouveau projet sans écraser les autres.</small>
 <textarea id="ex" style="min-height:220px"></textarea>
 <button class="go" id="exc">Copier</button> <button class="go sec" id="exr">Restaurer</button>
-<button class="go sec" id="exz">Tout effacer</button></div></section>
+<button class="go sec" id="exz">Réinitialiser ce projet</button></div></section>
 </main>
 
 <script>
 const TYPES=["Terrain","Créature","Artefact","Enchantement","Éphémère","Rituel","Planeswalker","Autre"];
 const ROLES=["Ramp","Pioche","Interaction","Protection","Balayage","Synergie","Wincon","Autre"];
-const TABS=[["projet","Projet"],["build","Première version"],["construction","Construction"],["decklist","Decklist"],["diagnostic","Diagnostic"],["probas","Probabilités"],["simu","Simulation"],["reserve","Réserve"],["classif","Classification"],["rapport","Rapport"],["export","Sauvegarde"]];
+const TABS=[["projet","Plan"],["build","Construire"],["ameliorer","Améliorer"],["tester","Tester"]];
 const TARGETS={Ramp:[8,12],Pioche:[8,12],Interaction:[6,10],Balayage:[2,4],Protection:[3,6]};
-let S={p:{},cards:[]};
+const PROJECTS_KEY="cdl_projects_v1";
+let S={p:{},cards:[],res:[]}, PROJECTS=[], ACTIVE_PROJECT_ID=null, SHOW_ARCHIVED=false, CURRENT_ROUTE="projet";
 const $=id=>document.getElementById(id);
 const PF=["p_cmd","p_col","p_br","p_vol","p_str","p_pri","p_obj","p_lands","p_cmc","p_q"];
-function load(){try{const r=localStorage.getItem("cdl");if(r)S=JSON.parse(r)}catch(e){}}
-function save(){try{localStorage.setItem("cdl",JSON.stringify(S))}catch(e){}}
+const freshData=()=>({p:{p_br:"3",p_vol:"Modéré",p_cmc:"3",p_lands:"36"},cards:[],res:[]});
+const uid=()=>"p_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+const clone=x=>JSON.parse(JSON.stringify(x));
+function load(){
+  try{
+    const saved=localStorage.getItem(PROJECTS_KEY);
+    if(saved){const d=JSON.parse(saved);PROJECTS=Array.isArray(d.projects)?d.projects:[];ACTIVE_PROJECT_ID=d.activeId||null;}
+    else{
+      const legacy=localStorage.getItem("cdl");
+      if(legacy){let data=JSON.parse(legacy);data.p=data.p||{};data.cards=data.cards||[];data.res=data.res||[];const name=(data.p.p_cmd||"Mon premier projet").trim();const project={id:uid(),name,data,archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS=[project];ACTIVE_PROJECT_ID=project.id;}
+    }
+    const active=PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID&&!p.archived)||PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID);
+    if(active)S=normalizeData(clone(active.data));else S=freshData();
+    persistProjects();
+  }catch(e){PROJECTS=[];ACTIVE_PROJECT_ID=null;S=freshData();}
+}
+function normalizeData(data){data=data||{};data.p=data.p||{};data.cards=Array.isArray(data.cards)?data.cards:[];data.res=Array.isArray(data.res)?data.res:[];return data;}
+function persistProjects(){try{localStorage.setItem(PROJECTS_KEY,JSON.stringify({activeId:ACTIVE_PROJECT_ID,projects:PROJECTS}));}catch(e){}}
+function save(){
+  try{S=normalizeData(S);const p=PROJECTS.find(x=>x.id===ACTIVE_PROJECT_ID);if(p){p.data=clone(S);p.updatedAt=new Date().toISOString();if(S.p.p_cmd&&!p.nameEdited)p.name=S.p.p_cmd;}persistProjects();localStorage.setItem("cdl",JSON.stringify(S));updateTopbar();}catch(e){}
+}
+function activeProject(){return PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID)||null;}
+function setActiveProject(id){const p=PROJECTS.find(x=>x.id===id&&!x.archived);if(!p)return;ACTIVE_PROJECT_ID=id;S=normalizeData(clone(p.data));persistProjects();render();updateTopbar();nav("projet");}
+function createProject(){const name=prompt("Nom du nouveau projet", "Nouveau projet");if(name===null)return;const p={id:uid(),name:name.trim()||"Nouveau projet",nameEdited:true,data:freshData(),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();nav("projet");}
+function duplicateProject(id){const src=PROJECTS.find(p=>p.id===id);if(!src)return;const name=prompt("Nom de cette variante",(src.name||"Projet")+" — Variante");if(name===null)return;const p={id:uid(),name:name.trim()||(src.name+" — Variante"),nameEdited:true,data:clone(src.data),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();nav("projet");}
+function renameProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;const name=prompt("Nom du projet",p.name);if(name===null)return;p.name=name.trim()||p.name;p.nameEdited=true;p.updatedAt=new Date().toISOString();persistProjects();renderProjects();renderCompareOptions();updateTopbar();}
+function archiveProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;p.archived=!p.archived;if(p.archived&&ACTIVE_PROJECT_ID===id){ACTIVE_PROJECT_ID=null;S=freshData();CURRENT_ROUTE="projet";}persistProjects();renderProjects();renderCompareOptions();updateTopbar();if(!ACTIVE_PROJECT_ID)showHome();}
+function deleteProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;if(!confirm(`Supprimer définitivement « ${p.name} » et toutes ses données ? Cette action est irréversible.`))return;PROJECTS=PROJECTS.filter(x=>x.id!==id);if(ACTIVE_PROJECT_ID===id){ACTIVE_PROJECT_ID=null;S=freshData();}persistProjects();renderProjects();renderCompareOptions();updateTopbar();if(!ACTIVE_PROJECT_ID)showHome();}
+function updateTopbar(){const p=activeProject();$("active_project_label").textContent=p?p.name:"Aucun projet ouvert";const b=p?(p.data?.p?.p_br||3):"—";$("bracket_badge").textContent=`Bracket max : ${b}`;$("bracket_badge").title="Indicateur de contrainte du projet ouvert";$("nav").style.display=(p&&CURRENT_ROUTE!=="home")?"flex":"none";document.querySelectorAll('[data-shortcut]').forEach(b=>b.disabled=!p);}
+function showHome(){save();document.querySelectorAll("main > section").forEach(s=>s.classList.remove("on"));$("home").classList.add("on");CURRENT_ROUTE="home";document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('on'));renderProjects();renderCompareOptions();updateTopbar();}
+function renderProjects(){
+  const list=PROJECTS.filter(p=>SHOW_ARCHIVED||!p.archived);const el=$("project_list");
+  if(!list.length){el.innerHTML='<div class="empty">Aucun projet ici. Crée un nouveau projet pour commencer.</div>';return;}
+  el.innerHTML=list.map(p=>{const d=p.data||{},cards=(d.cards||[]).reduce((n,c)=>n+(+c.q||1),0),cmd=d.p?.p_cmd||"Commandant non défini",isActive=p.id===ACTIVE_PROJECT_ID;return `<article class="project-card ${p.archived?'archived':''}"><h3>${esc(p.name||cmd)} ${isActive?'<span class="pill">Ouvert</span>':''}</h3><p>${esc(cmd)}</p><p class="project-meta">${cards}/99 cartes · Bracket max ${esc(d.p?.p_br||3)} · ${p.archived?'Archivé':'Projet actif'}</p><p class="project-meta">Modifié : ${p.updatedAt?new Date(p.updatedAt).toLocaleDateString('fr-FR'): '—'}</p><div class="project-actions">${!p.archived?`<button data-project-open="${p.id}">Ouvrir</button><button data-project-duplicate="${p.id}">Dupliquer</button>`:''}<button data-project-rename="${p.id}">Renommer</button><button data-project-archive="${p.id}">${p.archived?'Désarchiver':'Archiver'}</button><button data-project-delete="${p.id}">Supprimer</button></div></article>`}).join("");
+}
+function renderCompareOptions(){const opts=PROJECTS.map(p=>`<option value="${p.id}">${esc(p.name)}${p.archived?' (archivé)':''}</option>`).join("");const a=$("compare_a"),b=$("compare_b"),av=a.value,bv=b.value;a.innerHTML=opts;b.innerHTML=opts;if(PROJECTS.some(p=>p.id===av))a.value=av;if(PROJECTS.some(p=>p.id===bv))b.value=bv;if(!a.value&&PROJECTS[0])a.value=PROJECTS[0].id;if(!b.value&&PROJECTS[1])b.value=PROJECTS[1].id;}
+function compareProjects(){const a=PROJECTS.find(p=>p.id===$("compare_a").value),b=PROJECTS.find(p=>p.id===$("compare_b").value),out=$("compare_result");if(!a||!b){out.innerHTML='<div class="msg warn">Crée au moins un projet pour commencer la comparaison.</div>';return;}if(a.id===b.id){out.innerHTML='<div class="msg warn">Choisis deux projets différents pour comparer leurs versions.</div>';return;}const da=a.data||{},db=b.data||{},ca=da.cards||[],cb=db.cards||[],ma=new Map(ca.map(c=>[c.n,(ma0=>ma0)(c)])),mb=new Map(cb.map(c=>[c.n,c]));const onlyA=ca.filter(c=>!mb.has(c.n)).map(c=>c.n),onlyB=cb.filter(c=>!ma.has(c.n)).map(c=>c.n);const panel=(p,d,c,otherOnly,side)=>`<div class="compare-panel"><h3>${esc(p.name)}</h3><p><b>Commandant :</b> ${esc(d.p?.p_cmd||'Non défini')}</p><p><b>Stratégies :</b> ${esc(d.p?.p_str||'Non définies')}</p><p><b>Volonté :</b> ${esc(d.p?.p_vol||'—')} · <b>Bracket max :</b> ${esc(d.p?.p_br||3)}</p><p><b>Deck :</b> ${c.reduce((n,x)=>n+(+x.q||1),0)}/99 · <b>Réserve :</b> ${(d.res||[]).reduce((n,x)=>n+(+x.q||1),0)} cartes</p><h3>Cartes propres à cette version (${otherOnly.length})</h3>${otherOnly.length?`<ul>${otherOnly.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:'<p class="mute">Aucune carte propre.</p>'}</div>`;out.innerHTML=`<div class="compare-grid">${panel(a,da,ca,onlyA,'A')}${panel(b,db,cb,onlyB,'B')}</div><p class="mute">Comparaison descriptive des cartes par nom. Les quantités, coûts, fonctions et effets sur les probabilités ne sont pas encore comparés à ce jalon.</p>`;}
 function opt(sel,arr){sel.innerHTML=arr.map(x=>`<option>${x}</option>`).join("")}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-function nav(id){TABS.forEach(([k])=>{$(k).classList.toggle("on",k===id)});[...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.k===id));render()}
+function nav(id){
+  if(!activeProject()&&id!=="home"){alert("Ouvre ou crée d’abord un projet.");showHome();return;}
+  if(id==="home"){showHome();return;}
+  CURRENT_ROUTE=id;const visible={projet:["projet"],build:["build","construction"],ameliorer:["diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"],export:["export"]};
+  document.querySelectorAll("main > section").forEach(s=>s.classList.toggle("on",(visible[id]||[]).includes(s.id)));
+  [...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.k===id));render();updateTopbar();
+}
 function total(){return S.cards.reduce((a,c)=>a+c.q,0)}
 function addCard(c){const f=S.cards.find(x=>x.n.toLowerCase()===c.n.toLowerCase()&&x.t===c.t&&x.r===c.r&&x.c===c.c);if(f)f.q+=c.q;else S.cards.push(c)}
 function render(){
@@ -141,7 +213,7 @@ function render(){
   $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\nDeck\n`:"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
   bt();diag();probas();fillObj();res();cls();rep2();
-  $("ex").value=JSON.stringify(S);
+  const ap=activeProject();$("ex").value=JSON.stringify(ap?{format:"commander-deck-lab-project",version:1,project:{name:ap.name,data:S}}:S,null,2);
 }
 function diag(){
   const t=total(),lands=S.cards.filter(c=>c.t==="Terrain").reduce((a,c)=>a+c.q,0),m=[];
@@ -297,6 +369,11 @@ function init(){
   load();S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
   $("nav").innerHTML=TABS.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join("");
   $("nav").onclick=e=>{if(e.target.dataset.k)nav(e.target.dataset.k)};
+  $("home_btn").onclick=showHome;$("new_project_btn").onclick=createProject;
+  $("toggle_archived_btn").onclick=()=>{SHOW_ARCHIVED=!SHOW_ARCHIVED;$("toggle_archived_btn").textContent=SHOW_ARCHIVED?"Masquer les archives":"Afficher les archives";renderProjects()};
+  $("project_list").onclick=e=>{const d=e.target.dataset;if(d.projectOpen)setActiveProject(d.projectOpen);else if(d.projectDuplicate)duplicateProject(d.projectDuplicate);else if(d.projectRename)renameProject(d.projectRename);else if(d.projectArchive)archiveProject(d.projectArchive);else if(d.projectDelete)deleteProject(d.projectDelete)};
+  $("compare_btn").onclick=compareProjects;
+  $("topbar").onclick=e=>{const k=e.target.dataset.shortcut;if(k)nav(k)};
   opt($("c_t"),TYPES);opt($("c_r"),ROLES);opt($("pb_g"),["Terrain",...ROLES,"Créature","Artefact","Enchantement","Éphémère"]);
   PF.forEach(k=>$(k).addEventListener("input",()=>{S.p[k]=$(k).value;save();diag();$("ex").value=JSON.stringify(S)}));
   $("add").onclick=()=>{const n=$("c_n").value.trim();if(!n)return $("c_n").focus();
@@ -313,9 +390,9 @@ function init(){
   $("cp").onclick=()=>copy($("dl"),$("cpm"));
   ["pb_g","pb_k","pb_pl"].forEach(id=>$(id).addEventListener("input",probas));
   $("exc").onclick=()=>copy($("ex"));
-  $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.cards){S=o;S.p=S.p||{};S.res=S.res||[];save();render()}}catch(e){alert("Texte de sauvegarde invalide.")}};
-  $("exz").onclick=()=>{if(confirm("Tout effacer ?")){S={p:{},cards:[],res:[]};save();PF.forEach(k=>{$(k).value=""});render()}};
-  nav("projet");
+  $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.format==="commander-deck-lab-project"&&o.project&&o.project.data){const name=prompt("Nom du projet importé",o.project.name||"Projet importé");if(name===null)return;const p={id:uid(),name:name.trim()||o.project.name||"Projet importé",nameEdited:true,data:normalizeData(clone(o.project.data)),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();showHome();}else if(o&&o.cards){const name=prompt("Nom du projet importé","Projet importé");if(name===null)return;const p={id:uid(),name:name.trim()||"Projet importé",nameEdited:true,data:normalizeData(clone(o)),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();showHome();}else alert("Format de sauvegarde non reconnu.")}catch(e){alert("Texte de sauvegarde invalide.")}};
+  $("exz").onclick=()=>{if(confirm("Réinitialiser le deck, la Réserve et les réglages de ce projet ? Le projet lui-même et les autres projets seront conservés.")){S=freshData();const p=activeProject();if(p)p.data=clone(S);save();PF.forEach(k=>{if($(k))$(k).value=""});render();nav("projet")}};
+  renderProjects();renderCompareOptions();updateTopbar();showHome();
 }
 init();
 </script>
