@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Commander Deck Lab — Projets</title>
+<title>Commander Deck Lab</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#14181f;--panel:#1d232d;--line:#2e3744;--ink:#e9edf2;--mute:#8d99a8;--acc:#3fb8a5;--warn:#e8a23a;--bad:#e5604d;--ok:#5cc47a}
@@ -14,13 +14,13 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
 h1,h2,nav button,label,th{font-family:"Trebuchet MS",Verdana,sans-serif}
-header{padding:20px 16px 8px;max-width:1100px;margin:auto}
+header{padding:20px 16px 8px;max-width:900px;margin:auto}
 h1{margin:0;font-size:1.7rem;letter-spacing:.5px}
 header p{margin:2px 0 0;color:var(--mute)}
-nav{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:1100px;margin:auto;position:sticky;top:0;z-index:20;background:var(--bg)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:900px;margin:auto}
 nav button{flex:none;background:var(--panel);color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:8px 14px;font-size:.9rem;cursor:pointer}
 nav button.on{color:var(--bg);background:var(--acc);border-color:var(--acc);font-weight:700}
-main{max-width:1100px;margin:auto;padding:8px 16px 48px}
+main{max-width:900px;margin:auto;padding:8px 16px 48px}
 section{display:none}section.on{display:block}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:14px}
 h2{margin:0 0 10px;font-size:1.1rem}
@@ -42,60 +42,64 @@ td button{background:none;border:0;color:var(--bad);cursor:pointer;font-size:1re
 .msg{padding:8px 10px;border-left:4px solid;margin:6px 0;background:var(--bg);border-radius:0 6px 6px 0;font-size:.92rem}
 .ok{border-color:var(--ok)}.warn{border-color:var(--warn)}.bad{border-color:var(--bad)}
 h3{font:700 .95rem "Trebuchet MS",sans-serif;margin:14px 0 4px}td button[data-m],td button[data-rr]{color:var(--acc)}.big{font-size:2rem;font-weight:700}
+button.lnk,td button.lnk{background:none;border:0;color:var(--acc);font:inherit;text-align:left;padding:0;cursor:pointer}
 small,.mute{color:var(--mute)}
-.topbar{max-width:1100px;margin:0 auto;padding:8px 16px 4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.topbar .spacer{flex:1 1 auto}.pill{border:1px solid var(--line);border-radius:999px;padding:5px 10px;font:600 .82rem "Trebuchet MS",sans-serif;color:var(--ink);background:var(--panel)}
-.topbar button,.project-actions button,.home-actions button,.compare-actions button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:8px 11px;cursor:pointer;font:600 .85rem "Trebuchet MS",sans-serif}
-.topbar button.active{border-color:var(--acc);color:var(--acc)}
-#home{display:none}#home.on{display:block}
-.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
-.project-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px;min-width:0}
-.project-card h3{margin:0 0 6px;font-size:1.05rem}.project-card p{margin:5px 0}.project-actions,.home-actions,.compare-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.project-card.archived{opacity:.78;border-style:dashed}.project-card .project-meta{font-size:.82rem;color:var(--mute)}
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.compare-panel{min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-wrap:anywhere}
-.compare-panel h3{margin-top:0}.compare-panel ul{padding-left:20px}.empty{padding:18px;border:1px dashed var(--line);border-radius:8px;color:var(--mute)}
-.step-intro{color:var(--mute);margin:0 0 12px}.home-heading{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-@media(max-width:620px){.compare-grid{grid-template-columns:1fr}.topbar{gap:6px}.topbar button{padding:7px 9px}header{padding-top:14px}h1{font-size:1.45rem}}
-
+#sug{display:none;border:1px solid var(--line);border-radius:6px;background:var(--panel);margin-top:2px;overflow:hidden}
+#sug button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);padding:10px;font:inherit;cursor:pointer}
+#sug button:last-child{border-bottom:0}
+#cv{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:50;overflow:auto;padding:16px}
+#cv .cvp{max-width:420px;margin:12px auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+#cv img{width:100%;border-radius:12px}
+#cv pre,.cmdc pre{white-space:pre-wrap;font:inherit;margin:8px 0}
+.cmdc{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}.cmdc img{width:210px;max-width:46%;border-radius:10px;cursor:pointer;align-self:flex-start}.cmdc>div{flex:1 1 200px}
+.tt{margin-top:6px;padding:8px 10px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.tt label{margin-top:0}
 </style>
 </head>
 <body>
-<header><h1>Commander Deck Lab</h1><p>Le Lab propose, tu décides, le Lab recalcule.</p></header>
-<div class="topbar" id="topbar">
-  <button id="home_btn">⌂ Projets</button><span id="active_project_label" class="pill">Aucun projet ouvert</span><span class="spacer"></span>
-  <span id="bracket_badge" class="pill">Bracket —</span>
-  <button data-shortcut="decklist">Decklist</button><button data-shortcut="reserve">Réserve</button><button data-shortcut="export">Sauvegarde</button>
-</div>
+<header><h1>Commander Deck Lab</h1><div id="strip" style="display:none;margin-top:8px"><button class="go sec" id="home_btn" style="margin:0 8px 0 0">← Projets</button><b id="pname"></b><div id="brk" class="msg" style="margin-top:8px"></div></div></header>
 <nav id="nav"></nav>
 <main>
-<section id="home" class="on">
-  <div class="box">
-    <div class="home-heading"><div><h2>Mes projets</h2><p class="step-intro">Un projet indépendant par commandant. Créer ou ouvrir un projet ne modifie pas les autres.</p></div><div class="home-actions"><button id="new_project_btn">＋ Nouveau projet</button><button id="toggle_archived_btn">Afficher les archives</button></div></div>
-    <div id="project_list" class="home-grid"></div>
-  </div>
-  <div class="box">
-    <h2>Comparer deux versions</h2><p class="step-intro">Choisis deux projets pour comparer leur configuration et les cartes présentes dans leurs decks.</p>
-    <div class="row"><div><label>Version A</label><select id="compare_a"></select></div><div><label>Version B</label><select id="compare_b"></select></div></div>
-    <div class="compare-actions"><button id="compare_btn">Comparer</button></div><div id="compare_result" style="margin-top:12px"></div>
-  </div>
-</section>
 
-<section id="projet"><div class="box"><h2>Projet</h2>
-<label>Commandant</label><input id="p_cmd" placeholder="Cendreline, l'illimitée"><button class="go sec" id="p_load">Charger depuis Scryfall</button><div id="cmd_info" class="mute"></div>
-<div class="row"><div><label>Couleurs</label><input id="p_col" placeholder="R"></div>
-<div><label>Bracket maximum</label><select id="p_br"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
-<div><label>Volonté</label><select id="p_vol"><option>Casual</option><option selected>Modéré</option><option>Compétitif</option></select></div></div>
-<label>Stratégies</label><input id="p_str" placeholder="Tribal Élémental, ETB, Évocation">
-<label>Priorités</label><input id="p_pri" placeholder="Vitesse, Synergie, Résilience">
-<label>Objectif</label><input id="p_obj" placeholder="Jouer The Great Henge T5">
-<label>Requête Scryfall de synergie (facultatif)</label><input id="p_q" placeholder='ex. t:elemental o:"enters"'>
-<label>Coût du commandant (MV)</label><input id="p_cmc" type="number" value="3" min="0">
-<label>Nombre de terrains visé</label><input id="p_lands" type="number" value="36" min="20" max="45">
-<small class="mute">Tout se sauvegarde automatiquement dans ce navigateur.</small></div></section>
+<section id="accueil"><div class="box"><h2>Mes projets</h2><small class="mute">Un projet = un commandant, avec son deck, sa Réserve et ses réglages.</small>
+<div class="row"><div style="flex:3 1 200px"><input id="np_n" placeholder="Nom du commandant (ex. Cendreline, l'illimitée)"></div><div><button class="go" id="np_go" style="margin:0">Nouveau projet</button></div></div></div>
+<div id="ac_list"></div>
+<div class="box"><h2>Comparer deux versions</h2><small class="mute">Coche deux projets dans la liste, puis appuie sur Comparer.</small><br><button class="go sec" id="cmp_go">Comparer</button><div id="cmp_out" class="tw" style="margin-top:10px"></div></div></section>
+<section id="projet"><div class="box"><h2>1. Commandant</h2>
+<label>Commandant</label>
+<div class="row"><div style="flex:4 1 220px"><input id="p_cmd" placeholder="Commence à écrire le nom (ex. Cendreline)" autocomplete="off" autocapitalize="off" spellcheck="false"></div><div style="flex:1 1 110px"><button class="go sec" id="p_load" style="margin:0;width:100%">Charger</button></div></div>
+<div id="sug"></div>
+<div id="cmd_info" class="mute"></div><div id="cmd_card"></div><div id="edh_info" class="mute"></div><div id="edh_warn"></div>
+<div class="row"><div><label>Couleurs</label><input id="p_col" placeholder="R"></div><div><label>Coût du commandant (MV)</label><input id="p_cmc" type="number" value="3" min="0"></div><div><label>Compagnon</label><select id="p_comp"><option value="">Non</option><option value="1">Oui</option></select></div></div>
+<div id="comp_box" style="display:none"><label>Compagnon choisi</label><select id="p_compn"></select><small class="mute">Le compagnon est noté à part des 99 cartes (il apparaît dans la decklist, section Compagnon).</small></div></div>
+<div class="box"><h2>2. Stratégies</h2><small class="mute">Le Lab propose les stratégies d'après ce que les joueurs jouent avec ce commandant (thèmes EDHREC). En tête de chaque menu : les thèmes les plus joués. Tu peux tout changer. Règle ensuite la part du deck de chaque stratégie.</small>
+<label>Stratégie principale</label><div class="row"><div style="flex:4 1 200px"><select id="p_s1"></select></div><div style="flex:1 1 70px"><input id="p_w1" type="number" min="0" max="100" value="50" aria-label="Part en %"></div></div><small id="p_sx1" class="mute"></small>
+<div class="tt" id="tt1" style="display:none"><label>Type de créature (choisi par le Lab d'après les thèmes, tu peux le changer)</label><select class="ttsel"></select></div>
+<label>Stratégie secondaire</label><div class="row"><div style="flex:4 1 200px"><select id="p_s2"></select></div><div style="flex:1 1 70px"><input id="p_w2" type="number" min="0" max="100" value="30" aria-label="Part en %"></div></div><small id="p_sx2" class="mute"></small>
+<div class="tt" id="tt2" style="display:none"><label>Type de créature (choisi par le Lab d'après les thèmes, tu peux le changer)</label><select class="ttsel"></select></div>
+<label>Sous-stratégie</label><div class="row"><div style="flex:4 1 200px"><select id="p_s3"></select></div><div style="flex:1 1 70px"><input id="p_w3" type="number" min="0" max="100" value="20" aria-label="Part en %"></div></div><small id="p_sx3" class="mute"></small>
+<div class="tt" id="tt3" style="display:none"><label>Type de créature (choisi par le Lab d'après les thèmes, tu peux le changer)</label><select class="ttsel"></select></div>
+<div id="w_sum" class="msg" style="margin-top:10px"></div>
+<details><summary class="mute">Que signifie chaque stratégie ?</summary><div id="theme_guide" style="margin-top:8px"></div></details>
+<details><summary class="mute">Stratégie personnalisée (avancé)</summary><label>Requête Scryfall ajoutée à la sous-stratégie</label><input id="p_q" placeholder='ex. t:elemental o:"enters"'></details></div>
+<div class="box"><h2>3. Volonté et priorités</h2><label>Volonté de jeu</label><select id="p_vol"><option>Casual</option><option selected>Modéré</option><option>Go Win</option></select>
+<small class="mute">Priorités (facultatif, 2 au maximum) : elles orientent le choix des cartes.</small>
+<div class="row"><div><label>1re priorité</label><select id="p_pr1"></select></div><div><label>2e priorité</label><select id="p_pr2"></select></div></div>
+<div id="pr_msg" class="msg" style="margin-top:10px"></div></div>
+<div class="box"><h2>4. Contraintes</h2><div class="row"><div><label>Bracket maximum</label><select id="p_br"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+<div><label>Budget total (€, vide = aucun)</label><input id="p_bud" type="number" min="0"></div><div><label>Terrains visés</label><input id="p_lands" type="number" value="36" min="20" max="45"></div></div>
+<small id="lands_hint" class="mute"></small>
+<label>Cartes obligatoires (une par ligne, placées dès le début)</label><textarea id="p_must" style="min-height:70px"></textarea>
+<label>Cartes exclues (une par ligne)</label><textarea id="p_excl" style="min-height:70px"></textarea></div>
+<div class="box"><h2>5. Objectifs</h2><small class="mute">Action + carte + tour. Ils servent à tester le deck dans l'étape Tester.</small>
+<div class="row" style="margin-top:8px"><div><select id="o_a"><option>Jouer</option><option>Avoir accès à</option></select></div><div style="flex:3 1 160px"><input id="o_n" placeholder="Carte (ex. The Great Henge)"></div><div style="flex:1 1 70px"><input id="o_t" type="number" min="1" max="12" value="5" aria-label="Tour"></div><div><button class="go" id="o_add" style="margin:0">Ajouter</button></div></div>
+<div id="o_list" style="margin-top:10px"></div></div>
+<div class="box"><button class="go" id="plan_build" style="margin:0;width:100%">Construire le deck</button><small id="plan_note" class="mute">Le Lab construit avec tes stratégies, tes priorités et tes contraintes, et te montre le déroulé dans l'étape Construire.</small></div>
+<small class="mute">Tout se sauvegarde automatiquement dans ce navigateur.</small></section>
 
 <section id="build"><div class="box"><h2>Construire une première version</h2>
-<small class="mute">Le Lab cherche les cartes sur Scryfall (légales en Commander, dans l'identité couleur du commandant), les classe par rôle, par popularité EDHREC et par polyvalence, puis remplit les 99 cartes. Connexion internet nécessaire. Stratégies reconnues : Tribal X, ETB, Évocation, Sacrifice, Jetons, Sorts, Compteurs, Cimetière, Vie, Artefacts ; pour tout autre cas, utilise la requête Scryfall dans Projet.</small>
-<div class="row"><div><label>Terrains</label><input id="b_t" type="number" value="36"></div><div><label>Ramp</label><input id="b_ramp" type="number" value="10"></div><div><label>Pioche</label><input id="b_draw" type="number" value="10"></div><div><label>Interaction</label><input id="b_int" type="number" value="8"></div><div><label>Protection</label><input id="b_pro" type="number" value="5"></div><div><label>Wincon</label><input id="b_win" type="number" value="6"></div></div>
+<small class="mute">Le Lab cherche les cartes sur Scryfall et EDHREC selon ton plan (stratégies et leurs parts, volonté, priorités, contraintes, cartes obligatoires et exclues, budget). Connexion internet nécessaire. Les réglages se font dans l'étape Plan.</small>
+<div class="row"><div><label>Terrains (réglé dans le Plan)</label><input id="b_t" type="number" value="36" disabled></div><div><label>Ramp</label><input id="b_ramp" type="number" value="10"></div><div><label>Pioche</label><input id="b_draw" type="number" value="10"></div><div><label>Interaction</label><input id="b_int" type="number" value="8"></div><div><label>Protection</label><input id="b_pro" type="number" value="5"></div><div><label>Wincon</label><input id="b_win" type="number" value="6"></div></div>
 <small class="mute">Synergie = ce qui reste pour atteindre 99.</small><br>
 <button class="go" id="b_go">Construire</button><div id="b_log" style="margin-top:10px"></div></div>
 <div class="box"><h2>Résultat (<span id="b_n">0</span> / 99)</h2><div class="tw"><table><thead><tr><th>Nom</th><th>MV</th><th>Type</th><th>Rôle</th><th>Pourquoi</th></tr></thead><tbody id="b_tb"></tbody></table></div></div></section>
@@ -108,17 +112,18 @@ small,.mute{color:var(--mute)}
 <button class="go" id="add">Ajouter</button></div>
 <div class="box"><h2>Vérifier</h2><small class="mute">Contrôle chaque carte sur Scryfall : nom réel, coût, type, légalité Commander, identité couleur, Game Changer.</small><br><button class="go sec" id="v_go">Vérifier avec Scryfall</button><div id="v_out" style="margin-top:8px"></div></div>
 <div class="box"><h2>Importer une liste</h2>
-<small class="mute">Une carte par ligne : <b>1 Sol Ring ; 1 ; Artefact ; Ramp</b> (qté nom ; coût ; type ; rôle). Coût, type et rôle sont facultatifs. Les terrains de base sans coût sont comptés en Terrain si tu écris le type.</small>
+<small class="mute">Colle ici une liste exportée depuis Moxfield ou Archidekt (Export → texte), ou une carte par ligne : <b>1 Sol Ring</b>. Les cartes sont vérifiées automatiquement sur Scryfall après l'import. Les terrains de base sans coût sont comptés en Terrain si tu écris le type.</small>
 <textarea id="imp" placeholder="1 Sol Ring ; 1 ; Artefact ; Ramp&#10;10 Mountain ; 0 ; Terrain ; Autre"></textarea>
 <button class="go sec" id="impgo">Importer</button></div>
-<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_s"><option value="n">Tri : nom</option><option value="c">Tri : MV</option><option value="t">Tri : type</option></select></div><small class="mute">Verr. = ne pas proposer au retrait. GC = Game Changer (à cocher toi-même).</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>MV</th><th>Type</th><th>Rôle</th><th>Verr.</th><th>GC</th><th>Réserve</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
+<div class="box" id="fiche" style="display:none"></div>
+<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="n">Tri : nom</option><option value="c">Tri : MV</option><option value="t">Tri : type</option></select></div><small class="mute">Verr. = ne pas proposer au retrait. GC = Game Changer (à cocher toi-même).</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th>Réserve</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
 </section>
 
 <section id="decklist"><div class="box"><h2>Decklist</h2><div id="dl_info" class="mute"></div>
 <textarea id="dl" readonly style="min-height:300px"></textarea>
 <button class="go" id="cp">Copier la decklist</button> <small id="cpm"></small></div></section>
 
-<section id="diagnostic"><div class="box"><h2>Architecture du deck</h2><p class="step-intro">Cette étape expose les indicateurs déjà présents dans le Lab. Le moteur de recommandations et les modifications avec aperçu avant/après seront ajoutés dans un jalon ultérieur. Ici, aucune carte n’est modifiée automatiquement.</p><div id="dg_msgs"></div></div>
+<section id="diagnostic"><div class="box"><h2>Diagnostic</h2><div id="dg_msgs"></div></div>
 <div class="box"><h2>Courbe de mana (hors terrains)</h2><div id="dg_curve"></div></div>
 <div class="box"><h2>Types</h2><div id="dg_types"></div></div>
 <div class="box"><h2>Rôles</h2><div id="dg_roles"></div></div></section>
@@ -141,79 +146,80 @@ small,.mute{color:var(--mute)}
 <section id="classif"><div class="box"><h2>Classification</h2><div id="cl"></div></div></section>
 <section id="rapport"><div class="box"><h2>Rapport</h2><div id="rp"></div></div></section>
 <section id="export"><div class="box"><h2>Sauvegarde</h2>
-<small class="mute">Exporte le projet ouvert (réglages, deck, Réserve et données du commandant). L’import crée un nouveau projet sans écraser les autres.</small>
+<small class="mute">Copie ce texte pour garder tout le projet, ou colle-le pour le restaurer.</small>
 <textarea id="ex" style="min-height:220px"></textarea>
 <button class="go" id="exc">Copier</button> <button class="go sec" id="exr">Restaurer</button>
-<button class="go sec" id="exz">Réinitialiser ce projet</button></div></section>
+<button class="go sec" id="exz">Vider ce projet</button></div></section>
 </main>
+<div id="cv"><div class="cvp"><button class="go sec" id="cv_x" style="margin:0 0 8px">Fermer ✕</button><div id="cv_b"></div></div></div>
 
 <script>
 const TYPES=["Terrain","Créature","Artefact","Enchantement","Éphémère","Rituel","Planeswalker","Autre"];
 const ROLES=["Ramp","Pioche","Interaction","Protection","Balayage","Synergie","Wincon","Autre"];
-const TABS=[["projet","Plan"],["build","Construire"],["ameliorer","Améliorer"],["tester","Tester"]];
+const VIEWS={accueil:["accueil"],plan:["projet","export"],construire:["build","construction"],ameliorer:["diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"]};
+const NAVB=[["plan","Plan"],["construire","Construire"],["ameliorer","Améliorer"],["tester","Tester"],["decklist","Decklist"],["reserve","Réserve"]];
+const DEF={p_br:"3",p_vol:"Modéré",p_lands:"36",p_cmc:"3",p_w1:"50",p_w2:"30",p_w3:"20",p_comp:""};let V="accueil";
 const TARGETS={Ramp:[8,12],Pioche:[8,12],Interaction:[6,10],Balayage:[2,4],Protection:[3,6]};
-const PROJECTS_KEY="cdl_projects_v1";
-let S={p:{},cards:[],res:[]}, PROJECTS=[], ACTIVE_PROJECT_ID=null, SHOW_ARCHIVED=false, CURRENT_ROUTE="projet";
+let S={p:{},cards:[],res:[],db:{}},G=null;
 const $=id=>document.getElementById(id);
-const PF=["p_cmd","p_col","p_br","p_vol","p_str","p_pri","p_obj","p_lands","p_cmc","p_q"];
-const freshData=()=>({p:{p_br:"3",p_vol:"Modéré",p_cmc:"3",p_lands:"36"},cards:[],res:[]});
-const uid=()=>"p_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
-const clone=x=>JSON.parse(JSON.stringify(x));
-function load(){
-  try{
-    const saved=localStorage.getItem(PROJECTS_KEY);
-    if(saved){const d=JSON.parse(saved);PROJECTS=Array.isArray(d.projects)?d.projects:[];ACTIVE_PROJECT_ID=d.activeId||null;}
-    else{
-      const legacy=localStorage.getItem("cdl");
-      if(legacy){let data=JSON.parse(legacy);data.p=data.p||{};data.cards=data.cards||[];data.res=data.res||[];const name=(data.p.p_cmd||"Mon premier projet").trim();const project={id:uid(),name,data,archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS=[project];ACTIVE_PROJECT_ID=project.id;}
-    }
-    const active=PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID&&!p.archived)||PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID);
-    if(active)S=normalizeData(clone(active.data));else S=freshData();
-    persistProjects();
-  }catch(e){PROJECTS=[];ACTIVE_PROJECT_ID=null;S=freshData();}
-}
-function normalizeData(data){data=data||{};data.p=data.p||{};data.cards=Array.isArray(data.cards)?data.cards:[];data.res=Array.isArray(data.res)?data.res:[];return data;}
-function persistProjects(){try{localStorage.setItem(PROJECTS_KEY,JSON.stringify({activeId:ACTIVE_PROJECT_ID,projects:PROJECTS}));}catch(e){}}
-function save(){
-  try{S=normalizeData(S);const p=PROJECTS.find(x=>x.id===ACTIVE_PROJECT_ID);if(p){p.data=clone(S);p.updatedAt=new Date().toISOString();if(S.p.p_cmd&&!p.nameEdited)p.name=S.p.p_cmd;}persistProjects();localStorage.setItem("cdl",JSON.stringify(S));updateTopbar();}catch(e){}
-}
-function activeProject(){return PROJECTS.find(p=>p.id===ACTIVE_PROJECT_ID)||null;}
-function setActiveProject(id){const p=PROJECTS.find(x=>x.id===id&&!x.archived);if(!p)return;ACTIVE_PROJECT_ID=id;S=normalizeData(clone(p.data));persistProjects();render();updateTopbar();nav("projet");}
-function createProject(){const name=prompt("Nom du nouveau projet", "Nouveau projet");if(name===null)return;const p={id:uid(),name:name.trim()||"Nouveau projet",nameEdited:true,data:freshData(),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();nav("projet");}
-function duplicateProject(id){const src=PROJECTS.find(p=>p.id===id);if(!src)return;const name=prompt("Nom de cette variante",(src.name||"Projet")+" — Variante");if(name===null)return;const p={id:uid(),name:name.trim()||(src.name+" — Variante"),nameEdited:true,data:clone(src.data),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();nav("projet");}
-function renameProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;const name=prompt("Nom du projet",p.name);if(name===null)return;p.name=name.trim()||p.name;p.nameEdited=true;p.updatedAt=new Date().toISOString();persistProjects();renderProjects();renderCompareOptions();updateTopbar();}
-function archiveProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;p.archived=!p.archived;if(p.archived&&ACTIVE_PROJECT_ID===id){ACTIVE_PROJECT_ID=null;S=freshData();CURRENT_ROUTE="projet";}persistProjects();renderProjects();renderCompareOptions();updateTopbar();if(!ACTIVE_PROJECT_ID)showHome();}
-function deleteProject(id){const p=PROJECTS.find(x=>x.id===id);if(!p)return;if(!confirm(`Supprimer définitivement « ${p.name} » et toutes ses données ? Cette action est irréversible.`))return;PROJECTS=PROJECTS.filter(x=>x.id!==id);if(ACTIVE_PROJECT_ID===id){ACTIVE_PROJECT_ID=null;S=freshData();}persistProjects();renderProjects();renderCompareOptions();updateTopbar();if(!ACTIVE_PROJECT_ID)showHome();}
-function updateTopbar(){const p=activeProject();$("active_project_label").textContent=p?p.name:"Aucun projet ouvert";const b=p?(p.data?.p?.p_br||3):"—";$("bracket_badge").textContent=`Bracket max : ${b}`;$("bracket_badge").title="Indicateur de contrainte du projet ouvert";$("nav").style.display=(p&&CURRENT_ROUTE!=="home")?"flex":"none";document.querySelectorAll('[data-shortcut]').forEach(b=>b.disabled=!p);}
-function showHome(){save();document.querySelectorAll("main > section").forEach(s=>s.classList.remove("on"));$("home").classList.add("on");CURRENT_ROUTE="home";document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('on'));renderProjects();renderCompareOptions();updateTopbar();}
-function renderProjects(){
-  const list=PROJECTS.filter(p=>SHOW_ARCHIVED||!p.archived);const el=$("project_list");
-  if(!list.length){el.innerHTML='<div class="empty">Aucun projet ici. Crée un nouveau projet pour commencer.</div>';return;}
-  el.innerHTML=list.map(p=>{const d=p.data||{},cards=(d.cards||[]).reduce((n,c)=>n+(+c.q||1),0),cmd=d.p?.p_cmd||"Commandant non défini",isActive=p.id===ACTIVE_PROJECT_ID;return `<article class="project-card ${p.archived?'archived':''}"><h3>${esc(p.name||cmd)} ${isActive?'<span class="pill">Ouvert</span>':''}</h3><p>${esc(cmd)}</p><p class="project-meta">${cards}/99 cartes · Bracket max ${esc(d.p?.p_br||3)} · ${p.archived?'Archivé':'Projet actif'}</p><p class="project-meta">Modifié : ${p.updatedAt?new Date(p.updatedAt).toLocaleDateString('fr-FR'): '—'}</p><div class="project-actions">${!p.archived?`<button data-project-open="${p.id}">Ouvrir</button><button data-project-duplicate="${p.id}">Dupliquer</button>`:''}<button data-project-rename="${p.id}">Renommer</button><button data-project-archive="${p.id}">${p.archived?'Désarchiver':'Archiver'}</button><button data-project-delete="${p.id}">Supprimer</button></div></article>`}).join("");
-}
-function renderCompareOptions(){const opts=PROJECTS.map(p=>`<option value="${p.id}">${esc(p.name)}${p.archived?' (archivé)':''}</option>`).join("");const a=$("compare_a"),b=$("compare_b"),av=a.value,bv=b.value;a.innerHTML=opts;b.innerHTML=opts;if(PROJECTS.some(p=>p.id===av))a.value=av;if(PROJECTS.some(p=>p.id===bv))b.value=bv;if(!a.value&&PROJECTS[0])a.value=PROJECTS[0].id;if(!b.value&&PROJECTS[1])b.value=PROJECTS[1].id;}
-function compareProjects(){const a=PROJECTS.find(p=>p.id===$("compare_a").value),b=PROJECTS.find(p=>p.id===$("compare_b").value),out=$("compare_result");if(!a||!b){out.innerHTML='<div class="msg warn">Crée au moins un projet pour commencer la comparaison.</div>';return;}if(a.id===b.id){out.innerHTML='<div class="msg warn">Choisis deux projets différents pour comparer leurs versions.</div>';return;}const da=a.data||{},db=b.data||{},ca=da.cards||[],cb=db.cards||[],ma=new Map(ca.map(c=>[c.n,(ma0=>ma0)(c)])),mb=new Map(cb.map(c=>[c.n,c]));const onlyA=ca.filter(c=>!mb.has(c.n)).map(c=>c.n),onlyB=cb.filter(c=>!ma.has(c.n)).map(c=>c.n);const panel=(p,d,c,otherOnly,side)=>`<div class="compare-panel"><h3>${esc(p.name)}</h3><p><b>Commandant :</b> ${esc(d.p?.p_cmd||'Non défini')}</p><p><b>Stratégies :</b> ${esc(d.p?.p_str||'Non définies')}</p><p><b>Volonté :</b> ${esc(d.p?.p_vol||'—')} · <b>Bracket max :</b> ${esc(d.p?.p_br||3)}</p><p><b>Deck :</b> ${c.reduce((n,x)=>n+(+x.q||1),0)}/99 · <b>Réserve :</b> ${(d.res||[]).reduce((n,x)=>n+(+x.q||1),0)} cartes</p><h3>Cartes propres à cette version (${otherOnly.length})</h3>${otherOnly.length?`<ul>${otherOnly.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:'<p class="mute">Aucune carte propre.</p>'}</div>`;out.innerHTML=`<div class="compare-grid">${panel(a,da,ca,onlyA,'A')}${panel(b,db,cb,onlyB,'B')}</div><p class="mute">Comparaison descriptive des cartes par nom. Les quantités, coûts, fonctions et effets sur les probabilités ne sont pas encore comparés à ce jalon.</p>`;}
+const PF=["p_cmd","p_col","p_br","p_vol","p_lands","p_cmc","p_q","p_s1","p_s2","p_s3","p_w1","p_w2","p_w3","p_pr1","p_pr2","p_bud","p_must","p_excl","p_comp","p_compn"];
+
+/*PROJ*/
+const uid=()=>"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+function load(){try{const r=localStorage.getItem("cdl3");if(r)G=JSON.parse(r)}catch(e){}
+  if(!G){G={v:3,cur:null,projects:{},db:{}};try{const o=localStorage.getItem("cdl");if(o){const old=JSON.parse(o),id=uid();
+    G.projects[id]={id,name:(old.p&&old.p.p_cmd)||"Projet importé",created:Date.now(),mod:Date.now(),S:old};Object.assign(G.db,old.db||{});G.cur=id}}catch(e){}}
+  G.db=G.db||{};Object.values(G.projects).forEach(p=>{p.S.p=p.S.p||{};p.S.cards=p.S.cards||[];p.S.res=p.S.res||[];p.S.db=G.db});
+  if(G.cur&&G.projects[G.cur])S=G.projects[G.cur].S;else{G.cur=null;S={p:{},cards:[],res:[],db:G.db}}}
+function save(){try{if(G.cur&&G.projects[G.cur]){const pr=G.projects[G.cur];pr.S=S;pr.mod=Date.now();if(S.p.p_cmd)pr.name=S.p.p_cmd}
+  const out={v:3,cur:G.cur,db:G.db,projects:{}};Object.entries(G.projects).forEach(([id,pr])=>{out.projects[id]={...pr,S:{...pr.S,db:undefined}}});localStorage.setItem("cdl3",JSON.stringify(out))}catch(e){}}
+function newProject(name){const id=uid();G.projects[id]={id,name:name||"Nouveau projet",created:Date.now(),mod:Date.now(),S:{p:name?{p_cmd:name}:{},cards:[],res:[],db:G.db}};openProject(id)}
+function openProject(id){if(G.cur&&G.projects[G.cur])G.projects[G.cur].S=S;G.cur=id;S=G.projects[id].S;S.db=G.db;
+  ["b_log","s_out","v_out"].forEach(x=>{$(x).innerHTML=""});$("fiche").style.display="none";save();go("plan")}
+function dupProject(id){const src=G.projects[id];if(id===G.cur)src.S=S;const c=JSON.parse(JSON.stringify({...src.S,db:undefined})),n=uid();c.db=G.db;
+  G.projects[n]={id:n,name:src.name+" (copie)",created:Date.now(),mod:Date.now(),S:c};save();render()}
+function delProject(id){delete G.projects[id];if(G.cur===id){G.cur=null;S={p:{},cards:[],res:[],db:G.db}}save();go("accueil")}
+function archProject(id){const p=G.projects[id];p.arch=!p.arch;save();render()}
+function cmpProjects(ia,ib){const A=G.projects[ia],B=G.projects[ib],sa=A.S,sb=B.S;
+  const n=x=>x.cards.reduce((a,c)=>a+c.q,0),k=(x,f,v)=>x.cards.filter(c=>c[f]===v).reduce((a,c)=>a+c.q,0),gc=x=>x.cards.filter(c=>c.g).reduce((a,c)=>a+c.q,0);
+  const avg=x=>{const y=x.cards.filter(c=>c.t!=="Terrain"),q=y.reduce((a,c)=>a+c.q,0);return q?(y.reduce((a,c)=>a+c.c*c.q,0)/q).toFixed(2):"—"};
+  const rows=[["Cartes",n(sa),n(sb)],["Terrains",k(sa,"t","Terrain"),k(sb,"t","Terrain")],...ROLES.filter(r=>r!=="Autre").map(r=>[r,k(sa,"r",r),k(sb,"r",r)]),["MV moyen (sorts)",avg(sa),avg(sb)],["Game Changers",gc(sa),gc(sb)]];
+  const na=new Set(sa.cards.map(c=>c.n)),nb=new Set(sb.cards.map(c=>c.n)),oa=[...na].filter(x=>!nb.has(x)),ob=[...nb].filter(x=>!na.has(x));
+  return `<table><thead><tr><th></th><th>${esc(A.name)}</th><th>${esc(B.name)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table><h3>Seulement dans ${esc(A.name)} (${oa.length})</h3><p>${oa.map(esc).join(", ")||"—"}</p><h3>Seulement dans ${esc(B.name)} (${ob.length})</h3><p>${ob.map(esc).join(", ")||"—"}</p>`}
+/*ENDPROJ*/
+function go(v){if(!G.cur&&v!=="accueil")v="accueil";V=v;const ids=VIEWS[v];
+  document.querySelectorAll("main>section").forEach(x=>x.classList.toggle("on",ids.includes(x.id)));
+  [...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.k===v));
+  $("nav").style.display=v==="accueil"?"none":"flex";$("strip").style.display=v==="accueil"?"none":"block";render();window.scrollTo(0,0)}
+function homeUI(){const ps=Object.values(G.projects).sort((a,b)=>b.mod-a.mod),n=x=>x.cards.reduce((a,c)=>a+c.q,0);
+  const card=p=>`<div class="box"><h2>${esc(p.name)}</h2><p class="mute">${esc(p.S.p.p_col||"couleurs ?")} · Bracket ${p.S.p.p_br||3} max · ${n(p.S)} / 99 cartes · ${new Date(p.mod).toLocaleDateString("fr-FR")}</p>
+<label style="display:inline-block"><input type="checkbox" class="cmpck" value="${p.id}" style="width:auto"> Comparer</label><br>
+<button class="go" data-o="${p.id}">Ouvrir</button> <button class="go sec" data-dp="${p.id}">Dupliquer</button> <button class="go sec" data-ar="${p.id}">${p.arch?"Désarchiver":"Archiver"}</button> <button class="go sec" data-dl="${p.id}">Supprimer</button></div>`;
+  const act=ps.filter(p=>!p.arch),ar=ps.filter(p=>p.arch);
+  $("ac_list").innerHTML=(act.map(card).join("")||'<div class="box mute">Aucun projet pour l\'instant. Écris un commandant ci-dessus pour commencer.</div>')+(ar.length?"<h3>Archivés</h3>"+ar.map(card).join(""):"")}
+function brk(){const n=S.cards.filter(c=>c.g).reduce((a,c)=>a+c.q,0),b=+(S.p.p_br||3),max=b<=2?0:b===3?3:99,e=$("brk");
+  e.className="msg "+(n>max?"bad":"ok");e.textContent=`Bracket ${b} max · Game Changers ${n} / ${max===99?"illimités":max}`+(n>max?" — incompatible":"")}
+function cmdTxt(){const c=S.cmd;return`${esc(c.name)} — ${esc(c.mc)} — ${esc(c.tl||"")} — Commander : ${c.leg==="legal"?"légal":"non légal"}<br>Lancers successifs (taxe +2) : ${c.cmc} → ${c.cmc+2} → ${c.cmc+4}`}
 function opt(sel,arr){sel.innerHTML=arr.map(x=>`<option>${x}</option>`).join("")}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-function nav(id){
-  if(!activeProject()&&id!=="home"){alert("Ouvre ou crée d’abord un projet.");showHome();return;}
-  if(id==="home"){showHome();return;}
-  CURRENT_ROUTE=id;const visible={projet:["projet"],build:["build","construction"],ameliorer:["diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"],export:["export"]};
-  document.querySelectorAll("main > section").forEach(s=>s.classList.toggle("on",(visible[id]||[]).includes(s.id)));
-  [...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.k===id));render();updateTopbar();
-}
+
 function total(){return S.cards.reduce((a,c)=>a+c.q,0)}
 function addCard(c){const f=S.cards.find(x=>x.n.toLowerCase()===c.n.toLowerCase()&&x.t===c.t&&x.r===c.r&&x.c===c.c);if(f)f.q+=c.q;else S.cards.push(c)}
 function render(){
-  PF.forEach(k=>{const v=S.p[k];if(v!==undefined&&$(k).value!==String(v))$(k).value=v});
+  fillThemes();fillStrat();fillPrio();fillComp();PF.forEach(k=>{const v=S.p[k],w=v!==undefined?String(v):(DEF[k]||"");if($(k).value!==w)$(k).value=w});
+  ttFill();
+  if(V!=="accueil"){planUI();objUI()}
+  if(V==="accueil")homeUI();else{$("pname").textContent=G.cur&&G.projects[G.cur]?G.projects[G.cur].name:"";brk()}
+  $("cmd_info").innerHTML=S.cmd?cmdTxt():"";cmdCard();edhWarn();
+  $("b_t").value=S.p.p_lands||"36";
   $("cnt").textContent=total();
-  $("tb").innerHTML=rows().map(({c,i})=>`<tr><td>${c.q}</td><td>${esc(c.n)}</td><td>${c.c}</td><td>${c.t}</td><td>${c.r}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button data-m="${i}" title="Vers la Réserve">→ R</button></td><td><button data-d="${i}" aria-label="Supprimer">✕</button></td></tr>`).join("")||`<tr><td colspan="9" class="mute">Aucune carte.</td></tr>`;
+  $("tb").innerHTML=rows().map(({c,i})=>{const r=db(c),e=eff(c);return`<tr><td>${c.q}</td><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button> <button class="lnk" data-f="${i}" title="Fonctions détectées" aria-label="Fonctions détectées">ⓘ</button>${r&&r.sup.includes("Legendary")?" ★":""}</td><td>${esc(c.mc||"")}</td><td>${c.c}</td><td>${esc(r?r.tl.split(" // ")[0]:c.t)}</td><td>${e.p}${e.s.length?" +"+e.s.length:""}${r&&r.fx?" ✎":""}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button data-m="${i}" title="Vers la Réserve">→ R</button></td><td><button data-d="${i}" aria-label="Supprimer">✕</button></td></tr>`}).join("")||`<tr><td colspan="10" class="mute">Aucune carte.</td></tr>`;
   const t=total();
   const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
-  $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\nDeck\n`:"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
+  $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\n`:"")+(S.p.p_comp==="1"&&S.p.p_compn?`Compagnon\n1 ${S.p.p_compn}\n\n`:"")+(S.p.p_cmd?"Deck\n":"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
   bt();diag();probas();fillObj();res();cls();rep2();
-  const ap=activeProject();$("ex").value=JSON.stringify(ap?{format:"commander-deck-lab-project",version:1,project:{name:ap.name,data:S}}:S,null,2);
+  $("ex").value=JSON.stringify(S);
 }
 function diag(){
   const t=total(),lands=S.cards.filter(c=>c.t==="Terrain").reduce((a,c)=>a+c.q,0),m=[];
@@ -246,9 +252,14 @@ function probas(){
   $("pb_out").innerHTML=h+"</tr></tbody></table>";
 }
 function parse(txt){
-  let ok=0;
+  let ok=0,sec="";
   txt.split("\n").forEach(l=>{l=l.trim();if(!l)return;const p=l.split(/[;|\t]/).map(x=>x.trim());
-    const m=p[0].match(/^(\d+)\s*x?\s+(.+)$/i);const q=m?+m[1]:1,n=m?m[2]:p[0];if(!n)return;
+    const m=p[0].match(/^(\d+)\s*x?\s+(.+)$/i);const q=m?+m[1]:1;let n=(m?m[2]:p[0]).replace(/\s*\[[^\]]*\]/g,"").replace(/\s*\*[A-Za-z]+\*/g,"").replace(/\s*\([A-Za-z0-9]{2,6}\)\s*\S*$/,"").replace(/\s*\^[^^]*\^/g,"").trim();
+    if(!m&&/^(commander|commandant|deck|sideboard|maybeboard|companion|compagnon|mainboard)\b/i.test(n)){sec=n.toLowerCase();return}
+    if(/^(sideboard|maybeboard)/.test(sec))return;
+    if(sec==="commander"||sec==="commandant"){S.p.p_cmd=n;return}
+    if(sec==="companion"||sec==="compagnon"){S.p.p_compn=n;S.p.p_comp="1";return}
+    if(!n)return;
     const t=TYPES.find(x=>x.toLowerCase()===(p[2]||"").toLowerCase())||"Autre";
     const r=ROLES.find(x=>x.toLowerCase()===(p[3]||"").toLowerCase())||"Autre";
     addCard({q,n,c:+p[1]||0,t,r});ok++});
@@ -257,16 +268,16 @@ function parse(txt){
 function copy(el,msg){el.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}
   if(navigator.clipboard)navigator.clipboard.writeText(el.value).catch(()=>{});
   if(msg){msg.textContent=ok?"Copié.":"Sélectionné : copie avec ton menu.";}}
-const F={q:"",t:"",s:"n"};
-function rows(){const a=S.cards.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(F.q)&&(!F.t||c.t===F.t));
+const F={q:"",t:"",s:"n",f:""};
+function rows(){const a=S.cards.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(F.q)&&(!F.t||c.t===F.t)&&(!F.f||fnList(c).includes(F.f)));
   a.sort((x,y)=>F.s==="c"?x.c.c-y.c.c||x.c.n.localeCompare(y.c.n):F.s==="t"?TYPES.indexOf(x.c.t)-TYPES.indexOf(y.c.t)||x.c.n.localeCompare(y.c.n):x.c.n.localeCompare(y.c.n));return a}
 const day=()=>new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
 function toRes(i){const c=S.cards[i];if(c.l&&!confirm("Carte verrouillée. La retirer quand même ?"))return;
-  const w=prompt("Raison du retrait (facultatif)","")||"";S.cards.splice(i,1);
+  const w=prompt("Raison du retrait (facultatif)","")||"";S.cards.splice(i,1);S.manual=true;
   S.res.push({...c,why:w,hist:[...(c.hist||[]),day()+" Deck → Réserve"]});save();render()}
 function restore(i){const c=S.res[i];if(total()+c.q>99){alert("Le deck a déjà "+total()+" cartes. Retire d'abord une carte vers la Réserve, puis restaure "+c.n+".");return}
-  S.res.splice(i,1);c.hist.push(day()+" Réserve → Deck");S.cards.push(c);save();render()}
-function res(){$("rs").innerHTML=S.res.map((c,i)=>`<tr><td>${esc(c.n)}</td><td>${c.q}</td><td>${c.t}</td><td>${c.r}</td><td>${esc(c.why||"")}</td><td>${esc(c.hist.join(" ; "))}</td><td><button data-rr="${i}">Restaurer</button> <button data-rx="${i}">Suppr.</button></td></tr>`).join("")||`<tr><td colspan="7" class="mute">Réserve vide.</td></tr>`}
+  S.res.splice(i,1);c.hist.push(day()+" Réserve → Deck");S.cards.push(c);S.manual=true;save();render()}
+function res(){$("rs").innerHTML=S.res.map((c,i)=>`<tr><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button></td><td>${c.q}</td><td>${c.t}</td><td>${c.r}</td><td>${esc(c.why||"")}</td><td>${esc(c.hist.join(" ; "))}</td><td><button data-rr="${i}">Restaurer</button> <button data-rx="${i}">Suppr.</button></td></tr>`).join("")||`<tr><td colspan="7" class="mute">Réserve vide.</td></tr>`}
 function cls(){const g=S.cards.filter(c=>c.g),n=g.reduce((a,c)=>a+c.q,0),b=+(S.p.p_br||3),max=b<=2?0:b===3?3:99;
   const cat=n===0?"1 ou 2":n<=3?"3":"4 ou 5";
   $("cl").innerHTML=`<p><span class="big">${n}</span> Game Changer(s) cochés</p><div class="msg">Catégorie estimée d'après les Game Changers seuls : ${cat}.</div>`+(n>max?`<div class="msg bad">Incompatible avec le Bracket ${b} maximum (${max} Game Changer max). Concernées : ${g.map(c=>esc(c.n)).join(", ")}. Rien n'est retiré automatiquement.</div>`:`<div class="msg ok">Compatible avec le Bracket ${b} maximum.</div>`)+`<small class="mute">Estimation partielle : ni combos ni tutors analysés. C'est toi qui coches les Game Changers.</small>`}
@@ -287,71 +298,380 @@ function simu(){
   $("s_out").innerHTML=h+`</tbody></table><small class="mute">${N} simulations. Estimation, taxe de commandant non simulée.</small>`}
 function rep2(){const t=total();
   $("rp").innerHTML=`<h3>Identité</h3><p>${esc(S.p.p_cmd||"Commandant non défini")} — ${esc(S.p.p_str||"stratégie non définie")} — Bracket ${S.p.p_br||3} max, ${esc(S.p.p_vol||"")}</p><h3>Architecture (${t}/99)</h3>`+bars(ROLES.map(x=>[x,cnt("r",x)]))+`<h3>Forces et faiblesses</h3>`+$("dg_msgs").innerHTML+`<h3>Cartes verrouillées</h3><p>${S.cards.filter(c=>c.l).map(c=>esc(c.n)).join(", ")||"Aucune"}</p><h3>Performances</h3>`+($("s_out").innerHTML||"<small>Lance une simulation.</small>")+`<h3>Classification</h3>`+$("cl").innerHTML}
+/*MODEL*/
+const FUNCS=["Terrain","Ramp","Pioche","Interaction","Protection","Balayage","Recursion","Tuteur","Wincon","Tokens","Autre"];
+const RULES=[
+["Ramp",/\{T\}(, [^:]+)?: Add |add (one|two|three|\{)|search your library for (a|up to \w+) (basic )?land|land card[^.]*onto the battlefield/i],
+["Pioche",/\bdraws? (a|two|three|four|x|\w+) cards?|exile the top[^.]*you may (play|cast)|look at the top[^.]*\.[\s\S]*into your hand/i],
+["Interaction",/(destroy|exile) target|counter target (spell|activated|triggered)|return target [^.]* to (its|their) owner's hand|target creature gets -/i],
+["Balayage",/(destroy|exile) all |each creature [^.]*(damage|-\d)|deals \d+ damage to each creature/i],
+["Protection",/\bhexproof\b|\bindestructible\b|phases? out|protection from|can't be countered/i],
+["Recursion",/return [^.]*(card|creature)[^.]* from (your|a) graveyard to (your hand|the battlefield)/i],
+["Tuteur",/search your library for (a|an|up to \w+) (?!basic land|land|basic)/i],
+["Wincon",/each opponent loses|you win the game|extra turn|additional combat|double strike|target player loses/i],
+["Tokens",/create (a|an|two|three|x|\w+) [^.]*tokens?/i]];
+const TAGS=[["ETB",/\benters\b/i],["Evoke",/\bevoke\b/i],["Sacrifice",/\bsacrifice\b/i],["Jetons",/\btokens?\b/i],["Compteurs",/\+1\/\+1 counter/i],["Cimetière",/graveyard/i],["Gain de vie",/gains? (\d+|x|that much|life)|lifelink/i],["Sorts",/instant or sorcery|noncreature spell/i],["Artefacts",/\bartifacts?\b/i],["Mana",/\badd \{|: add /i]];
+const ROLEOF={Terrain:"Autre",Ramp:"Ramp",Pioche:"Pioche",Interaction:"Interaction",Protection:"Protection",Balayage:"Balayage",Wincon:"Wincon"};
+const roleOf=f=>ROLEOF[f]||"Synergie";
+function condOf(sent){if(/if an opponent|if target opponent|if a player/i.test(sent))return["externe",.3];if(/\bif\b|as long as|unless|only/i.test(sent))return["interne",.7];
+  if(/when [^,]*enters|when this|when it/i.test(sent))return["directe",.9];if(/whenever/i.test(sent))return["deck",.5];return["directe",1]}
+function analyze(r){const ox=r.ox||"",isLand=r.ty.includes("Land"),sents=ox.split(/\n|(?<=\.)\s/),found=[];
+  RULES.forEach(([f,re])=>{if(isLand&&f==="Ramp")return;const m=re.exec(ox);if(!m)return;const sn=sents.find(x=>re.test(x))||ox,[cd,fi]=condOf(sn);found.push({f,cond:cd,fi,idx:m.index})});
+  found.sort((a,b)=>a.idx-b.idx);const dir=found.filter(x=>x.cond==="directe"),con=found.filter(x=>x.cond!=="directe");
+  let p=isLand?"Terrain":dir.length?dir[0].f:con.length?con[0].f:"Autre";
+  const s=dir.map(x=>x.f).filter(x=>x!==p),c=con.filter(x=>x.f!==p).map(x=>({f:x.f,cond:x.cond,fi:x.fi}));
+  const tags=TAGS.filter(([t,re])=>re.test(ox)).map(x=>x[0]).concat(r.sub.filter(x=>/^[A-Z]/.test(x)).map(x=>"Tribu:"+x),r.kw||[]);
+  const pc=dir.length||!con.length?null:con[0].cond;return{v:1,p,pc,s,c,tags:[...new Set(tags)]}}
+function mkRec(c){const fc=c.card_faces||[],ox=c.oracle_text||fc.map(x=>x.oracle_text).join("\n//\n"),tl=c.type_line||"",main=tl.split(" // ")[0].split(" — "),sub=main[1]?main[1].split(" "):[];
+  const r={id:c.id,oid:c.oracle_id,n:c.name,mc:c.mana_cost||(fc[0]&&fc[0].mana_cost)||"",cmc:c.cmc,tl,
+   sup:(main[0].match(/Legendary|Basic|Snow|World|Tribal/g)||[]),ty:main[0].replace(/Legendary|Basic|Snow|World|Tribal/g,"").trim().split(/\s+/).filter(Boolean),sub,
+   col:c.colors||[],ci:c.color_identity||[],ox,kw:c.keywords||[],leg:(c.legalities||{}).commander||"",gc:!!c.game_changer,rk:c.edhrec_rank||null,
+   rel:[],syn:[],com:null,cls:{gc:!!c.game_changer}};
+  r.an=analyze(r);return r}
+function store(c){const k=c.name.toLowerCase(),o=S.db[k],r=mkRec(c);if(o){["fx","rel","syn","com"].forEach(x=>{if(o[x])r[x]=o[x]})}S.db[k]=r;return r}
+const db=c=>S.db[(c.n||"").toLowerCase()];
+function eff(c){const r=db(c);if(!r)return{p:c.t==="Terrain"?"Terrain":c.r,s:[]};return r.fx||r.an}
+const fnList=c=>{const e=eff(c);return[e.p,...e.s]};
+function syncCom(){const e=S.edh&&S.edh.cards;if(!e)return;Object.values(S.db).forEach(r=>{if(e[r.n])r.com={pct:e[r.n].pct,syn:e[r.n].syn,src:"edhrec"}})}
+/*ENDMODEL*/
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function sf(path,opt){await sleep(120);const r=await fetch("https://api.scryfall.com"+path,opt);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error((d&&d.details)||("Scryfall "+r.status));return d}
 async function sfs(q){try{return (await sf("/cards/search?order=edhrec&unique=cards&q="+encodeURIComponent(q))).data||[]}catch(e){if(/match|404/i.test(e.message))return[];throw e}}
 function tmap(tl){tl=tl||"";return /Land/.test(tl)?"Terrain":/Creature/.test(tl)?"Créature":/Planeswalker/.test(tl)?"Planeswalker":/Artifact/.test(tl)?"Artefact":/Enchantment/.test(tl)?"Enchantement":/Instant/.test(tl)?"Éphémère":/Sorcery/.test(tl)?"Rituel":"Autre"}
 function bt(){$("b_n").textContent=total();
-  $("b_tb").innerHTML=[...S.cards].sort((a,b)=>ROLES.indexOf(a.r)-ROLES.indexOf(b.r)||a.c-b.c).map(c=>`<tr><td>${c.q>1?c.q+" ":""}${esc(c.n)}${c.l?" 🔒":""}</td><td>${c.c}</td><td>${c.t}</td><td>${c.r}</td><td style="white-space:normal;min-width:220px">${esc(c.w||"—")}</td></tr>`).join("")||'<tr><td colspan="5" class="mute">Pas encore de cartes.</td></tr>'}
+  $("b_tb").innerHTML=[...S.cards].sort((a,b)=>ROLES.indexOf(a.r)-ROLES.indexOf(b.r)||a.c-b.c).map(c=>`<tr><td>${c.q>1?c.q+" ":""}<button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button>${c.l?" 🔒":""}</td><td>${c.c}</td><td>${c.t}</td><td>${c.r}</td><td style="white-space:normal;min-width:220px">${esc(c.w||"—")}</td></tr>`).join("")||'<tr><td colspan="5" class="mute">Pas encore de cartes.</td></tr>'}
 const Q={Ramp:'(o:"search your library for a basic land" OR o:"search your library for up to two basic" OR o:"{T}: Add") cmc<=3 -t:land',
  Pioche:'(o:"draw a card" OR o:"draw two" OR o:"draw three" OR o:"draw cards") -t:land',
  Interaction:'(o:"destroy target" OR o:"exile target" OR o:"counter target") -t:land',
  Protection:'(o:hexproof OR o:indestructible OR o:"phase out" OR o:"protection from") -t:land -t:creature',
  Wincon:'(o:"extra turn" OR o:"each opponent loses" OR o:"you win the game" OR o:"additional combat" OR o:"double strike") -t:land'};
-const TRIBE={elemental:"elemental","élémentaire":"elemental",elementaire:"elemental",guerrier:"warrior",elfe:"elf",gobelin:"goblin",zombie:"zombie",vampire:"vampire",dragon:"dragon",humain:"human",ange:"angel","bête":"beast",oiseau:"bird",soldat:"soldier",sorcier:"wizard"};
+const TRIBE={elemental:"elemental","élémental":"elemental","élémentaire":"elemental",elementaire:"elemental",guerrier:"warrior",elfe:"elf",gobelin:"goblin",zombie:"zombie",vampire:"vampire",dragon:"dragon",humain:"human",ange:"angel","bête":"beast",oiseau:"bird",soldat:"soldier",sorcier:"wizard"};
 const STRAT=[[/etb|entre en jeu|enters/i,'o:"enters" -t:land'],[/[eé]voc|evoke/i,"o:evoke"],[/sacrific/i,"o:sacrifice -t:land"],[/token|jeton/i,"o:create o:token -t:land"],[/sort|spell|[eé]ph[eé]m/i,'(o:"whenever you cast an instant or sorcery" OR o:"whenever you cast a noncreature spell")'],[/compteur|counter/i,'o:"+1/+1 counter" -t:land'],[/cimeti|graveyard|r[eé]anim/i,'o:"from your graveyard" -t:land'],[/\bvie\b|lifegain|life/i,'(o:gain o:life) -t:land'],[/artefact|artifact/i,"t:artifact o:artifact"]];
-function stratQ(){const out=[],unk=[];(S.p.p_str||"").split(/[,;]/).map(x=>x.trim()).filter(Boolean).forEach(x=>{
-  const tm=x.match(/^tribal\s+(.+)$/i);if(tm){const w=tm[1].toLowerCase().trim(),t=TRIBE[w]||w;out.push([x,`(t:${t} OR o:${t}) -t:land`]);return}
-  const m=STRAT.find(([re])=>re.test(x));if(m)out.push([x,m[1]]);else unk.push(x)});
-  if(S.p.p_q)out.push(["requête perso","("+S.p.p_q+") -t:land"]);return{out,unk}}
-async function loadCmd(){const n=$("p_cmd").value.trim();if(!n)throw new Error("Commandant non renseigné");
-  const c=await sf("/cards/named?fuzzy="+encodeURIComponent(n));
-  S.cmd={name:c.name,ci:c.color_identity,mc:c.mana_cost||"",cmc:c.cmc};
+/*PLAN*/
+const PRIOS=["Vitesse","Synergie","Résilience","Interaction","Thème","Budget"];
+const PRIOD={Vitesse:"sorts bon marché et plus de ramp",Synergie:"cartes à fort score de synergie plutôt que les staples","Résilience":"plus de protection et de récursion",Interaction:"plus de retrait et de contre-sorts","Thème":"seulement des cartes dans la stratégie, même moins puissantes",Budget:"cartes peu chères"};
+const ARCH=[["etb","ETB (effets à l'entrée)",'o:"enters" -t:land'],["blink","Blink / Flicker",'o:"exile" o:"then return" -t:land'],["evoke","Évocation","o:evoke"],["tokens","Jetons",'o:create o:token -t:land'],["sac","Sacrifice",'o:sacrifice -t:land'],["gy","Cimetière",'o:"from your graveyard" -t:land'],["reanim","Réanimation",'o:"from your graveyard to the battlefield" -t:land'],["spells","Sorts (instants et rituels)",'(o:"whenever you cast an instant or sorcery" OR o:"whenever you cast a noncreature spell")'],["counters","Compteurs +1/+1",'o:"+1/+1 counter" -t:land'],["arts","Artefacts","o:artifact -t:land"],["ench","Enchantements","o:enchantment -t:land"],["landfall","Atterrissage (landfall)",'(o:landfall OR o:"whenever a land enters")'],["life","Gain de vie",'(o:gain o:life) -t:land'],["voltron","Voltron / Équipements",'(t:equipment OR t:aura OR o:"equipped creature") -t:land'],["mill","Mill (bibliothèque)","o:mill -t:land"],["pw","Planeswalkers (Superfriends)","t:planeswalker"],["treasure","Trésors et mana","o:treasure -t:land"],["copy","Copies / Clones",'(o:"copy target" OR o:"that\'s a copy") -t:land'],["haste","Aggro / Célérité",'(o:haste OR o:"additional combat phase")'],["slug","Dégâts à tous les adversaires",'(o:"each opponent" o:damage) -t:land'],["control","Contrôle",'(o:"counter target spell" OR o:"destroy all")'],["stax","Stax",'(o:"spells cost" o:"more to cast" OR o:"doesn\'t untap" OR o:"can\'t cast")']];
+let TRIBES=["Advisor","Angel","Archer","Artificer","Assassin","Avatar","Bear","Beast","Berserker","Bird","Boar","Cat","Cleric","Construct","Demon","Devil","Dinosaur","Dragon","Drake","Druid","Dwarf","Eldrazi","Elemental","Elf","Faerie","Fish","Frog","Fungus","Giant","Gnome","Goblin","Golem","Horror","Human","Hydra","Insect","Kithkin","Knight","Lizard","Merfolk","Minotaur","Monk","Ogre","Orc","Ooze","Phyrexian","Pirate","Plant","Rat","Rogue","Samurai","Saproling","Shaman","Shapeshifter","Skeleton","Sliver","Snake","Soldier","Sorcerer","Specter","Sphinx","Spider","Spirit","Squirrel","Thopter","Treefolk","Vampire","Warlock","Warrior","Werewolf","Wizard","Wolf","Wraith","Wurm","Zombie"];
+const OLDARCH=["etb","evoke","sac","tokens","spells","counters","gy","life","arts"];
+const COMP_NAMES={gyruda:"Gyruda, Doom of Depths",jegantha:"Jegantha, the Wellspring",kaheera:"Kaheera, the Orphanguard",keruga:"Keruga, the Macrosage",lurrus:"Lurrus of the Dream-Den",lutri:"Lutri, the Spellchaser",obosh:"Obosh, the Preypiercer",umori:"Umori, the Collector",yorion:"Yorion, Sky Nomad",zirda:"Zirda, the Dawnwaker"};
+/* Explications courtes des thèmes EDHREC (brouillon à relire) */
+const THEME_INFO={
+"tokens":"Créer beaucoup de jetons (créatures, trésors…) puis les multiplier ou s'en servir comme ressource.",
+"evoke":"Créatures à évocation : on les lance pour un coût réduit, elles sont sacrifiées mais leur effet d'entrée se déclenche. Idéal avec du blink ou des copies.",
+"etb":"Effets d'entrée (ETB) : des créatures qui font quelque chose en arrivant en jeu, qu'on rejoue grâce au blink, aux clones ou au sacrifice.",
+"combo":"Combinaisons de cartes qui gagnent la partie ou créent un effet infini.",
+"midrange":"Jeu équilibré : bonnes créatures et retrait, sans se spécialiser.",
+"reanimator":"Mettre de grosses créatures au cimetière puis les ramener en jeu à bas coût.",
+"aggro":"Attaquer vite avec des créatures bon marché pour gagner tôt.",
+"clones":"Copier ses meilleures créatures ou celles des adversaires.",
+"sacrifice":"Sacrifier ses permanents pour des effets, et rejouer les effets de mort ou d'entrée.",
+"ramp":"Accélérer le mana (terrains, créatures, artefacts) pour jouer de gros sorts plus tôt.",
+"triggered-abilities":"Capacités qui se déclenchent sur un événement, qu'on cherche à doubler ou à enchaîner.",
+"aristocrats":"Sacrifier des créatures pour drainer les adversaires à chaque mort.",
+"good-stuff":"Les meilleures cartes de chaque couleur, sans thème précis.",
+"commander-matters":"Cartes qui font quelque chose avec ton commandant (le relancer, le copier, le protéger).",
+"blink":"Exiler puis faire revenir ses créatures pour rejouer leurs effets d'entrée.",
+"populate":"Copier ses jetons créatures.",
+"burn":"Infliger des dégâts directs aux adversaires.",
+"toolbox":"Créatures qui vont chercher la bonne carte dans le deck selon le besoin.",
+"birthing-pod":"Sacrifier une créature pour en chercher une de coût supérieur (Birthing Pod et cartes proches).",
+"lands-matter":"Les terrains sont la ressource centrale : en chercher, en rejouer, profiter de leur nombre.",
+"cascade":"Lancer gratuitement des sorts grâce à la cascade.",
+"graveyard":"Utiliser le cimetière comme une seconde main.",
+"storm":"Enchaîner beaucoup de sorts dans le même tour pour un effet de tempête.",
+"control":"Ralentir les adversaires (contre-sorts, retrait, balayages) et gagner plus tard.",
+"tempo":"Poser des menaces vite et gêner l'adversaire au bon moment.",
+"card-draw":"Piocher énormément de cartes.",
+"spell-copy":"Copier ses instantanés et rituels.",
+"big-mana":"Produire énormément de mana pour de très gros sorts.",
+"ltb-effects":"Effets quand une permanent quitte le champ de bataille.",
+"stompy":"Grosses créatures vertes peu chères qui écrasent la table.",
+"plus-1-plus-1-counters":"Placer et multiplier des marqueurs +1/+1.",
+"activated-abilities":"Capacités activées qu'on utilise à répétition.",
+"spellslinger":"Beaucoup d'instantanés et de rituels, avec des cartes qui profitent de chaque sort lancé.",
+"convoke":"Lancer des sorts en engageant des créatures pour les payer.",
+"chaos":"Effets aléatoires et imprévisibles.",
+"enchantress":"Enchantements, avec de la pioche à chaque enchantement joué.",
+"multicolor-matters":"Cartes qui récompensent les sorts ou permanents multicolores.",
+"affinity":"Réduire le coût des sorts selon le nombre d'artefacts (ou d'un autre type).",
+"haste":"Créatures avec célérité qui attaquent tout de suite.",
+"landfall":"Bonus à chaque terrain qui arrive en jeu.",
+"sneak-attack":"Mettre gratuitement de grosses créatures en jeu (Sneak Attack, Natural Order…).",
+"mill":"Remplir un cimetière, le sien ou celui des adversaires.",
+"group-slug":"Faire perdre de la vie à toute la table, petit à petit.",
+"legends":"Cartes légendaires.",
+"zoo":"Beaucoup de petites créatures variées.",
+"ad-nauseam":"Piocher en payant des points de vie (Ad Nauseam) pour enchaîner un combo.",
+"artifacts":"Artefacts et cartes qui les exploitent.",
+"historic":"Artefacts, légendes et sagas.",
+"anthems":"Bonus de force et d'endurance pour toutes tes créatures.",
+"cycling":"Défausser des cartes avec le cyclage pour piocher et remplir le cimetière.",
+"glass-cannon":"Très puissant mais fragile.",
+"hatebears":"Petites créatures qui gênent l'adversaire.",
+"attack-triggers":"Capacités qui se déclenchent quand tes créatures attaquent.",
+"extra-combats":"Phases de combat supplémentaires.",
+"lifedrain":"Drainer la vie des adversaires.",
+"lifegain":"Gagner de la vie et en profiter.",
+"self-mill":"Remplir son propre cimetière pour s'en servir.",
+"topdeck":"Jouer avec la carte du dessus de la bibliothèque.",
+"exile":"Exiler les cartes des adversaires ou jouer depuis l'exil.",
+"flashback":"Rejouer des sorts depuis le cimetière.",
+"flying":"Créatures volantes.",
+"land-destruction":"Détruire les terrains des adversaires.",
+"mana-dorks":"Créatures qui produisent du mana.",
+"myriad":"Attaquer plusieurs adversaires avec des copies de ses créatures.",
+"sagas":"Sagas (enchantements à chapitres).",
+"x-spells":"Sorts à X, dont la puissance dépend du mana investi.",
+"bounce":"Renvoyer des permanents dans la main (les siens pour rejouer leurs effets, ceux des autres pour les gêner).",
+"devotion":"Compter les symboles de mana de ses permanents.",
+"extra-turns":"Tours supplémentaires.",
+"fling":"Lancer ses créatures pour infliger des dégâts.",
+"group-hug":"Aider toute la table, en gardant un avantage caché.",
+"monarch":"Devenir monarque pour piocher une carte de plus à chaque tour.",
+"voltron":"Concentrer équipements et auras sur une seule créature (souvent le commandant).",
+"stax":"Imposer des restrictions pour ralentir la table.",
+"infect":"Poison au lieu de dégâts.",
+"treasure":"Trésors et mana en plus."};
+const TRIBAL_INFO="Jouer un maximum de créatures du même type, avec les cartes qui les renforcent, les copient ou les rejouent.";
+const isComp=t=>/-companion$/.test(t.s);
+function themeType(t){const v=String(t.n||t.s).toLowerCase();
+  for(const T of TRIBES){const l=T.toLowerCase(),c=[l,l+"s",l+"es",l.replace(/f$/,"ves"),l.replace(/fe$/,"ves"),l.replace(/y$/,"ies"),l.replace(/man$/,"men")];if(c.includes(v))return T}
+  return null}
+function themeModel(){const e=S.edh;if(!e)return null;const comps=[],others=[],types=[];
+  e.themes.forEach(t=>{if(isComp(t)){comps.push(t);return}const ty=themeType(t);if(ty){types.push({ty,c:t.c,t});return}others.push(t)});
+  types.sort((a,b)=>b.c-a.c);return{comps,others,types,tribal:types[0]||null}}
+function strengthFn(){const e=S.edh,top=e&&e.themes.length?e.themes[0].c:0;return c=>top?(c>=top*.5?"très forte":c>=top*.2?"forte":"modérée"):""}
+function stratLabel(v){if(v==="tribal")return"Tribal (type de créature)";const i=v.indexOf(":"),k=v.slice(0,i),id=v.slice(i+1);
+  if(k==="arch"){const a=ARCH.find(x=>x[0]===id);return a?a[1]:id}
+  if(k==="tribe")return"Tribal "+id;
+  if(k==="edh"){const t=S.edh&&S.edh.themes.find(x=>x.s===id);return t?t.n:id}
+  return v}
+function stratExplain(v){if(!v)return"";
+  if(v==="tribal")return"Tribal "+(S.p.p_tt||"")+" : "+TRIBAL_INFO;
+  const i=v.indexOf(":"),k=v.slice(0,i),id=v.slice(i+1);
+  if(k==="edh")return THEME_INFO[id]||("Thème EDHREC « "+stratLabel(v)+" » : explication à venir.");
+  if(k==="tribe")return"Tribal "+id+" : "+TRIBAL_INFO;
+  return"Archétype : "+stratLabel(v)}
+function stratOpts(skip){const m=themeModel(),fl=strengthFn(),o=(v,l)=>`<option value="${esc(v)}">${esc(l)}</option>`;
+  if(!m){const a=ARCH.filter(x=>!skip.has("arch:"+x[0])).map(x=>o("arch:"+x[0],x[1])).join("");
+    return'<option value="">(aucune)</option>'+(skip.has("tribal")?"":o("tribal","Tribal (type de créature)"))+`<optgroup label="Archétypes">${a}</optgroup>`}
+  let list=m.others.map(t=>({v:"edh:"+t.s,lab:`${t.n} — ${fl(t.c)} (${t.c} decks)`,c:t.c}));
+  const tl=m.tribal?{v:"tribal",lab:`Tribal (type de créature) — ${fl(m.tribal.c)} (${m.tribal.c} decks)`,c:m.tribal.c}:null;
+  if(tl)list.push(tl);list.sort((a,b)=>b.c-a.c);list=list.filter(x=>!skip.has(x.v));
+  const rec=list.slice(0,12),rest=list.slice(12),extra=[];
+  if(!tl&&!skip.has("tribal"))extra.push(o("tribal","Tribal (type de créature)"));
+  rest.forEach(x=>extra.push(o(x.v,x.lab)));
+  return'<option value="">(aucune)</option>'+`<optgroup label="Recommandées pour ce commandant">${rec.map(x=>o(x.v,x.lab)).join("")}</optgroup>`+(extra.length?`<optgroup label="Autres thèmes du commandant">${extra.join("")}</optgroup>`:"")}
+function fillStrat(){const cur=[1,2,3].map(i=>S.p["p_s"+i]||"");
+  [1,2,3].forEach(i=>{const sl=$("p_s"+i),v=cur[i-1],skip=new Set(cur.filter((x,j)=>x&&j!==i-1));
+    let html=stratOpts(skip);if(v&&!html.includes('value="'+esc(v)+'"'))html+=`<option value="${esc(v)}">${esc(stratLabel(v))}</option>`;
+    if(sl.dataset.h!==html){sl.innerHTML=html;sl.dataset.h=html}
+    if(sl.value!==v)sl.value=v;
+    $("p_sx"+i).textContent=stratExplain(v)});
+  const m=themeModel(),g=$("theme_guide");
+  if(!m){g.innerHTML='<small class="mute">Charge un commandant pour voir ses thèmes.</small>';return}
+  const fl=strengthFn(),rows=[];
+  if(m.tribal)rows.push([m.tribal.c,"Tribal (type de créature)",TRIBAL_INFO]);
+  m.others.forEach(t=>rows.push([t.c,t.n,THEME_INFO[t.s]||"Explication à venir."]));
+  rows.sort((a,b)=>b[0]-a[0]);
+  const h=rows.map(r=>`<p style="margin:6px 0"><b>${esc(r[1])}</b> <small class="mute">${fl(r[0])} · ${r[0]} decks</small><br><small>${esc(r[2])}</small></p>`).join("");
+  if(g.dataset.h!==h){g.innerHTML=h;g.dataset.h=h}}
+function tribeList(){const m=themeModel(),out=[];if(m)m.types.forEach(x=>out.push(x.ty));
+  const cs=S.cmd&&S.cmd.tl?(S.cmd.tl.split(" // ")[0].split(" — ")[1]||"").split(" ").filter(Boolean):[];cs.forEach(x=>{if(TRIBES.includes(x))out.push(x)});
+  TRIBES.forEach(x=>out.push(x));return[...new Set(out)]}
+function autoTribe(){return tribeList()[0]||""}
+function ttFill(){const l=tribeList(),html=l.map(x=>`<option>${esc(x)}</option>`).join("");let any=false;
+  [1,2,3].forEach(i=>{const on=S.p["p_s"+i]==="tribal";$("tt"+i).style.display=on?"block":"none";if(on)any=true});
+  if(any&&!S.p.p_tt)S.p.p_tt=autoTribe();
+  document.querySelectorAll(".ttsel").forEach(sl=>{let h=html;if(S.p.p_tt&&!l.includes(S.p.p_tt))h=`<option>${esc(S.p.p_tt)}</option>`+h;
+    if(sl.dataset.h!==h){sl.innerHTML=h;sl.dataset.h=h}if(sl.value!==(S.p.p_tt||""))sl.value=S.p.p_tt||""})}
+function stratCount(v){const e=S.edh;if(!e)return 0;
+  if(v==="tribal"){const m=themeModel(),x=m&&m.types.find(y=>y.ty===S.p.p_tt);return x?x.c:0}
+  if(v.startsWith("edh:")){const t=e.themes.find(y=>y.s===v.slice(4));return t?t.c:0}
+  return 0}
+function autoW(){const vs=[1,2,3].map(i=>S.p["p_s"+i]||""),cs=vs.map(v=>v?stratCount(v):0),known=cs.filter(Boolean),fb=known.length?Math.max(...known):1;
+  const c=vs.map((v,i)=>v?(cs[i]||fb):0),tot=c.reduce((a,b)=>a+b,0);
+  if(!tot){[1,2,3].forEach(i=>S.p["p_w"+i]="0");return}
+  const w=c.map(x=>Math.floor(100*x/tot));let left=100-w.reduce((a,b)=>a+b,0);
+  const order=c.map((x,i)=>[x,i]).sort((a,b)=>b[0]-a[0]);for(let k=0;left>0;k=(k+1)%order.length){if(order[k][0]>0){w[order[k][1]]++;left--}}
+  w.forEach((x,i)=>S.p["p_w"+(i+1)]=String(x))}
+function proposeStrat(){const m=themeModel();if(!m)return;
+  const items=m.others.map(t=>({v:"edh:"+t.s,c:t.c}));if(m.tribal)items.push({v:"tribal",c:m.tribal.c});
+  items.sort((a,b)=>b.c-a.c);const top=items.slice(0,3);
+  ["p_s1","p_s2","p_s3"].forEach((k,i)=>S.p[k]=top[i]?top[i].v:"");
+  if(top.some(x=>x.v==="tribal"))S.p.p_tt=m.tribal.ty;
+  S.p.p_wman=false;autoW()}
+function fillPrio(){["p_pr1","p_pr2"].forEach((k,i)=>{const other=S.p[i?"p_pr1":"p_pr2"]||"",sl=$(k),v=S.p[k]||"";
+  const html='<option value="">(aucune)</option>'+PRIOS.filter(x=>x!==other).map(x=>`<option>${x}</option>`).join("");
+  if(sl.dataset.h!==html){sl.innerHTML=html;sl.dataset.h=html}if(sl.value!==v)sl.value=v})}
+function fillComp(){const on=S.p.p_comp==="1";$("comp_box").style.display=on?"block":"none";if(!on)return;
+  const m=themeModel(),sl=$("p_compn"),opts=[];
+  const nm=t=>{const k=t.s.replace(/-companion$/,"");return COMP_NAMES[k]||String(t.n).replace(/ Companion$/,"")};
+  if(m)m.comps.forEach(t=>opts.push([nm(t),`${nm(t)} — ${t.c} decks`]));
+  Object.values(COMP_NAMES).forEach(n=>{if(!opts.some(x=>x[0]===n))opts.push([n,n])});
+  let html='<option value="">(je choisirai plus tard)</option>'+opts.map(x=>`<option value="${esc(x[0])}">${esc(x[1])}</option>`).join("");
+  const v=S.p.p_compn||"";if(v&&!html.includes(`value="${esc(v)}"`))html+=`<option value="${esc(v)}">${esc(v)}</option>`;
+  if(sl.dataset.h!==html){sl.innerHTML=html;sl.dataset.h=html}if(sl.value!==v)sl.value=v}
+function stratInfo(sv,v){
+  if(v==="tribal"){const tt=sv.p.p_tt;if(!tt)return null;
+    const th=sv.edh&&sv.edh.themes.find(t=>!isComp(t)&&themeType(t)===tt);
+    if(th)return{k:"edh",lab:"Tribal "+tt,slug:th.s};
+    const t=tt.toLowerCase();return{k:"tribe",lab:"Tribal "+tt,q:`(t:"${t}" OR o:"${t}") -t:land`}}
+  const i=v.indexOf(":"),k=v.slice(0,i),id=v.slice(i+1);
+  if(k==="arch"){const a=ARCH.find(x=>x[0]===id);return a?{k,lab:a[1],q:a[2]}:null}
+  if(k==="tribe"){const t=id.toLowerCase();return{k,lab:"Tribal "+id,q:`(t:"${t}" OR o:"${t}") -t:land`}}
+  if(k==="edh"){const t=sv.edh&&sv.edh.themes.find(x=>x.s===id);return{k,lab:t?t.n:id,slug:id}}
+  return null}
+function stratSel(sv){const d=[50,30,20],out=[];[1,2,3].forEach(i=>{const v=sv.p["p_s"+i];if(!v)return;const inf=stratInfo(sv,v);if(!inf)return;
+    let w=sv.p["p_w"+i];w=(w===undefined||w==="")?d[i-1]:+w;
+    if(i===3&&sv.p.p_q){const extra={k:"arch",lab:"requête perso",q:"("+sv.p.p_q+") -t:land",w:0};out.push({...inf,w});out.push(extra);return}
+    out.push({...inf,w})});
+  if(!out.length&&sv.p.p_q)out.push({k:"arch",lab:"requête perso",q:"("+sv.p.p_q+") -t:land",w:1});
+  const tot=out.reduce((a,x)=>a+x.w,0);out.forEach(x=>{x.w=tot?x.w/tot:1/out.length});return out}
+function migPlan(sv){const p=sv.p;
+  if(p.p_pri&&!p.p_pr1){const f=p.p_pri.split(/[,;>]/).map(x=>x.trim().toLowerCase()).map(x=>PRIOS.find(n=>n.toLowerCase()===x)).filter(Boolean);["p_pr1","p_pr2"].forEach((k,i)=>{if(f[i])p[k]=f[i]})}
+  if(p.p_str&&!p.p_s1){const out=[];p.p_str.split(/[,;]/).map(x=>x.trim()).filter(Boolean).forEach(x=>{const tm=x.match(/^tribal\s+(.+)$/i);
+      if(tm){const w=tm[1].toLowerCase().trim(),t=TRIBE[w]||w;out.push("tribe:"+t.charAt(0).toUpperCase()+t.slice(1))}else{const i=STRAT.findIndex(([re])=>re.test(x));if(i>=0)out.push("arch:"+OLDARCH[i])}});
+    ["p_s1","p_s2","p_s3"].forEach((k,i)=>{if(out[i])p[k]=out[i]})}
+  let tr=false;["p_s1","p_s2","p_s3"].forEach(k=>{const v=p[k]||"";if(/^tribe:/.test(v)){if(!tr){p.p_tt=v.slice(6);p[k]="tribal";tr=true}else p[k]=""}else if(v==="tribal"){if(tr)p[k]="";else tr=true}});
+  if(p.p_pr2&&p.p_pr2===p.p_pr1)p.p_pr2=""}
+/*ENDPLAN*/
+function planChk(){const d=[50,30,20],w=[1,2,3].map(i=>{if(!S.p["p_s"+i])return 0;const v=S.p["p_w"+i];return(v===undefined||v==="")?d[i-1]:(+v||0)}),t=w[0]+w[1]+w[2],n=[1,2,3].filter(i=>S.p["p_s"+i]).length,m=$("w_sum");
+  if(!n){m.className="msg warn";m.textContent="Aucune stratégie choisie : la synergie viendra des cartes les plus jouées avec ce commandant."}
+  else{m.className="msg "+(t===100?"ok":"warn");m.textContent="Total des parts : "+t+" %"+(t===100?"":" — le Lab le ramènera à 100 %")+(S.p.p_wman?"":" · parts proposées d'après le poids des thèmes")}
+  const pr=[S.p.p_pr1,S.p.p_pr2].filter(Boolean),pm=$("pr_msg");
+  pm.className="msg "+(pr.length?"ok":"warn");
+  pm.textContent=pr.length?"Priorités : "+pr.map(x=>x+" ("+(PRIOD[x]||"")+")").join(" > "):"Aucune priorité : le Lab se base uniquement sur le poids des thèmes."}
+function planUI(){fillStrat();fillPrio();fillComp();ttFill();
+  [1,2,3].forEach(i=>{const e=$("p_w"+i),v=S.p["p_w"+i];if(document.activeElement!==e&&v!==undefined&&e.value!==String(v))e.value=v;e.disabled=!S.p["p_s"+i]});
+  planChk()}
+/* ---- Voir une carte (texte en français si possible) ---- */
+const CC={};
+function viewOf(c,lang){const fc=c.card_faces||[],f0=fc[0]||{},fr=lang==="fr";
+  const img=(c.image_uris||f0.image_uris||{}).normal||"";
+  const nm=fr?(c.printed_name||c.name):c.name,tl=fr?(c.printed_type_line||c.type_line):c.type_line;
+  const ft=f=>(fr?(f.printed_text||f.oracle_text):f.oracle_text)||"";
+  const multi=fc.length&&!c.oracle_text&&!c.printed_text;
+  const txt=multi?fc.map(f=>(fr?(f.printed_name||f.name):f.name)+" — "+(fr?(f.printed_type_line||f.type_line):f.type_line)+"\n"+ft(f)).join("\n\n"):((fr?(c.printed_text||c.oracle_text):c.oracle_text)||"");
+  return{img,name:nm,en:c.name,mc:c.mana_cost||f0.mana_cost||"",tl:tl||"",text:txt,lang}}
+async function cardData(name){const k=name.toLowerCase();if(CC[k])return CC[k];let out=null;
+  try{const d=await sf("/cards/search?unique=prints&order=released&q="+encodeURIComponent('!"'+name.replace(/"/g,"")+'" lang:fr'));
+    const c=(d.data||[]).find(x=>x.printed_text||(x.card_faces||[]).some(f=>f.printed_text));if(c)out=viewOf(c,"fr")}catch(e){}
+  if(!out){let c;try{c=await sf("/cards/named?exact="+encodeURIComponent(name))}catch(e){c=await sf("/cards/named?fuzzy="+encodeURIComponent(name))}out=viewOf(c,"en")}
+  return CC[k]=out}
+async function showCard(name){const o=$("cv"),b=$("cv_b");o.style.display="block";b.innerHTML='<p class="mute">Chargement…</p>';
+  try{const v=await cardData(name);b.innerHTML=`<img src="${esc(v.img)}" alt="${esc(v.name)}"><h3>${esc(v.name)} <small class="mute">${esc(v.mc)}</small></h3><p class="mute">${esc(v.tl)}</p><pre>${esc(v.text)}</pre><small class="mute">${v.lang==="fr"?"Texte français":"Texte anglais (pas de version française trouvée)"}</small>`}
+  catch(e){b.innerHTML=`<div class="msg bad">Carte introuvable ou connexion indisponible : ${esc(e.message||e)}</div>`}}
+let CMDLD="";
+function cmdCard(){const el=$("cmd_card");if(!S.cmd){el.innerHTML="";return}const v=S.cmd.view;
+  if(!v){if(CMDLD!==S.cmd.name){CMDLD=S.cmd.name;const nm=S.cmd.name;cardData(nm).then(x=>{if(S.cmd&&S.cmd.name===nm){S.cmd.view=x;save();render()}}).catch(()=>{})}el.innerHTML="";return}
+  el.innerHTML=`<div class="cmdc"><img src="${esc(v.img)}" alt="${esc(v.name)}" data-card="${esc(S.cmd.name)}"><div><b>${esc(v.name)}</b> <small class="mute">${esc(v.mc)}</small><p class="mute">${esc(v.tl)}</p><pre>${esc(v.text)}</pre><small class="mute">${v.lang==="fr"?"Texte français":"Texte anglais (pas de version française trouvée)"}</small></div></div>`}
+/* ---- Suggestions au fil de la frappe ---- */
+let sugT=null,sugN=0;
+function sugInput(){clearTimeout(sugT);const q=$("p_cmd").value.trim().replace(/["\\]/g,"");if(q.length<2){$("sug").style.display="none";return}sugT=setTimeout(()=>suggest(q),250)}
+async function suggest(q){const n=++sugN;let l=[];
+  try{l=await sfs("is:commander f:commander "+q);
+    if(!l.length){try{l=(await sf("/cards/search?include_multilingual=true&unique=cards&q="+encodeURIComponent("is:commander f:commander "+q))).data||[]}catch(e){}}}catch(e){}
+  if(n!==sugN)return;const box=$("sug");l=l.slice(0,8);
+  if(!l.length){box.style.display="none";return}
+  box.innerHTML=l.map(c=>`<button type="button" data-sug="${esc(c.name)}">${esc(c.name)} <small class="mute">${esc(c.type_line||"")}</small></button>`).join("");box.style.display="block"}
+async function loadCmd(){const n=$("p_cmd").value.trim();if(!n)throw new Error("Commandant non renseigné");$("sug").style.display="none";
+  let c;try{c=await sf("/cards/named?fuzzy="+encodeURIComponent(n))}catch(e){
+    const d=await sf("/cards/search?include_multilingual=true&unique=cards&q="+encodeURIComponent('"'+n+'"'));if(!d.data||!d.data.length)throw e;c=d.data[0]}
+  S.cmd={name:c.name,ci:c.color_identity,mc:c.mana_cost||"",cmc:c.cmc,zone:"command",tax:2,leg:c.legalities.commander,tl:c.type_line};store(c);
   S.p.p_cmd=c.name;S.p.p_col=c.color_identity.join("")||"incolore";S.p.p_cmc=c.cmc;save();render();
-  $("cmd_info").innerHTML=`${esc(c.name)} — ${esc(c.mana_cost||"")} — ${esc(c.type_line)} — Commander : ${c.legalities.commander==="legal"?"légal":"non légal"}`}
+  $("cmd_info").innerHTML=cmdTxt();
+  try{S.cmd.view=await cardData(c.name);save();render()}catch(e){}
+  try{await loadEdh()}catch(e){$("edh_info").textContent="EDHREC indisponible : "+e.message}}
+function slug(n){return n.split(" // ")[0].normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/['’,]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+async function edhGet(path){const r=await fetch("https://json.edhrec.com/pages/"+path+".json");if(!r.ok)throw new Error("EDHREC code "+r.status);return r.json()}
+function edhParse(d){const cl=((d.container||{}).json_dict||{}).cardlists||[],cards={};
+  cl.forEach(l=>(l.cardviews||[]).forEach(v=>{if(!v.name)return;const pot=v.potential_decks||0,pct=pot?Math.round(100*(v.inclusion||v.num_decks||0)/pot):0,o=cards[v.name];
+    if(!o||pct>o.pct)cards[v.name]={pct,syn:Math.round((v.synergy||0)*100)}}));return cards}
+async function loadEdh(){const sl=slug(S.cmd.name),prev=S.edh&&S.edh.slug;let d;
+  try{d=await edhGet("commanders/"+sl)}catch(e){S.edhErr=e.message;S.edh=null;save();render();throw e}
+  S.edhErr=null;const cards=edhParse(d),jd=(d.container||{}).json_dict||{};
+  const th=((d.panels||{}).taglinks||[]).filter(t=>t.slug).map(t=>({n:t.value||t.slug,s:t.slug,c:t.count||0})).sort((a,b)=>b.c-a.c);
+  S.edh={slug:sl,themes:th,cards,n:(jd.card||{}).num_decks||0,land:d.land||0,
+    avg:{creature:d.creature,instant:d.instant,sorcery:d.sorcery,artifact:d.artifact,enchantment:d.enchantment,land:d.land,basic:d.basic,nonbasic:d.nonbasic},
+    curve:(d.panels||{}).mana_curve||null,similar:d.similar||[]};
+  syncCom();
+  if(prev!==undefined&&prev!==sl){S.p.p_sman=false;S.p.p_wman=false;S.p.p_lman=false;S.p.p_s1=S.p.p_s2=S.p.p_s3="";S.p.p_tt="";S.p.p_compn="";S.p.p_comp=""}
+  if(!S.p.p_s1&&!S.p.p_s2&&!S.p.p_s3&&!S.p.p_sman)proposeStrat();
+  if(!S.p.p_lman&&S.edh.land)S.p.p_lands=String(S.edh.land);
+  save();render();
+  if(!Object.keys(cards).length)$("edh_info").textContent="EDHREC reçu mais format inattendu. Clés : "+Object.keys(d).slice(0,15).join(", ")}
+function fillThemes(){const e=S.edh,el=$("edh_info");
+  if(e&&Object.keys(e.cards).length){const a=e.avg||{};el.innerHTML=`EDHREC : ${e.n?e.n+" decks · ":""}${Object.keys(e.cards).length} cartes · ${e.themes.length} thèmes.`+(a.land?` Deck moyen : ${a.land} terrains, ${a.creature||"?"} créatures, ${a.artifact||"?"} artefacts, ${a.enchantment||"?"} enchantements, ${a.instant||"?"} éphémères, ${a.sorcery||"?"} rituels.`:"")}else el.innerHTML="";
+  $("lands_hint").textContent=e&&e.land?"Moyenne EDHREC pour ce commandant : "+e.land+" terrains (proposé automatiquement, tu peux le changer).":""}
+function edhWarn(){const e=S.edh,w=$("edh_warn");let h="";
+  if(S.edhErr)h=`<div class="msg bad">EDHREC n'a pas de page pour ce commandant (${esc(S.edhErr)}). Le Lab ne saura pas ce que les joueurs jouent avec lui : vérifie le nom, ou choisis tes stratégies à la main.</div>`;
+  else if(e&&e.n){const sim=(e.similar||[]).length?" Commandants proches sur EDHREC : "+e.similar.map(esc).join(", ")+".":"";
+    if(e.n<100)h=`<div class="msg bad">Très peu de données EDHREC pour ce commandant (${e.n} decks). Les suggestions du Lab seront peu fiables.${sim}</div>`;
+    else if(e.n<500)h=`<div class="msg warn">Peu de données EDHREC pour ce commandant (${e.n} decks). Les suggestions seront moins précises.${sim}</div>`}
+  if(w.dataset.h!==h){w.innerHTML=h;w.dataset.h=h}}
 async function build(){
   const log=$("b_log"),btn=$("b_go");let L="";const say=(c,t)=>{L+=`<div class="msg ${c}">${t}</div>`;log.innerHTML=L};
-  if(!S.p.p_cmd){alert("Renseigne d'abord le commandant dans l'onglet Projet.");return}
-  if(S.cards.some(c=>!c.l)&&!confirm("Les cartes non verrouillées iront en Réserve et seront remplacées. Continuer ?"))return;
+  if(!S.p.p_cmd){alert("Renseigne d'abord le commandant dans l'étape Plan.");return}
+  if(S.manual&&S.cards.length&&!confirm("Tu as modifié le deck à la main. La reconstruction le remplace entièrement (la Réserve n'est pas touchée). Continuer ?"))return;
   btn.disabled=true;log.innerHTML='<div class="msg">Connexion à Scryfall…</div>';
   try{
     await loadCmd();
-    const ci=S.cmd.ci.join("")||"c",base=`f:commander id<=${ci}`,{out:sq,unk}=stratQ();
+    const ci=S.cmd.ci.join("")||"c",base=`f:commander id<=${ci}`,sel=stratSel(S);
     const roles=new Map(),lists={},syn=[],rs=c=>roles.get(c.name)||new Set();
     const reg=(l,r)=>l.forEach(c=>{if(!roles.has(c.name))roles.set(c.name,new Set());roles.get(c.name).add(r)});
     for(const r of Object.keys(Q)){log.innerHTML=L+`<div class="msg">Recherche : ${r}…</div>`;lists[r]=await sfs(`${base} ${Q[r]}`);reg(lists[r],r)}
-    for(const [lab,q] of sq){log.innerHTML=L+`<div class="msg">Recherche : ${esc(lab)}…</div>`;const l=await sfs(`${base} ${q}`);syn.push([lab,l]);reg(l,"Synergie")}
+    let tc={};
+    for(const x of sel){log.innerHTML=L+`<div class="msg">Recherche : ${esc(x.lab)}…</div>`;let l=[];
+      if(x.k==="edh"){try{if(!S.edh)throw new Error("données EDHREC absentes");const cm=edhParse(await edhGet("commanders/"+S.edh.slug+"/"+x.slug));Object.assign(tc,cm);
+        l=await byNames(Object.entries(cm).filter(([n,e])=>e.syn>=5||e.pct>=25).sort((a,b)=>(b[1].pct+2*b[1].syn)-(a[1].pct+2*a[1].syn)).slice(0,120).map(y=>y[0]))}catch(e){say("warn","Stratégie « "+esc(x.lab)+" » : "+esc(e.message))}}
+      else l=await sfs(`${base} ${x.q}`);
+      syn.push([x.lab,l,x.w]);reg(l,"Synergie")}
     const flex=await sfs(`${base} -t:land`);
-    S.cards.filter(c=>!c.l).forEach(c=>S.res.push({...c,why:"Remplacé par une nouvelle construction",hist:[...(c.hist||[]),day()+" Deck → Réserve"]}));
-    S.cards=S.cards.filter(c=>c.l);
-    const v=id=>+$(id).value||0,tg={Terrain:v("b_t"),Ramp:v("b_ramp"),Pioche:v("b_draw"),Wincon:v("b_win"),Interaction:v("b_int"),Protection:v("b_pro")};
+    const eMap=Object.assign({},(S.edh&&S.edh.slug===slug(S.cmd.name)?S.edh.cards:{}),tc),edhPool=[];
+    const en=Object.entries(eMap).filter(([n,e])=>e.syn>=5||e.pct>=25).sort((a,b)=>(b[1].pct+2*b[1].syn)-(a[1].pct+2*a[1].syn)).slice(0,150).map(x=>x[0]);
+    if(en.length)log.innerHTML=L+'<div class="msg">Recherche : cartes EDHREC…</div>';
+    edhPool.push(...await byNames(en));
+    S.cards=[];
+    const pr=c=>+(c.prices&&(c.prices.eur||c.prices.usd))||0,bud=+S.p.p_bud||0;let spent=0;
+    const excl=new Set((S.p.p_excl||"").split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean));
+    const must=(S.p.p_must||"").split("\n").map(x=>x.trim()).filter(Boolean);
+    if(must.length){log.innerHTML=L+'<div class="msg">Recherche : cartes obligatoires…</div>';const got=await byNames(must,true),low=new Set(got.map(c=>c.name.toLowerCase()));
+      must.filter(n=>!low.has(n.toLowerCase())).forEach(n=>say("warn","Carte obligatoire introuvable : "+esc(n)));
+      got.forEach(c=>{if(S.cards.some(k=>k.n===c.name))return;
+        if(c.legalities.commander!=="legal"){say("warn","Carte obligatoire non légale : "+esc(c.name));return}
+        if(!c.color_identity.every(x=>S.cmd.ci.includes(x))){say("warn","Carte obligatoire hors identité couleur : "+esc(c.name));return}
+        const r=store(c);spent+=pr(c);S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:roleOf(r.an.p),g:!!c.game_changer,mc:r.mc,l:true,w:"Carte obligatoire (ton choix)"})})}
+    const v=id=>+$(id).value||0,tg={Terrain:+(S.p.p_lands||36),Ramp:v("b_ramp"),Pioche:v("b_draw"),Wincon:v("b_win"),Interaction:v("b_int"),Protection:v("b_pro")};
     tg.Synergie=Math.max(0,99-Object.values(tg).reduce((a,b)=>a+b,0));
-    const b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,pri=(S.p.p_pri||"").toLowerCase();let gc=S.cards.filter(c=>c.g).reduce((a,c)=>a+c.q,0);
+    const b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,prs=[S.p.p_pr1,S.p.p_pr2].map(x=>(x||"").toLowerCase()),prw=nm=>{const i=prs.indexOf(nm);return i<0?0:[1,.7][i]};let gc=S.cards.filter(c=>c.g).reduce((a,c)=>a+c.q,0);
     const taken=new Set(S.cards.map(c=>c.n));taken.add(S.cmd.name);
-    const sc=c=>10-Math.log10(c.edhrec_rank||60000)*2-(/vitesse/.test(pri)?c.cmc*.3:0)-(/budget/.test(pri)?(+(c.prices&&(c.prices.eur||c.prices.usd))||0)*.05:0)+1.5*Math.max(0,rs(c).size-1);
-    const pick=(list,role,n,lab)=>{let k=0;list.filter(c=>!taken.has(c.name)&&c.legalities.commander==="legal"&&!/Land/.test(c.type_line)).map(c=>[c,sc(c)]).sort((a,b)=>b[1]-a[1]).forEach(([c])=>{
+    const sc=c=>10-Math.log10(c.edhrec_rank||60000)*2-c.cmc*.3*prw("vitesse")-pr(c)*.05*prw("budget")+1.5*Math.max(0,rs(c).size-1)+(eMap[c.name]?eMap[c.name].pct/12+eMap[c.name].syn/10:0);
+    const pick=(list,role,n,lab)=>{let k=0;list.filter(c=>!taken.has(c.name)&&!excl.has(c.name.toLowerCase())&&(!bud||(pr(c)<=bud*.15&&spent+pr(c)<=bud))&&c.legalities.commander==="legal"&&!/Land/.test(c.type_line)).map(c=>[c,sc(c)]).sort((a,b)=>b[1]-a[1]).forEach(([c])=>{
       if(k>=n||(c.game_changer&&gc>=maxGC))return;const oth=[...rs(c)].filter(x=>x!==role);
-      S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:role,g:!!c.game_changer,mc:c.mana_cost||"",w:`${role}${lab?" ("+lab+")":""} · rang EDHREC ${c.edhrec_rank||"n/d"} · MV ${c.cmc}${oth.length?" · aussi "+oth.join(", "):""}${c.game_changer?" · Game Changer":""}`});
-      taken.add(c.name);if(c.game_changer)gc++;k++});return k};
+      S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:role,g:!!c.game_changer,mc:c.mana_cost||"",w:`${role}${lab?" ("+lab+")":""} · rang EDHREC ${c.edhrec_rank||"n/d"} · MV ${c.cmc}${oth.length?" · aussi "+oth.join(", "):""}${eMap[c.name]?" · EDHREC "+eMap[c.name].pct+"%"+(eMap[c.name].syn?" (synergie "+(eMap[c.name].syn>0?"+":"")+eMap[c.name].syn+")":""):""}${c.game_changer?" · Game Changer":""}`});
+      taken.add(c.name);spent+=pr(c);store(c);if(c.game_changer)gc++;k++});return k};
     const need=r=>Math.max(0,tg[r]-cnt("r",r));
     pick(lists.Ramp,"Ramp",need("Ramp"));pick(lists.Pioche,"Pioche",need("Pioche"));
     const N0=need("Synergie");let done=0;
-    syn.forEach(([lab,l],i)=>{const w=syn.length===1?1:syn.length===2?[.6,.4][i]:(i===0?.4:.6/(syn.length-1));done+=pick(l,"Synergie",i===syn.length-1?N0-done:Math.round(N0*w),lab)});
+    syn.forEach(([lab,l,w],i)=>{done+=pick(l,"Synergie",i===syn.length-1?N0-done:Math.round(N0*w),lab)});
     if(need("Synergie")>0)pick(syn.flatMap(x=>x[1]),"Synergie",need("Synergie"),"stratégies");
+    if(need("Synergie")>0)pick(edhPool,"Synergie",need("Synergie"),"EDHREC");
     if(need("Synergie")>0)pick(flex,"Synergie",need("Synergie"),"populaires");
     pick(lists.Wincon,"Wincon",need("Wincon"));pick(lists.Interaction,"Interaction",need("Interaction"));pick(lists.Protection,"Protection",need("Protection"));
     const nl=Math.max(0,tg.Terrain-cnt("t","Terrain")),nb=Math.round(nl*.3);
-    if(nb){log.innerHTML=L+'<div class="msg">Recherche : terrains…</div>';let k=0;(await sfs(`${base} t:land -t:basic o:add`)).filter(c=>!taken.has(c.name)&&c.legalities.commander==="legal").forEach(c=>{if(k>=nb)return;
-      S.cards.push({q:1,n:c.name,c:0,t:"Terrain",r:"Autre",g:!!c.game_changer,mc:"",w:`Terrain · rang EDHREC ${c.edhrec_rank||"n/d"}`});taken.add(c.name);k++})}
+    if(nb){log.innerHTML=L+'<div class="msg">Recherche : terrains…</div>';let k=0;(await sfs(`${base} t:land -t:basic o:add`)).sort((a,b)=>((eMap[b.name]||{}).pct||0)-((eMap[a.name]||{}).pct||0)).filter(c=>!taken.has(c.name)&&!excl.has(c.name.toLowerCase())&&c.legalities.commander==="legal").forEach(c=>{if(k>=nb)return;
+      S.cards.push({q:1,n:c.name,c:0,t:"Terrain",r:"Autre",g:!!c.game_changer,mc:"",w:`Terrain · rang EDHREC ${c.edhrec_rank||"n/d"}`});taken.add(c.name);store(c);k++})}
     const rest=Math.max(0,tg.Terrain-cnt("t","Terrain")),cols=S.cmd.ci,BAS={W:"Plains",U:"Island",B:"Swamp",R:"Mountain",G:"Forest"};
     if(rest){const W="Terrain de base réparti selon les symboles de mana du deck";
       if(!cols.length)S.cards.push({q:rest,n:"Wastes",c:0,t:"Terrain",r:"Autre",g:false,mc:"",w:W});
       else{const txt=[...S.cards.map(c=>c.mc||""),S.cmd.mc].join(""),wt=cols.map(x=>1+(txt.match(new RegExp("\\{"+x+"\\}","g"))||[]).length),tot=wt.reduce((a,c)=>a+c,0),al=wt.map(x=>Math.floor(rest*x/tot));
         let left=rest-al.reduce((a,c)=>a+c,0);for(let i=0;left>0;i=(i+1)%al.length,left--)al[i]++;
         cols.forEach((x,i)=>{if(al[i])S.cards.push({q:al[i],n:BAS[x],c:0,t:"Terrain",r:"Autre",g:false,mc:"",w:W})})}}
-    save();render();
+    S.manual=false;syncCom();save();render();
     [["Terrain","Terrains"],["Ramp","Ramp"],["Pioche","Pioche"],["Synergie","Synergie"],["Wincon","Wincon"],["Interaction","Interaction"],["Protection","Protection"]].forEach(([k,l])=>{const g=k==="Terrain"?cnt("t","Terrain"):cnt("r",k);say(g>=tg[k]?"ok":"warn",`${l} : ${g} / ${tg[k]}`)});
-    if(unk.length)say("warn","Stratégie non reconnue : "+esc(unk.join(", "))+". Utilise la requête Scryfall de synergie dans Projet.");
+    if(!sel.length)say("warn","Aucune stratégie choisie : la synergie vient des cartes populaires. Choisis tes stratégies dans l'étape Plan.");
+    if(bud)say(spent<=bud?"ok":"warn",`Budget estimé (hors terrains de base) : ${spent.toFixed(0)} € / ${bud} €`);
     say(total()===99?"ok":"warn",`Terminé : ${total()} / 99 cartes. Regarde Diagnostic, puis verrouille ce que tu gardes.`);
   }catch(e){say("bad","Erreur : "+esc(e.message||e)+". Vérifie ta connexion internet, puis réessaie.")}
   btn.disabled=false}
@@ -359,40 +679,71 @@ async function verify(){const o=$("v_out");o.innerHTML='<div class="msg">Vérifi
   try{const names=[...new Set(S.cards.map(c=>c.n))],nf=[],ill=[],oi=[];
     for(let i=0;i<names.length;i+=75){const d=await sf("/cards/collection",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifiers:names.slice(i,i+75).map(name=>({name}))})});
       (d.not_found||[]).forEach(x=>nf.push(x.name));
-      d.data.forEach(c=>S.cards.filter(k=>k.n.toLowerCase()===c.name.toLowerCase()||c.name.toLowerCase().startsWith(k.n.toLowerCase()+" //")).forEach(k=>{
-        k.n=c.name;k.c=c.cmc;k.t=tmap(c.type_line);k.g=!!c.game_changer;k.mc=c.mana_cost||"";
-        if(c.legalities.commander!=="legal")ill.push(c.name);if(S.cmd&&!c.color_identity.every(x=>S.cmd.ci.includes(x)))oi.push(c.name)}))}
+      d.data.forEach(c=>{store(c);S.cards.filter(k=>k.n.toLowerCase()===c.name.toLowerCase()||c.name.toLowerCase().startsWith(k.n.toLowerCase()+" //")).forEach(k=>{
+        k.n=c.name;k.c=c.cmc;k.t=tmap(c.type_line);k.g=!!c.game_changer;k.mc=c.mana_cost||"";if(k.r==="Autre"&&k.t!=="Terrain"){k.r=roleOf(eff(k).p)}
+        if(c.legalities.commander!=="legal")ill.push(c.name);if(S.cmd&&!c.color_identity.every(x=>S.cmd.ci.includes(x)))oi.push(c.name)})})}
     save();render();
     o.innerHTML=(nf.length?`<div class="msg bad">Introuvables : ${esc(nf.join(", "))}</div>`:"")+(ill.length?`<div class="msg bad">Non légales en Commander : ${esc(ill.join(", "))}</div>`:"")+(oi.length?`<div class="msg bad">Hors identité couleur du commandant : ${esc(oi.join(", "))}</div>`:"")+(nf.length+ill.length+oi.length?"":`<div class="msg ok">${names.length} cartes vérifiées : toutes existent et sont légales${S.cmd?" dans l'identité du commandant":" (charge le commandant pour contrôler l'identité couleur)"}.</div>`)
   }catch(e){o.innerHTML=`<div class="msg bad">Erreur : ${esc(e.message||e)}</div>`}}
+function fiche(i){const c=S.cards[i],r=db(c),b=$("fiche");b.dataset.i=i;b.style.display="block";
+  if(!r){b.innerHTML=`<h2>${esc(c.n)}</h2><div class="msg warn">Pas de données complètes (terrain de base, ou liste jamais vérifiée). Lance « Vérifier avec Scryfall ».</div><button class="go sec" id="fx_x">Fermer</button>`;return}
+  const e=eff(c);
+  b.innerHTML=`<h2>${esc(r.n)} <small class="mute">${esc(r.mc)} · MV ${r.cmc}</small></h2><p class="mute">${esc(r.tl)}${r.sup.includes("Legendary")?" · Légendaire":""}${r.gc?" · Game Changer":""}${r.com?" · EDHREC "+r.com.pct+"%":""}</p><p style="white-space:pre-wrap;font-size:.9rem">${esc(r.ox)}</p>
+<h3>Détecté automatiquement</h3><p>Principale : <b>${r.an.p}</b>${r.an.pc?" (conditionnelle : "+r.an.pc+")":""} · Secondaires : ${r.an.s.join(", ")||"—"}</p>${r.an.c.length?`<p>Conditionnelles : ${r.an.c.map(x=>esc(x.f)+" ("+x.cond+", fiabilité "+x.fi+")").join(" ; ")}</p>`:""}<p>Tags : ${esc(r.an.tags.join(", ")||"—")}</p>
+<h3>Ta validation${r.fx?" (corrigée le "+r.fx.d+")":""}</h3><label>Fonction principale</label><select id="fx_p">${FUNCS.map(f=>`<option${f===e.p?" selected":""}>${f}</option>`).join("")}</select>
+<label>Fonctions secondaires</label><div class="row">${FUNCS.map(f=>`<label style="margin:0;flex:0 0 auto"><input type="checkbox" style="width:auto" class="fxs" value="${f}"${e.s.includes(f)?" checked":""}> ${f}</label>`).join("")}</div>
+<button class="go" id="fx_ok">Valider</button> <button class="go sec" id="fx_rs">Revenir à la détection</button> <button class="go sec" id="fx_x">Fermer</button>`}
+function fiheClick(e){const b=$("fiche"),i=+b.dataset.i,c=S.cards[i],r=c&&db(c),id=e.target.id;
+  if(id==="fx_x"){b.style.display="none";return}if(!r)return;
+  if(id==="fx_ok"){const p=$("fx_p").value;r.fx={p,s:[...b.querySelectorAll(".fxs:checked")].map(x=>x.value).filter(x=>x!==p),src:"user",d:day()};c.r=roleOf(p);save();render();fiche(i)}
+  else if(id==="fx_rs"){delete r.fx;c.r=roleOf(r.an.p);save();render();fiche(i)}}
+function objUI(){S.obj=S.obj||[];$("o_list").innerHTML=S.obj.map((o,i)=>`<div class="msg ok">${esc(o.a)} <button class="lnk" data-card="${esc(o.n)}"><b>${esc(o.n)}</b></button> au tour ${o.t}<button data-od="${i}" aria-label="Supprimer" style="float:right;background:none;border:0;color:var(--bad);cursor:pointer">✕</button></div>`).join("")||'<small class="mute">Aucun objectif pour l\'instant.</small>'}
+async function loadTribes(){try{const c=localStorage.getItem("cdl_tr");if(c){TRIBES=JSON.parse(c);return}const d=await sf("/catalog/creature-types");if(d.data&&d.data.length){TRIBES=d.data;localStorage.setItem("cdl_tr",JSON.stringify(TRIBES))}}catch(e){}}
+async function byNames(nm,all){const out=[];for(let i=0;i<nm.length;i+=75){const d=await sf("/cards/collection",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifiers:nm.slice(i,i+75).map(name=>({name}))})});out.push(...d.data.filter(c=>all||c.color_identity.every(x=>S.cmd.ci.includes(x))))}return out}
 function init(){
-  load();S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
-  $("nav").innerHTML=TABS.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join("");
-  $("nav").onclick=e=>{if(e.target.dataset.k)nav(e.target.dataset.k)};
-  $("home_btn").onclick=showHome;$("new_project_btn").onclick=createProject;
-  $("toggle_archived_btn").onclick=()=>{SHOW_ARCHIVED=!SHOW_ARCHIVED;$("toggle_archived_btn").textContent=SHOW_ARCHIVED?"Masquer les archives":"Afficher les archives";renderProjects()};
-  $("project_list").onclick=e=>{const d=e.target.dataset;if(d.projectOpen)setActiveProject(d.projectOpen);else if(d.projectDuplicate)duplicateProject(d.projectDuplicate);else if(d.projectRename)renameProject(d.projectRename);else if(d.projectArchive)archiveProject(d.projectArchive);else if(d.projectDelete)deleteProject(d.projectDelete)};
-  $("compare_btn").onclick=compareProjects;
-  $("topbar").onclick=e=>{const k=e.target.dataset.shortcut;if(k)nav(k)};
+  load();S.db=S.db||{};S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
+  $("nav").innerHTML=NAVB.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join("");
+  $("nav").onclick=e=>{if(e.target.dataset.k)go(e.target.dataset.k)};
+  $("home_btn").onclick=()=>go("accueil");
+  $("np_go").onclick=()=>{const n=$("np_n").value.trim();if(!n){$("np_n").focus();return}$("np_n").value="";newProject(n);loadCmd().catch(e=>{$("cmd_info").textContent="Commandant non chargé : "+e.message})};
+  $("ac_list").onclick=e=>{const d=e.target.dataset;if(d.o)openProject(d.o);else if(d.dp)dupProject(d.dp);else if(d.ar)archProject(d.ar);else if(d.dl&&confirm("Supprimer ce projet et tout son contenu ?"))delProject(d.dl)};
+  $("cmp_go").onclick=()=>{const ids=[...document.querySelectorAll(".cmpck:checked")].map(x=>x.value);$("cmp_out").innerHTML=ids.length===2?cmpProjects(ids[0],ids[1]):'<div class="msg warn">Coche exactement deux projets.</div>'};
   opt($("c_t"),TYPES);opt($("c_r"),ROLES);opt($("pb_g"),["Terrain",...ROLES,"Créature","Artefact","Enchantement","Éphémère"]);
-  PF.forEach(k=>$(k).addEventListener("input",()=>{S.p[k]=$(k).value;save();diag();$("ex").value=JSON.stringify(S)}));
+  PF.forEach(k=>$(k).addEventListener("input",()=>{S.p[k]=$(k).value;
+    if(/^p_s[123]$/.test(k)){S.p.p_sman=true;if(S.p[k]==="tribal"&&!S.p.p_tt)S.p.p_tt=autoTribe();if(!S.p.p_wman)autoW()}
+    if(/^p_w[123]$/.test(k))S.p.p_wman=true;
+    if(k==="p_lands")S.p.p_lman=true;
+    save();diag();planUI();if(k==="p_br")brk();$("ex").value=JSON.stringify(S)}));
+  document.querySelectorAll(".ttsel").forEach(sl=>sl.addEventListener("input",()=>{S.p.p_tt=sl.value;S.p.p_sman=true;if(!S.p.p_wman)autoW();save();planUI()}));
+  Object.values(G.projects).forEach(pr=>migPlan(pr.S));loadTribes().then(()=>{fillStrat();render()});
+  $("p_cmd").addEventListener("input",sugInput);
+  $("p_cmd").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();clearTimeout(sugT);sugN++;loadCmd().catch(er=>{$("cmd_info").textContent="Erreur : "+er.message})}});
+  $("sug").onclick=e=>{const b=e.target.closest("[data-sug]");if(!b)return;$("p_cmd").value=b.dataset.sug;S.p.p_cmd=b.dataset.sug;$("sug").style.display="none";loadCmd().catch(er=>{$("cmd_info").textContent="Erreur : "+er.message})};
+  document.addEventListener("click",e=>{
+    const c=e.target.closest("[data-card]");if(c){e.preventDefault();showCard(c.dataset.card);return}
+    if(e.target.id==="cv"||e.target.id==="cv_x")$("cv").style.display="none";
+    if(!e.target.closest("#sug")&&e.target.id!=="p_cmd")$("sug").style.display="none"});
+  $("plan_build").onclick=()=>{if(!S.p.p_cmd){alert("Choisis d'abord un commandant.");$("p_cmd").focus();return}go("construire");build()};
+  $("o_add").onclick=()=>{const n=$("o_n").value.trim();if(!n){$("o_n").focus();return}S.obj=S.obj||[];S.obj.push({a:$("o_a").value,n,t:+$("o_t").value||5});$("o_n").value="";save();render()};
+  $("o_list").onclick=e=>{const i=e.target.dataset.od;if(i!==undefined){S.obj.splice(+i,1);save();render()}};
   $("add").onclick=()=>{const n=$("c_n").value.trim();if(!n)return $("c_n").focus();
-    addCard({q:+$("c_q").value||1,n,c:+$("c_c").value||0,t:$("c_t").value,r:$("c_r").value});
+    addCard({q:+$("c_q").value||1,n,c:+$("c_c").value||0,t:$("c_t").value,r:$("c_r").value});S.manual=true;
     $("c_n").value="";$("c_q").value=1;save();render();$("c_n").focus()};
   $("c_n").addEventListener("keydown",e=>{if(e.key==="Enter")$("add").click()});
-  $("tb").onclick=e=>{const d=e.target.dataset;if(d.d!==undefined){S.cards.splice(+d.d,1);save();render()}else if(d.m!==undefined)toRes(+d.m)};
+  $("tb").onclick=e=>{const d=e.target.dataset;if(d.d!==undefined){S.cards.splice(+d.d,1);S.manual=true;save();render()}else if(d.m!==undefined)toRes(+d.m);else if(d.f!==undefined)fiche(+d.f)};
+  $("fiche").onclick=fiheClick;$("f_f").innerHTML='<option value="">Toutes fonctions</option>'+FUNCS.map(x=>`<option>${x}</option>`).join("");$("f_f").onchange=e=>{F.f=e.target.value;render()};
   $("tb").onchange=e=>{const d=e.target.dataset;if(d.l!==undefined)S.cards[+d.l].l=e.target.checked;if(d.g!==undefined)S.cards[+d.g].g=e.target.checked;save();render()};
   $("f_t").innerHTML='<option value="">Tous types</option>'+TYPES.map(x=>`<option>${x}</option>`).join("");
   $("f_q").oninput=e=>{F.q=e.target.value.toLowerCase();render()};$("f_t").onchange=e=>{F.t=e.target.value;render()};$("f_s").onchange=e=>{F.s=e.target.value;render()};
   $("rs").onclick=e=>{const d=e.target.dataset;if(d.rr!==undefined)restore(+d.rr);else if(d.rx!==undefined&&confirm("Supprimer définitivement cette carte ?")){S.res.splice(+d.rx,1);save();render()}};
   $("b_go").onclick=build;$("v_go").onclick=verify;$("p_load").onclick=()=>loadCmd().catch(e=>{$("cmd_info").textContent="Erreur : "+e.message});$("s_go").onclick=()=>{simu();rep2()};
-  $("impgo").onclick=()=>{if(parse($("imp").value)){$("imp").value="";save();render()}};
+  $("impgo").onclick=()=>{if(parse($("imp").value)){$("imp").value="";S.manual=true;save();render();verify()}};
   $("cp").onclick=()=>copy($("dl"),$("cpm"));
   ["pb_g","pb_k","pb_pl"].forEach(id=>$(id).addEventListener("input",probas));
   $("exc").onclick=()=>copy($("ex"));
-  $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.format==="commander-deck-lab-project"&&o.project&&o.project.data){const name=prompt("Nom du projet importé",o.project.name||"Projet importé");if(name===null)return;const p={id:uid(),name:name.trim()||o.project.name||"Projet importé",nameEdited:true,data:normalizeData(clone(o.project.data)),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();showHome();}else if(o&&o.cards){const name=prompt("Nom du projet importé","Projet importé");if(name===null)return;const p={id:uid(),name:name.trim()||"Projet importé",nameEdited:true,data:normalizeData(clone(o)),archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};PROJECTS.push(p);ACTIVE_PROJECT_ID=p.id;S=clone(p.data);persistProjects();render();updateTopbar();showHome();}else alert("Format de sauvegarde non reconnu.")}catch(e){alert("Texte de sauvegarde invalide.")}};
-  $("exz").onclick=()=>{if(confirm("Réinitialiser le deck, la Réserve et les réglages de ce projet ? Le projet lui-même et les autres projets seront conservés.")){S=freshData();const p=activeProject();if(p)p.data=clone(S);save();PF.forEach(k=>{if($(k))$(k).value=""});render();nav("projet")}};
-  renderProjects();renderCompareOptions();updateTopbar();showHome();
+  $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.cards){Object.assign(G.db,o.db||{});S=o;S.p=S.p||{};S.res=S.res||[];S.db=G.db;save();render()}}catch(e){alert("Texte de sauvegarde invalide.")}};
+  $("exz").onclick=()=>{if(confirm("Vider ce projet ?")){S.p={};S.cards=[];S.res=[];delete S.edh;delete S.cmd;save();render()}};
+  go(G.cur?"plan":"accueil");
 }
 init();
 </script>
