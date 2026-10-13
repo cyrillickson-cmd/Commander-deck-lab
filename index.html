@@ -755,7 +755,7 @@ async function build(skip){
     cl.forEach(x=>{if(x.why&&(x.e.pct>=10||x.e.syn>=10||x.master))rej.push({n:x.n,why:x.why,s:x.s})});
     const elig=cl.filter(x=>!x.why).sort((a,b)=>b.s-a.s);
     S.cand=elig.map(x=>({n:x.n,s:Math.round(x.s*10)/10,pct:x.e.pct,syn:x.e.syn,fn:x.fn,gc:!!x.c.game_changer,ct:x.counter,p:pr(x.c)}));
-    S.landc=lands.filter(x=>!x.why&&!BASICS[x.n]).sort((a,b)=>b.e.pct-a.e.pct).map(x=>({n:x.n,pct:x.e.pct}));
+    S.landc=lands.filter(x=>!x.why&&!BASICS[x.n]).sort((a,b)=>b.e.pct-a.e.pct).map(x=>({n:x.n,pct:x.e.pct}));S.moreR={};
     /* 5. Sélection */
     const taken=new Map(),tgL=+(S.p.p_lands||37);let spent=0,gc=0,tut=0,ctr=0;const slots=Math.max(0,99-tgL);
     const lim=x=>{if(x.c.game_changer&&gc>=maxGC)return`Game Changer : ton Bracket ${b} en autorise ${maxGC} au maximum.`;
@@ -820,7 +820,17 @@ function deckStats(cards){const nl=cards.filter(c=>c.t!=="Terrain"),o={tot:0,lan
   o.f.Terrains=o.lands;o.cmc=q?sum/q:0;return o}
 const candRec=n=>S.db[n.toLowerCase()];
 function candCard(x,why){const r=candRec(x.n);if(!r)return null;const cs=front(S.cmd?S.cmd.name:"").split(",")[0];
-  return{q:1,n:r.n,c:r.cmc,t:tmap(r.tl),r:roleOf(x.fn[0]),g:!!r.gc,mc:r.mc,l:false,w:`Ajoutée depuis Améliorer. Jouée dans ${x.pct} % des decks de ${cs}`+(x.syn>=5?` (synergie +${x.syn})`:"")+".",h:`Rôle : ${x.fn.join(", ")} · MV ${r.cmc}.`,k:why||"—"}}
+  return{q:1,n:r.n,c:r.cmc,t:tmap(r.tl),r:roleOf(x.fn[0]),g:!!r.gc,mc:r.mc,l:false,w:x.ext?"Ajoutée depuis Améliorer. Trouvée par recherche Scryfall (même fonction), hors données EDHREC.":`Ajoutée depuis Améliorer. Jouée dans ${x.pct} % des decks de ${cs}`+(x.syn>=5?` (synergie +${x.syn})`:"")+".",h:`Rôle : ${x.fn.join(", ")} · MV ${r.cmc}.`,k:why||"—"}}
+const QR={Ramp:Q.Ramp,Pioche:Q.Pioche,Interaction:Q.Interaction,Protection:Q.Protection,Wincon:Q.Wincon,Balayage:'(o:"destroy all" OR o:"exile all" OR o:"each creature") -t:land'};
+async function amFetchMore(role){S.moreR=S.moreR||{};if(S.moreR[role])return;S.moreR[role]="loading";render();
+  try{const ci=(S.cmd.ci.join("")||"c"),base=`f:commander id<=${ci}`,today=new Date().toISOString().slice(0,10);let qs=[];
+    if(role==="Synergie"){stratSel(S).forEach(x=>{if(x.q)qs.push(x.q)});if(!qs.length)qs.push("-t:land")}else qs=[QR[role]||"-t:land"];
+    const have=new Set((S.cand||[]).map(x=>x.n.toLowerCase())),ex=new Set((S.p.p_excl||"").split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean)),add=[];
+    for(const q of qs){const l=await sfs(`${base} ${q} -t:land`);
+      l.slice(0,60).forEach(c=>{const k=c.name.toLowerCase();if(have.has(k)||ex.has(k)||(c.released_at||"")>today||c.legalities.commander!=="legal"||!c.color_identity.every(x=>S.cmd.ci.includes(x)))return;have.add(k);
+        store(c);const fn=fnList({n:c.name,t:tmap(c.type_line),r:"Synergie"});add.push({n:c.name,s:Math.round((10-Math.log10(c.edhrec_rank||60000)*2)*10)/10,pct:0,syn:0,fn,gc:!!c.game_changer,ct:isCounter(c),p:+(c.prices&&(c.prices.eur||c.prices.usd))||0,ext:true})})}
+    S.cand=(S.cand||[]).concat(add);S.moreR[role]=add.length}catch(e){S.moreR[role]=0}
+  save();render()}
 function amCands(role,all,outCard){
   if(role==="Terrains"){const inD=new Set(S.cards.map(c=>c.n.toLowerCase())),o=(S.landc||[]).filter(x=>!inD.has(x.n.toLowerCase())).slice(0,3).map(x=>({n:x.n,pct:x.pct,syn:0,fn:["Terrain"],land:true}));
     (S.cmd&&S.cmd.ci||[]).forEach(c=>{const nm={W:"Plains",U:"Island",B:"Swamp",R:"Mountain",G:"Forest"}[c];o.push({n:nm,pct:0,syn:0,fn:["Terrain"],land:true,basic:true})});
@@ -858,8 +868,10 @@ function amUI(){
   else if(m.pickOut){h+=`<label>Quelle carte retirer ?</label>`+amOutSel(m)}
   else h+=`<p>Carte retirée : <b>${esc(out?out.n:"")}</b> <small class="mute">(elle ira en Réserve)</small></p>`;
   if(!m.inCard){const cs=amCands(m.role,m.all,out);m.lastC=cs;
+    if(cs.length<5&&!m.all&&m.role!=="Terrains"&&!(S.moreR&&S.moreR[m.role]))setTimeout(()=>amFetchMore(m.role),0);
     h+=`<label>${m.mode==="rm"?"Remplaçantes proposées":"Propositions"} <small class="mute">(${m.all?"toutes fonctions":"même fonction : "+esc(m.role)})</small></label>`;
-    h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:`${x.pct} % des decks`+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button>`}).join(""):`<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>`;
+    if(S.moreR&&S.moreR[m.role]==="loading")h+=`<div class="msg">Recherche d'autres cartes sur Scryfall (même fonction)…</div>`;
+    h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:(x.ext?"Trouvée sur Scryfall (hors données EDHREC)":`${x.pct} % des decks`)+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button>`}).join(""):`${S.moreR&&S.moreR[m.role]==="loading"?"":'<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>'}`;
     h+=`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="am_all" style="width:auto"${m.all?" checked":""}> Voir toutes les fonctions</label>`;
     if(m.mode==="rm")h+=`<button class="prop${m.empty?" on":""}" data-empty="1">Laisser vide (le deck passera à ${total()-1} cartes)</button>`}
   const ready=(m.inCard||m.sel||m.empty)&&(out||!full||!(m.inCard||m.mode==="add"));
