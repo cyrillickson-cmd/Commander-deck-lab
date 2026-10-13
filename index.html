@@ -60,6 +60,8 @@ small,.mute{color:var(--mute)}
 .amb{position:sticky;top:0;z-index:6;padding:10px 14px}.mc{display:flex;gap:3px;align-items:flex-end;margin-top:6px}.mc i{background:var(--acc);border-radius:2px}
 button.mini{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;min-width:38px;height:34px;font-size:1.1rem;cursor:pointer}
 button.act{background:none;border:1px solid var(--line);color:var(--acc);border-radius:6px;padding:4px 8px;font-size:.82rem;cursor:pointer;margin-right:4px}
+.propw{display:flex;gap:8px;align-items:stretch}.propw .prop{flex:1 1 auto;width:auto}
+button.seeb{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--acc);border-radius:6px;padding:0 12px;margin:6px 0;font:inherit;font-size:.85rem;cursor:pointer}
 button.prop{display:block;width:100%;text-align:left;background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:9px;margin:6px 0;cursor:pointer;font:inherit}button.prop.on{border-color:var(--acc);background:var(--bg)}
 .cr details{margin-top:4px}.cr summary{color:var(--mute);font-size:.82rem;cursor:pointer}.cr details p{margin:4px 0;font-size:.88rem}
 </style>
@@ -862,16 +864,16 @@ function amUI(){
   $("am_undo").innerHTML=UNDO&&UNDO.pid===G.cur?`<button class="go sec" id="am_undo_b" style="margin-top:8px">↩ Annuler le dernier changement (${esc(UNDO.label)})</button>`:"";
   const box=$("am_box");if(!AM){box.style.display="none";box.innerHTML="";return}box.style.display="block";
   const m=AM,out=amOut(),full=total()>=99;let h="";
-  const title=m.inCard?`Ajouter <b>${esc(m.inCard.n)}</b>`:m.mode==="rm"?"Retirer une carte":m.mode==="rep"?`Remplacer <b>${esc(out?out.n:"")}</b>`:`Ajouter une carte (${esc(m.role)})`;
+  const title=m.inCard?`Ajouter <button class="lnk" data-card="${esc(m.inCard.n)}"><b>${esc(m.inCard.n)}</b></button>`:m.mode==="rm"?"Retirer une carte":m.mode==="rep"?`Remplacer <button class="lnk" data-card="${esc(out?out.n:"")}"><b>${esc(out?out.n:"")}</b></button>`:`Ajouter une carte (${esc(m.role)})`;
   h+=`<h2>${title}</h2>`;
   if(m.inCard||m.mode==="add"){if(full){h+=`<label>Le deck a déjà ${total()} cartes. Quelle carte retirer ?</label>`;h+=amOutSel(m)}else h+=`<div class="msg ok">Le deck a ${total()} cartes : il reste de la place, aucune carte à retirer.</div>`}
   else if(m.pickOut){h+=`<label>Quelle carte retirer ?</label>`+amOutSel(m)}
-  else h+=`<p>Carte retirée : <b>${esc(out?out.n:"")}</b> <small class="mute">(elle ira en Réserve)</small></p>`;
+  else h+=`<p>Carte retirée : <button class="lnk" data-card="${esc(out?out.n:"")}"><b>${esc(out?out.n:"")}</b></button> <small class="mute">(elle ira en Réserve)</small></p>`;
   if(!m.inCard){const cs=amCands(m.role,m.all,out);m.lastC=cs;
     if(cs.length<5&&!m.all&&m.role!=="Terrains"&&!(S.moreR&&S.moreR[m.role]))setTimeout(()=>amFetchMore(m.role),0);
     h+=`<label>${m.mode==="rm"?"Remplaçantes proposées":"Propositions"} <small class="mute">(${m.all?"toutes fonctions":"même fonction : "+esc(m.role)})</small></label>`;
     if(S.moreR&&S.moreR[m.role]==="loading")h+=`<div class="msg">Recherche d'autres cartes sur Scryfall (même fonction)…</div>`;
-    h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:(x.ext?"Trouvée sur Scryfall (hors données EDHREC)":`${x.pct} % des decks`)+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button>`}).join(""):`${S.moreR&&S.moreR[m.role]==="loading"?"":'<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>'}`;
+    h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<div class="propw"><button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:(x.ext?"Trouvée sur Scryfall (hors données EDHREC)":`${x.pct} % des decks`)+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button><button type="button" class="seeb" data-card="${esc(x.n)}" aria-label="Voir la carte ${esc(x.n)}">Voir la carte</button></div>`}).join(""):`${S.moreR&&S.moreR[m.role]==="loading"?"":'<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>'}`;
     h+=`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="am_all" style="width:auto"${m.all?" checked":""}> Voir toutes les fonctions</label>`;
     if(m.mode==="rm")h+=`<button class="prop${m.empty?" on":""}" data-empty="1">Laisser vide (le deck passera à ${total()-1} cartes)</button>`}
   const ready=(m.inCard||m.sel||m.empty)&&(out||!full||!(m.inCard||m.mode==="add"));
@@ -885,7 +887,8 @@ function amUI(){
   box.innerHTML=h}
 function amOutSel(m){const pool=m.mode==="rm"&&!m.inCard?amPool():S.cards.map((c,i)=>i).filter(i=>S.cards[i].t!=="Terrain"),sug=suggestOut(pool);
   const opts=[...pool].sort((a,b)=>(a===sug?-1:b===sug?1:0)).map(i=>{const c=S.cards[i];return`<option value="${i}"${i===m.outIdx?" selected":""}>${i===sug?"★ conseillée : ":""}${esc(c.n)} (${esc(c.r)}, MV ${c.c})${c.l?" 🔒":""}</option>`}).join("");
-  return`<select id="am_out">${opts}</select><small class="mute">★ = la carte que le Lab retirerait en premier (jamais une carte verrouillée).</small>`}
+  const cur=m.outIdx!=null&&S.cards[m.outIdx]?S.cards[m.outIdx]:(sug!=null?S.cards[sug]:null);
+  return`<select id="am_out">${opts}</select>${cur?`<button type="button" class="seeb" data-card="${esc(cur.n)}" style="margin:6px 0">Voir la carte à retirer : ${esc(cur.n)}</button><br>`:""}<small class="mute">★ = la carte que le Lab retirerait en premier (jamais une carte verrouillée).</small>`}
 function amApply(){const m=AM;if(!m)return;const out=amOut(),A=amAfter();
   if(out&&out.l&&!confirm("Cette carte est verrouillée. La retirer quand même ?"))return;
   UNDO={pid:G.cur,cards:JSON.stringify(S.cards),res:JSON.stringify(S.res),manual:!!S.manual,label:A.inc?(out?out.n+" → "+A.inc.n:"ajout de "+A.inc.n):"retrait de "+(out?out.n:"")};
