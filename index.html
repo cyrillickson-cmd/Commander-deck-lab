@@ -44,9 +44,9 @@ td button{background:none;border:0;color:var(--bad);cursor:pointer;font-size:1re
 h3{font:700 .95rem "Trebuchet MS",sans-serif;margin:14px 0 4px}td button[data-m],td button[data-rr]{color:var(--acc)}.big{font-size:2rem;font-weight:700}
 button.lnk,td button.lnk{background:none;border:0;color:var(--acc);font:inherit;text-align:left;padding:0;cursor:pointer}
 small,.mute{color:var(--mute)}
-#sug{display:none;border:1px solid var(--line);border-radius:6px;background:var(--panel);margin-top:2px;overflow:hidden}
-#sug button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);padding:10px;font:inherit;cursor:pointer}
-#sug button:last-child{border-bottom:0}
+#sug,.sugb{display:none;border:1px solid var(--line);border-radius:6px;background:var(--panel);margin-top:2px;overflow:hidden}
+#sug button,.sugb button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);padding:10px;font:inherit;cursor:pointer}
+#sug button:last-child,.sugb button:last-child{border-bottom:0}
 #cv{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:50;overflow:auto;padding:16px}
 #cv .cvp{max-width:420px;margin:12px auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
 #cv img{width:100%;border-radius:12px}
@@ -57,6 +57,10 @@ small,.mute{color:var(--mute)}
 .ms{display:inline-block;min-width:1.35em;height:1.35em;line-height:1.35em;border-radius:50%;text-align:center;font-size:.7rem;font-weight:700;margin-right:2px;color:#111;background:#cfcfcf;padding:0 1px}
 .msW{background:#f3eed7}.msU{background:#9fc7e8}.msB{background:#a79c97}.msR{background:#eb9a85}.msG{background:#9bc89b}.msn,.msC{background:#d0d0d0}
 .cr{padding:7px 0;border-bottom:1px solid var(--line)}.cr1{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}.cr1>span:first-child{flex:2 1 160px}.cr1 .cm{flex:0 0 auto;white-space:nowrap}
+.amb{position:sticky;top:0;z-index:6;padding:10px 14px}.mc{display:flex;gap:3px;align-items:flex-end;margin-top:6px}.mc i{background:var(--acc);border-radius:2px}
+button.mini{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;min-width:38px;height:34px;font-size:1.1rem;cursor:pointer}
+button.act{background:none;border:1px solid var(--line);color:var(--acc);border-radius:6px;padding:4px 8px;font-size:.82rem;cursor:pointer;margin-right:4px}
+button.prop{display:block;width:100%;text-align:left;background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:9px;margin:6px 0;cursor:pointer;font:inherit}button.prop.on{border-color:var(--acc);background:var(--bg)}
 .cr details{margin-top:4px}.cr summary{color:var(--mute);font-size:.82rem;cursor:pointer}.cr details p{margin:4px 0;font-size:.88rem}
 </style>
 </head>
@@ -97,6 +101,7 @@ small,.mute{color:var(--mute)}
 <label>Cartes exclues (une par ligne)</label><textarea id="p_excl" style="min-height:70px"></textarea></div>
 <div class="box"><h2>5. Objectifs</h2><small class="mute">Action + carte + tour. Ils servent à tester le deck dans l'étape Tester.</small>
 <div class="row" style="margin-top:8px"><div><select id="o_a"><option>Jouer</option><option>Avoir accès à</option></select></div><div style="flex:3 1 160px"><input id="o_n" placeholder="Carte (ex. The Great Henge)"></div><div style="flex:1 1 70px"><input id="o_t" type="number" min="1" max="12" value="5" aria-label="Tour"></div><div><button class="go" id="o_add" style="margin:0">Ajouter</button></div></div>
+<div class="sugb" id="o_sug"></div>
 <div id="o_list" style="margin-top:10px"></div></div>
 <div class="box"><button class="go" id="plan_build" style="margin:0;width:100%">Construire le deck</button><small id="plan_note" class="mute">Le Lab construit avec tes stratégies, tes priorités et tes contraintes, et te montre le déroulé dans l'étape Construire.</small></div>
 <small class="mute">Tout se sauvegarde automatiquement dans ce navigateur.</small></section>
@@ -117,21 +122,26 @@ small,.mute{color:var(--mute)}
 <div class="row"><div><label>1re priorité</label><select id="r_pr1"></select></div><div><label>2e priorité</label><select id="r_pr2"></select></div></div>
 <button class="go" id="r_go" style="width:100%">Reconstruire le deck</button></div></section>
 <section id="construction">
-<div class="box"><h2>Ajouter une carte</h2>
-<div class="row"><div style="flex:3 1 180px"><label>Nom</label><input id="c_n"></div>
-<div><label>Qté</label><input id="c_q" type="number" value="1" min="1"></div>
-<div><label>Coût (MV)</label><input id="c_c" type="number" value="0" min="0"></div></div>
-<div class="row"><div><label>Type</label><select id="c_t"></select></div><div><label>Rôle</label><select id="c_r"></select></div></div>
-<button class="go" id="add">Ajouter</button></div>
 <div class="box"><h2>Vérifier</h2><small class="mute">Contrôle chaque carte sur Scryfall : nom réel, coût, type, légalité Commander, identité couleur, Game Changer.</small><br><button class="go sec" id="v_go">Vérifier avec Scryfall</button><div id="v_out" style="margin-top:8px"></div></div>
 <div class="box"><h2>Importer une liste</h2>
 <small class="mute">Colle ici une liste exportée depuis Moxfield ou Archidekt (Export → texte), ou une carte par ligne : <b>1 Sol Ring</b>. Les cartes sont vérifiées automatiquement sur Scryfall après l'import. Les terrains de base sans coût sont comptés en Terrain si tu écris le type.</small>
 <textarea id="imp" placeholder="1 Sol Ring ; 1 ; Artefact ; Ramp&#10;10 Mountain ; 0 ; Terrain ; Autre"></textarea>
 <button class="go sec" id="impgo">Importer</button></div>
-<div class="box" id="fiche" style="display:none"></div>
-<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="n">Tri : nom</option><option value="c">Tri : MV</option><option value="t">Tri : type</option></select></div><small class="mute">Verr. = ne pas proposer au retrait. GC = Game Changer (à cocher toi-même).</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th>Réserve</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
 </section>
-
+<section id="amel"><div id="am_banner" class="box amb"></div>
+<div class="box" id="am_box" style="display:none"></div>
+<div class="box"><h2>Architecture du deck</h2><small class="mute">− retire une carte de ce rôle et propose une remplaçante. + ajoute une carte de ce rôle et en retire une autre : le deck reste à 99. Les cibles viennent du deck moyen EDHREC.</small>
+<div class="tw"><table><thead><tr><th>Rôle</th><th>Deck</th><th>Cible</th><th></th><th></th></tr></thead><tbody id="am_arch"></tbody></table></div><div id="am_undo"></div></div>
+<div class="box"><h2>Ajouter une carte</h2>
+<div class="row"><div style="flex:3 1 180px"><label>Nom</label><input id="c_n"></div>
+<div><label>Qté</label><input id="c_q" type="number" value="1" min="1"></div>
+<div><label>Coût (MV)</label><input id="c_c" type="number" value="0" min="0"></div></div>
+<div class="sugb" id="c_sug"></div>
+<div class="row"><div><label>Type</label><select id="c_t"></select></div><div><label>Rôle</label><select id="c_r"></select></div></div>
+<button class="go" id="add">Ajouter</button></div>
+<div class="box" id="fiche" style="display:none"></div>
+<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="type">Trier : type</option><option value="cmc">Trier : coût de mana</option><option value="col">Trier : couleur</option><option value="role">Trier : rôle</option><option value="n">Trier : nom</option></select><select id="f_first" aria-label="Type en premier"></select></div><small class="mute">Verr. = jamais proposée au retrait. GC = Game Changer (à cocher toi-même). Remplacer / Retirer envoient la carte en Réserve.</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
+<div class="box"><h2>Vérifier</h2><small class="mute">Contrôle chaque carte sur Scryfall (nom réel, légalité, identité couleur).</small><br><button class="go sec" id="v_go2">Vérifier avec Scryfall</button><div id="v_out2" style="margin-top:8px"></div></div></section>
 <section id="decklist"><div class="box"><h2>Decklist</h2><div id="dl_info" class="mute"></div>
 <textarea id="dl" readonly style="min-height:300px"></textarea>
 <button class="go" id="cp">Copier la decklist</button> <small id="cpm"></small></div></section>
@@ -169,7 +179,7 @@ small,.mute{color:var(--mute)}
 <script>
 const TYPES=["Terrain","Créature","Artefact","Enchantement","Éphémère","Rituel","Planeswalker","Autre"];
 const ROLES=["Ramp","Pioche","Interaction","Protection","Balayage","Synergie","Wincon","Autre"];
-const VIEWS={accueil:["accueil"],plan:["projet","export"],construire:["build","construction"],ameliorer:["diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"]};
+const VIEWS={accueil:["accueil"],plan:["projet","export"],construire:["build","construction"],ameliorer:["amel","diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"]};
 const NAVB=[["plan","Plan"],["construire","Construire"],["ameliorer","Améliorer"],["tester","Tester"],["decklist","Decklist"],["reserve","Réserve"]];
 const DEF={p_br:"3",p_vol:"Modéré",p_lands:"36",p_cmc:"3",p_w1:"50",p_w2:"30",p_w3:"20",p_comp:""};let V="accueil";
 const TARGETS={Ramp:[8,12],Pioche:[8,12],Interaction:[6,10],Balayage:[2,4],Protection:[3,6]};
@@ -225,12 +235,12 @@ function render(){
   if(V==="accueil")homeUI();else{$("pname").textContent=G.cur&&G.projects[G.cur]?G.projects[G.cur].name:"";brk()}
   $("cmd_info").innerHTML=S.cmd?cmdTxt():"";cmdCard();edhWarn();
   $("cnt").textContent=total();
-  $("tb").innerHTML=rows().map(({c,i})=>{const r=db(c),e=eff(c);return`<tr><td>${c.q}</td><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button> <button class="lnk" data-f="${i}" title="Fonctions détectées" aria-label="Fonctions détectées">ⓘ</button>${r&&r.sup.includes("Legendary")?" ★":""}</td><td>${esc(c.mc||"")}</td><td>${c.c}</td><td>${esc(r?r.tl.split(" // ")[0]:c.t)}</td><td>${e.p}${e.s.length?" +"+e.s.length:""}${r&&r.fx?" ✎":""}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button data-m="${i}" title="Vers la Réserve">→ R</button></td><td><button data-d="${i}" aria-label="Supprimer">✕</button></td></tr>`}).join("")||`<tr><td colspan="10" class="mute">Aucune carte.</td></tr>`;
+  const rw=rows();$("tb").innerHTML=rw.length?groupBy(rw,F.s,F.first,x=>x.c).map(([t,l])=>(t?`<tr><td colspan="9"><b>${esc(t)} (${l.reduce((a,x)=>a+x.c.q,0)})</b></td></tr>`:"")+l.map(({c,i})=>{const r=db(c),e=eff(c),mc=cardMana(c);return`<tr><td>${c.q}</td><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button> <button class="lnk" data-f="${i}" title="Fonctions détectées" aria-label="Fonctions détectées">ⓘ</button>${r&&r.sup.includes("Legendary")?" ★":""}</td><td>${mc?manaHtml(mc):""}</td><td>${c.c}</td><td>${esc(r?r.tl.split(" // ")[0]:c.t)}</td><td>${e.p}${e.s.length?" +"+e.s.length:""}${r&&r.fx?" ✎":""}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button class="act" data-rp="${i}">Remplacer</button><button class="act" data-rt="${i}">Retirer</button></td></tr>`}).join("")).join(""):`<tr><td colspan="9" class="mute">Aucune carte.</td></tr>`;
   const t=total();
   const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
   $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\n`:"")+(S.p.p_comp==="1"&&S.p.p_compn?`Compagnon\n1 ${S.p.p_compn}\n\n`:"")+(S.p.p_cmd?"Deck\n":"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
-  bt();diag();probas();fillObj();res();cls();rep2();
+  bt();amUI();diag();probas();fillObj();res();cls();rep2();
   $("ex").value=JSON.stringify(S);
 }
 function diag(){
@@ -241,7 +251,7 @@ function diag(){
   else{
     add(t===99?"ok":"warn",`${t} / 99 cartes.`);
     add(Math.abs(lands-tl)<=2?"ok":"warn",`${lands} terrains (objectif ${tl}).`);
-    Object.entries(TARGETS).forEach(([r,[a,b]])=>{const n=cnt("r",r);add(n>=a&&n<=b?"ok":n<a?"bad":"warn",`${r} : ${n} (cible ${a}–${b}).`)});
+    Object.entries(TARGETS).forEach(([r,[a,b]])=>{const n=deckStats(S.cards).f[r];if(S.need&&S.need[r]!==undefined&&NEEDR.includes(r)){const nd=S.need[r];add(Math.abs(n-nd)<=1?"ok":n<nd?"bad":"warn",`${r} : ${n} (deck moyen EDHREC : ${nd}).`)}else add(n>=a&&n<=b?"ok":n<a?"bad":"warn",`${r} : ${n} (cible ${a}–${b}).`)});
     const nl=S.cards.filter(c=>c.t!=="Terrain"),q=nl.reduce((a,c)=>a+c.q,0);
     if(q){const avg=nl.reduce((a,c)=>a+c.c*c.q,0)/q;add(avg<=3.4?"ok":"warn",`Coût moyen des sorts : ${avg.toFixed(2)}.`)}
     const dup=S.cards.filter(c=>c.q>1&&c.t!=="Terrain");if(dup.length)add("bad","Doublon hors terrains de base (règle Commander) : "+dup.map(c=>esc(c.n)).join(", "))
@@ -280,14 +290,13 @@ function parse(txt){
 function copy(el,msg){el.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}
   if(navigator.clipboard)navigator.clipboard.writeText(el.value).catch(()=>{});
   if(msg){msg.textContent=ok?"Copié.":"Sélectionné : copie avec ton menu.";}}
-const F={q:"",t:"",s:"n",f:""};
-function rows(){const a=S.cards.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(F.q)&&(!F.t||c.t===F.t)&&(!F.f||fnList(c).includes(F.f)));
-  a.sort((x,y)=>F.s==="c"?x.c.c-y.c.c||x.c.n.localeCompare(y.c.n):F.s==="t"?TYPES.indexOf(x.c.t)-TYPES.indexOf(y.c.t)||x.c.n.localeCompare(y.c.n):x.c.n.localeCompare(y.c.n));return a}
+const F={q:"",t:"",s:"type",f:"",first:"Créature"};
+function rows(){return S.cards.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(F.q)&&(!F.t||c.t===F.t)&&(!F.f||fnList(c).includes(F.f)))}
 const day=()=>new Date().toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
 function toRes(i){const c=S.cards[i];if(c.l&&!confirm("Carte verrouillée. La retirer quand même ?"))return;
   const w=prompt("Raison du retrait (facultatif)","")||"";S.cards.splice(i,1);S.manual=true;
   S.res.push({...c,why:w,hist:[...(c.hist||[]),day()+" Deck → Réserve"]});save();render()}
-function restore(i){const c=S.res[i];if(total()+c.q>99){alert("Le deck a déjà "+total()+" cartes. Retire d'abord une carte vers la Réserve, puis restaure "+c.n+".");return}
+function restore(i){const c=S.res[i];if(total()+c.q>99){amStart({mode:"add",role:c.r,pickOut:true,inCard:{...c,hist:[...(c.hist||[]),day()+" Réserve → Deck"]},fromRes:i});return}
   S.res.splice(i,1);c.hist.push(day()+" Réserve → Deck");S.cards.push(c);S.manual=true;save();render()}
 function res(){$("rs").innerHTML=S.res.map((c,i)=>`<tr><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button></td><td>${c.q}</td><td>${c.t}</td><td>${c.r}</td><td>${esc(c.why||"")}</td><td>${esc(c.hist.join(" ; "))}</td><td><button data-rr="${i}">Restaurer</button> <button data-rx="${i}">Suppr.</button></td></tr>`).join("")||`<tr><td colspan="7" class="mute">Réserve vide.</td></tr>`}
 function cls(){const g=S.cards.filter(c=>c.g),n=g.reduce((a,c)=>a+c.q,0),b=+(S.p.p_br||3),max=b<=2?0:b===3?3:99;
@@ -351,20 +360,22 @@ async function sf(path,opt){await sleep(120);const r=await fetch("https://api.sc
 async function sfs(q){try{return (await sf("/cards/search?order=edhrec&unique=cards&q="+encodeURIComponent(q))).data||[]}catch(e){if(/match|404/i.test(e.message))return[];throw e}}
 function tmap(tl){tl=tl||"";return /Land/.test(tl)?"Terrain":/Creature/.test(tl)?"Créature":/Planeswalker/.test(tl)?"Planeswalker":/Artifact/.test(tl)?"Artefact":/Enchantment/.test(tl)?"Enchantement":/Instant/.test(tl)?"Éphémère":/Sorcery/.test(tl)?"Rituel":"Autre"}
 const PLUR={"Créature":"Créatures",Artefact:"Artefacts",Enchantement:"Enchantements","Éphémère":"Éphémères",Rituel:"Rituels",Planeswalker:"Planeswalkers",Autre:"Autres"};
-function crow(c){const mc=cardMana(c);return`<div class="cr"><div class="cr1"><span>${c.q>1?c.q+" × ":""}<button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button>${c.l?" 🔒":""}</span><span class="cm">${mc?manaHtml(mc):""}</span><small class="mute">${c.t==="Terrain"?"":esc(c.r)}</small></div>`+
+function crow(c){const mc=cardMana(c);return`<div class="cr"><div class="cr1"><span>${c.q>1?c.q+" × ":""}<button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button>${c.l?" 🔒":""}</span><span class="cm">${mc?manaHtml(mc):""}</span><small class="mute">${c.t==="Terrain"?"":esc(c.r)}${c.pm?" · ★ pièce maîtresse":""}</small></div>`+
   (c.w||c.h||c.k?`<details><summary>Pourquoi cette carte ?</summary><p><b>Pourquoi :</b> ${esc(c.w||"—")}</p><p><b>Comment :</b> ${esc(c.h||"—")}</p><p><b>Conséquence :</b> ${esc(c.k||"—")}</p></details>`:"")+`</div>`}
+function groupBy(items,mode,first,get){const g=x=>get(x),land=x=>g(x).t==="Terrain",nl=items.filter(x=>!land(x)),ln=items.filter(land),groups=[];
+  if(mode==="type"){[first,...TYPES.filter(t=>t!=="Terrain"&&t!==first)].forEach(t=>groups.push([PLUR[t]||t,nl.filter(x=>g(x).t===t)]))}
+  else if(mode==="cmc"){for(let m=0;m<=7;m++)groups.push([m===7?"Coût 7 et plus":"Coût "+m,nl.filter(x=>m===7?g(x).c>=7:Math.floor(g(x).c)===m)])}
+  else if(mode==="col"){const nm={W:"Blanc",U:"Bleu",B:"Noir",R:"Rouge",G:"Vert"};groups.push(["Incolore",nl.filter(x=>!cardCols(g(x)).length)]);
+    WUBRG.split("").forEach(c=>groups.push([nm[c],nl.filter(x=>{const k=cardCols(g(x));return k.length===1&&k[0]===c})]));groups.push(["Multicolore",nl.filter(x=>cardCols(g(x)).length>1)])}
+  else if(mode==="role")ROLES.forEach(r=>groups.push([r,nl.filter(x=>g(x).r===r)]));
+  else groups.push(["",nl]);
+  groups.push([mode==="n"?"":"Terrains",ln]);
+  return groups.filter(x=>x[1].length).map(([t,l])=>[t,[...l].sort((x,y)=>mode==="n"?g(x).n.localeCompare(g(y).n):g(x).c-g(y).c||g(x).n.localeCompare(g(y).n))])}
 function bt(){$("b_n").textContent=total();
   const mode=$("b_sort").value||"type",first=$("b_first").value||"Créature";$("b_first_w").style.display=mode==="type"?"block":"none";
   const out=$("b_res");
   if(!S.cards.length){out.innerHTML='<small class="mute">Pas encore de deck. Règle ton plan, puis touche « Construire le deck » dans l\'étape Plan.</small>';$("b_extra").innerHTML="";return}
-  const land=c=>c.t==="Terrain",nl=S.cards.filter(c=>!land(c)),ln=S.cards.filter(land),groups=[];
-  if(mode==="type"){[first,...TYPES.filter(t=>t!=="Terrain"&&t!==first)].forEach(t=>groups.push([PLUR[t]||t,nl.filter(c=>c.t===t)]))}
-  else if(mode==="cmc"){for(let m=0;m<=7;m++)groups.push([m===7?"Coût 7 et plus":"Coût "+m,nl.filter(c=>m===7?c.c>=7:Math.floor(c.c)===m)])}
-  else if(mode==="col"){const nm={W:"Blanc",U:"Bleu",B:"Noir",R:"Rouge",G:"Vert"};groups.push(["Incolore",nl.filter(c=>!cardCols(c).length)]);
-    WUBRG.split("").forEach(x=>groups.push([nm[x],nl.filter(c=>{const k=cardCols(c);return k.length===1&&k[0]===x})]));groups.push(["Multicolore",nl.filter(c=>cardCols(c).length>1)])}
-  else ROLES.forEach(r=>groups.push([r,nl.filter(c=>c.r===r)]));
-  groups.push(["Terrains",ln]);
-  out.innerHTML=groups.filter(g=>g[1].length).map(([t,l])=>`<h3>${esc(t)} (${l.reduce((a,c)=>a+c.q,0)})</h3>`+[...l].sort((a,b)=>a.c-b.c||a.n.localeCompare(b.n)).map(crow).join("")).join("");
+  out.innerHTML=groupBy(S.cards,mode,first,c=>c).map(([t,l])=>`<h3>${esc(t)} (${l.reduce((a,c)=>a+c.q,0)})</h3>`+l.map(crow).join("")).join("");
   const rj=S.rej||[],nr=S.near||[];
   $("b_extra").innerHTML=`<h2>Ce que le Lab a écarté</h2><details><summary>Presque prises (${nr.length})</summary><small class="mute">Des cartes qui ont failli entrer, avec la carte qu'elles auraient remplacée (12 au maximum).</small>`+(nr.map(x=>`<p style="margin:6px 0"><button class="lnk" data-card="${esc(x.n)}">${esc(x.n)}</button>${x.rep?` <small class="mute">aurait remplacé</small> <button class="lnk" data-card="${esc(x.rep)}">${esc(x.rep)}</button>`:""}<br><small class="mute">${esc(x.why)}</small></p>`).join("")||'<p class="mute">Aucune.</p>')+`</details><details><summary>Cartes écartées, avec la raison (${rj.length})</summary><small class="mute">Cartes très jouées avec ce commandant que le Lab n'a pas pu ou voulu prendre.</small>`+(rj.map(x=>`<p style="margin:6px 0"><button class="lnk" data-card="${esc(x.n)}">${esc(x.n)}</button><br><small class="mute">${esc(x.why)}</small></p>`).join("")||'<p class="mute">Aucune.</p>')+`</details>`}
 const Q={Ramp:'(o:"search your library for a basic land" OR o:"search your library for up to two basic" OR o:"{T}: Add") cmc<=3 -t:land',
@@ -603,6 +614,15 @@ async function suggest(q){const n=++sugN;let l=[];
   if(n!==sugN)return;const box=$("sug");l=l.slice(0,8);
   if(!l.length){box.style.display="none";return}
   box.innerHTML=l.map(c=>`<button type="button" data-sug="${esc(c.name)}">${esc(c.name)} <small class="mute">${esc(c.type_line||"")}</small></button>`).join("");box.style.display="block"}
+let csT=null,csN=0;
+function cardSugBind(inp,box,onPick){let list=[];
+  inp.addEventListener("input",()=>{clearTimeout(csT);const q=inp.value.trim().replace(/["\\]/g,"");if(q.length<2){box.style.display="none";return}
+    csT=setTimeout(async()=>{const n=++csN,ci=S.cmd&&S.cmd.ci?(S.cmd.ci.join("")||"c"):"",pre=ci?`id<=${ci} `:"";let l=[];
+      try{l=await sfs(pre+"f:commander "+q);if(!l.length)l=(await sf("/cards/search?include_multilingual=true&unique=cards&order=edhrec&q="+encodeURIComponent(pre+q))).data||[]}catch(e){}
+      if(n!==csN)return;list=l.slice(0,8);
+      if(!list.length){box.style.display="none";return}
+      box.innerHTML=list.map((c,i)=>`<button type="button" data-cs="${i}">${esc(c.name)} <small class="mute">${esc(c.type_line||"")}</small></button>`).join("");box.style.display="block"},250)});
+  box.addEventListener("click",e=>{const b=e.target.closest("[data-cs]");if(!b)return;const c=list[+b.dataset.cs];box.style.display="none";if(c)onPick(c)})}
 async function loadCmd(){const n=$("p_cmd").value.trim();if(!n)throw new Error("Commandant non renseigné");$("sug").style.display="none";
   let c;try{c=await sf("/cards/named?fuzzy="+encodeURIComponent(n))}catch(e){
     const d=await sf("/cards/search?include_multilingual=true&unique=cards&q="+encodeURIComponent('"'+n+'"'));if(!d.data||!d.data.length)throw e;c=d.data[0]}
@@ -614,8 +634,8 @@ async function loadCmd(){const n=$("p_cmd").value.trim();if(!n)throw new Error("
 function slug(n){return n.split(" // ")[0].normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/['’,]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 async function edhGet(path){const r=await fetch("https://json.edhrec.com/pages/"+path+".json");if(!r.ok)throw new Error("EDHREC code "+r.status);return r.json()}
 function edhParse(d){const cl=((d.container||{}).json_dict||{}).cardlists||[],cards={};
-  cl.forEach(l=>(l.cardviews||[]).forEach(v=>{if(!v.name)return;const pot=v.potential_decks||0,pct=pot?Math.round(100*(v.inclusion||v.num_decks||0)/pot):0,syn=Math.round((v.synergy||0)*100),o=cards[v.name];
-    if(!o)cards[v.name]={pct,syn,tg:[l.tag||""]};else{if(pct>o.pct)o.pct=pct;if(Math.abs(syn)>Math.abs(o.syn))o.syn=syn;o.tg.push(l.tag||"")}}));return cards}
+  cl.forEach(l=>(l.cardviews||[]).forEach(v=>{if(!v.name)return;const pot=v.potential_decks||0,pct=pot?Math.round(100*(v.inclusion||v.num_decks||0)/pot):0,syn=Math.round((v.synergy||0)*100),lf=+v.lift||0,tz=+v.trend_zscore||0,nd=+v.num_decks||0,o=cards[v.name];
+    if(!o)cards[v.name]={pct,syn,tg:[l.tag||""],lf,tz,nd};else{if(pct>o.pct)o.pct=pct;if(Math.abs(syn)>Math.abs(o.syn))o.syn=syn;o.tg.push(l.tag||"");if(lf>o.lf)o.lf=lf;if(tz>o.tz)o.tz=tz;if(nd>o.nd)o.nd=nd}}));return cards}
 async function loadEdh(){const sl=slug(S.cmd.name),prev=S.edh&&S.edh.slug;let d;
   try{d=await edhGet("commanders/"+sl)}catch(e){S.edhErr=e.message;S.edh=null;save();render();throw e}
   S.edhErr=null;const cards=edhParse(d),jd=(d.container||{}).json_dict||{};
@@ -659,6 +679,7 @@ function reasonFor(x,ctx){const e=x.e,cs=ctx.cmdShort,p=[],h=[],k=[];
   if(x.must)p.push("Carte obligatoire (ton choix).");
   else{if(e.pct)p.push(`Jouée dans ${e.pct} % des decks de ${cs}`+(Math.abs(e.syn)>=5?` (synergie ${e.syn>0?"+":""}${e.syn})`:"")+".");
     else p.push("Absente de la liste EDHREC du commandant : elle vient d'une recherche sur ta stratégie.");
+    if(x.master)p.push("Pièce maîtresse EDHREC : "+x.mk.map(m=>m==="Top card"?"Top card":m==="High lift"?`High lift (jouée ${(x.e.lf||0).toFixed(1).replace(".",",")} fois plus qu'ailleurs avec ce commandant)`:`en hausse récente (score ${x.e.tz.toFixed(1).replace(".",",")})`).join(", ")+".");
     ctx.sel.forEach((s,i)=>{if(x.th[i]>0)p.push(`Fait partie de la stratégie « ${esc(s.lab)} »`+(x.th[i]<100&&x.thSrc[i]==="edh"?` (${x.th[i]} % des decks de ce thème)`:"")+".")});
     if(x.need)p.push(`Comble un besoin de base : ${x.need} (${x.needN}/${ctx.need[x.need]} d'après le deck moyen).`)}
   const fn=x.fn,tags=(db({n:x.c.name})||{an:{tags:[]}}).an.tags.filter(t=>!/^Tribu:/.test(t)).slice(0,3);
@@ -698,9 +719,9 @@ async function build(skip){
       NEEDF.forEach(f=>need[f]=Math.min(need[f],16))}
     else say("warn","Deck moyen EDHREC introuvable : le Lab utilise des besoins de base par défaut (Ramp 10, Pioche 10, Interaction 8, Protection 4, Balayage 2, Wincon 4).");
     /* 3. Cartes candidates */
-    const pool={};const add=(n,e,tg)=>{const o=pool[n];if(!o)pool[n]={e:{pct:e.pct,syn:e.syn,tg:e.tg||[]},th:[],thSrc:[]};else{if(e.pct>o.e.pct)o.e.pct=e.pct;if(Math.abs(e.syn)>Math.abs(o.e.syn))o.e.syn=e.syn}};
+    const pool={};const add=(n,e,tg)=>{const o=pool[n];if(!o)pool[n]={e:{pct:e.pct,syn:e.syn,tg:e.tg||[],lf:e.lf||0,tz:e.tz||0,nd:e.nd||0},th:[],thSrc:[]};else{if(e.pct>o.e.pct)o.e.pct=e.pct;if(Math.abs(e.syn)>Math.abs(o.e.syn))o.e.syn=e.syn;if((e.lf||0)>o.e.lf)o.e.lf=e.lf;if((e.tz||0)>o.e.tz)o.e.tz=e.tz;if((e.nd||0)>o.e.nd)o.e.nd=e.nd}};
     Object.entries(ed).forEach(([n,e])=>add(n,e));
-    thm.forEach(t=>Object.entries(t.m).forEach(([n,e])=>{if(!pool[n])add(n,{pct:ed[n]?ed[n].pct:Math.min(e.pct,15),syn:e.syn},[])}));
+    thm.forEach(t=>Object.entries(t.m).forEach(([n,e])=>{if(!pool[n])add(n,{pct:ed[n]?ed[n].pct:Math.min(e.pct,15),syn:e.syn,lf:e.lf,tz:e.tz,nd:e.nd},[])}));
     Object.keys(pool).forEach(n=>{pool[n].th=thm.map(t=>t.m[n]?(t.src==="edh"?t.m[n].pct:40):0);pool[n].thSrc=thm.map(t=>t.src)});
     const isLandTag=o=>o.e.tg.some(t=>/land/.test(t));
     const pre=n=>{const o=pool[n];return o.e.pct+1.5*Math.max(0,o.e.syn)+o.th.reduce((a,v,i)=>a+v*(sel[i]?sel[i].w:0),0)};
@@ -722,15 +743,19 @@ async function build(skip){
       if(bud&&pr(c)>bud*.15)return`Trop chère pour ton budget (${pr(c).toFixed(0)} € pour un budget de ${bud} €).`;return""};
     const mk=(n,landMode)=>{const c=get(n);if(!c)return null;const o=pool[n]||{e:{pct:0,syn:0,tg:[]},th:thm.map(()=>0),thSrc:thm.map(t=>t.src)},r=store(c),fn=fnList({n:c.name,t:tmap(c.type_line),r:"Synergie"});
       const x={c,n:c.name,e:o.e,th:o.th,thSrc:o.thSrc,fn,r,tutor:fn.includes("Tuteur"),counter:isCounter(c),land:/Land/.test(c.type_line)};x.why=bad(c,n);
+      const E=x.e,enough=(E.nd||0)>=100,top=E.tg.includes("topcards"),hl=E.tg.includes("highliftcards")&&enough,hot=E.tz>2&&enough&&(E.lf>=2||x.th.some(v=>v>0));
+      x.mk=[top?"Top card":"",hl?"High lift":"",hot?"hot":""].filter(Boolean);x.master=x.mk.length>0&&!x.land;x.ms=x.master?Math.min(E.lf||0,20)+(top?5:0)+(hot?Math.min(E.tz,10):0):0;
       const e=x.e;let s=.6*e.pct+(e.syn>0?.8*e.syn:.3*e.syn);let st=0;x.th.forEach((v,i)=>{st+=v*(sel[i]?sel[i].w:0)});s+=.6*st*(1+.5*prw("thème"));
       if(prw("vitesse"))s-=3*c.cmc*prw("vitesse");if(prw("synergie"))s+=.6*Math.max(e.syn,0)*prw("synergie");
       if(prw("résilience")&&fn.some(f=>["Protection","Recursion","Balayage"].includes(f)))s+=8*prw("résilience");
       if(prw("interaction")&&fn.includes("Interaction"))s+=8*prw("interaction");if(prw("budget"))s-=1.5*pr(c)*prw("budget");
-      s+=2*Math.max(0,fn.length-1);x.s=s;return x};
+      s+=2*Math.max(0,fn.length-1);if(x.master)s+=12+.8*Math.min(e.lf||0,15);x.s=s;return x};
     const cand=nonland.map(n=>mk(n)).filter(x=>x&&!x.land),lands=landN.concat(nl).map(n=>mk(n)).filter(x=>x&&x.land);
     const seen=new Set();const cl=cand.filter(x=>{if(seen.has(x.n))return false;seen.add(x.n);return true});
-    cl.forEach(x=>{if(x.why&&(x.e.pct>=10||x.e.syn>=10))rej.push({n:x.n,why:x.why,s:x.s})});
+    cl.forEach(x=>{if(x.why&&(x.e.pct>=10||x.e.syn>=10||x.master))rej.push({n:x.n,why:x.why,s:x.s})});
     const elig=cl.filter(x=>!x.why).sort((a,b)=>b.s-a.s);
+    S.cand=elig.map(x=>({n:x.n,s:Math.round(x.s*10)/10,pct:x.e.pct,syn:x.e.syn,fn:x.fn,gc:!!x.c.game_changer,ct:x.counter,p:pr(x.c)}));
+    S.landc=lands.filter(x=>!x.why&&!BASICS[x.n]).sort((a,b)=>b.e.pct-a.e.pct).map(x=>({n:x.n,pct:x.e.pct}));
     /* 5. Sélection */
     const taken=new Map(),tgL=+(S.p.p_lands||37);let spent=0,gc=0,tut=0,ctr=0;const slots=Math.max(0,99-tgL);
     const lim=x=>{if(x.c.game_changer&&gc>=maxGC)return`Game Changer : ton Bracket ${b} en autorise ${maxGC} au maximum.`;
@@ -742,6 +767,8 @@ async function build(skip){
     if(must.length){const got=must.map(n=>({n,c:get(n)}));got.forEach(({n,c})=>{if(!c){say("warn","Carte obligatoire introuvable : "+esc(n));return}
       const w=bad(c,n);if(w){say("warn","Carte obligatoire refusée : "+esc(c.name)+" — "+esc(w));return}const x=mk(c.name);if(x)take(x,{must:true})})}
     const have=f=>[...taken.values()].filter(t=>t.fn.includes(f)).length;
+    const masters=elig.filter(x=>x.master).sort((a,b)=>b.ms-a.ms);let nM=0;
+    for(const x of masters){if(nM>=25||taken.size>=slots)break;if(tryTake(x,{}))nM++}
     NEEDF.forEach(f=>{for(const x of elig){if(have(f)>=need[f]||taken.size>=slots)break;if(!x.fn.includes(f)||taken.has(x.n))continue;tryTake(x,{need:f})}});
     NEEDF.forEach(f=>[...taken.values()].forEach(x=>{if(x.need===f)x.needN=have(f)}));
     const inS=i=>[...taken.values()].filter(t=>t.th[i]>0).length;
@@ -762,7 +789,7 @@ async function build(skip){
     S.rej=rejAll.filter(r=>{if(rs.has(r.n))return false;rs.add(r.n);return true}).slice(0,40).map(r=>({n:r.n,why:r.why}));S.near=near;
     /* 8. Remplir S.cards */
     S.cards=[];
-    taken.forEach(x=>{const c=x.c,rs=reasonFor(x,ctx);S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:roleOf(x.fn[0]),g:!!c.game_changer,mc:x.r.mc,l:!!x.must,w:rs.w,h:rs.h,k:rs.k})});
+    taken.forEach(x=>{const c=x.c,rs=reasonFor(x,ctx);S.cards.push({q:1,n:c.name,c:c.cmc,t:tmap(c.type_line),r:roleOf(x.fn[0]),g:!!c.game_changer,mc:x.r.mc,l:!!x.must,w:rs.w,h:rs.h,k:rs.k,pm:x.master?x.mk.join(", "):""})});
     chosenL.forEach(x=>{const c=x.c;S.cards.push({q:1,n:c.name,c:0,t:"Terrain",r:"Autre",g:!!c.game_changer,mc:"",w:`Joué dans ${x.e.pct} % des decks de ${cs}.`,h:"Terrain spécial : il fournit les couleurs affichées.",k:"Sans lui : un terrain de base prendrait sa place."})});
     const rest=Math.max(0,tgL-cnt("t","Terrain")),cols=S.cmd.ci,BAS={W:"Plains",U:"Island",B:"Swamp",R:"Mountain",G:"Forest"},W="Terrain de base réparti selon les symboles de mana du deck.";
     if(rest){if(!cols.length)S.cards.push({q:rest,n:"Wastes",c:0,t:"Terrain",r:"Autre",g:false,mc:"",w:W,h:"Fournit du mana incolore.",k:"—"});
@@ -773,6 +800,7 @@ async function build(skip){
     /* 9. Déroulé */
     say("ok",`Liste de base : ${taken.size} cartes choisies parmi ${cl.length} candidates (cartes jouées avec ${esc(cs)} sur EDHREC, synergie et popularité ensemble).`);
     if(avg&&avg.length)say("ok",`Besoins de base calculés d'après le deck moyen EDHREC : ${NEEDF.filter(f=>need[f]>0).map(f=>f+" "+have(f)+"/"+need[f]).join(" · ")}.`);
+    {const tm=[...taken.values()].filter(x=>x.master&&!x.must);say("ok",`Pièces maîtresses EDHREC (Top cards, High lift, hot) : ${tm.length} retenues sur ${masters.length+[...rejRule.values()].filter(r=>masters.some(m=>m.n===r.n)).length} repérées (25 au maximum au premier tour de sélection). Aucune n'est verrouillée.`)}
     sel.forEach((s,i)=>say(inS(i)?"ok":"warn",`Stratégie « ${esc(s.lab)} » (${Math.round(s.w*100)} %) : ${inS(i)} cartes.`));
     if(!sel.length)say("warn","Aucune stratégie choisie : la liste vient seulement des cartes les plus jouées avec ce commandant.");
     say("ok",`Terrains : ${cnt("t","Terrain")} / ${tgL} (dont ${chosenL.length} terrains spéciaux d'après EDHREC).`);
@@ -781,7 +809,81 @@ async function build(skip){
     say(total()===99?"ok":"warn",`Terminé : ${total()} / 99 cartes. ${S.rej.length} cartes écartées et ${near.length} presque prises sont listées plus bas.`);
   }catch(e){say("bad","Erreur : "+esc(e.message||e)+". Vérifie ta connexion internet, puis réessaie.")}
   btns.forEach(b=>b&&(b.disabled=false));render()}
-async function verify(){const o=$("v_out");o.innerHTML='<div class="msg">Vérification en cours…</div>';
+/* ===== Améliorer : changements par paires (le deck reste à 99) ===== */
+let AM=null,UNDO=null;
+const NEEDR=["Ramp","Pioche","Interaction","Protection","Balayage","Wincon"],ROWS=["Terrains",...NEEDR,"Synergie"];
+const needOf=f=>S.need&&S.need[f]!==undefined?S.need[f]:(TARGETS[f]?Math.round((TARGETS[f][0]+TARGETS[f][1])/2):0);
+const ctrRe=/counter target [^.]*(spell|ability)|counter all/i;
+function deckStats(cards){const nl=cards.filter(c=>c.t!=="Terrain"),o={tot:0,lands:0,gc:0,tut:0,ctr:0,f:{},cmc:0};ROWS.forEach(r=>o.f[r]=0);let q=0,sum=0;
+  cards.forEach(c=>{o.tot+=c.q;if(c.t==="Terrain"){o.lands+=c.q;return}if(c.g)o.gc+=c.q;const r=db(c),fl=fnList(c);
+    if(fl.includes("Tuteur"))o.tut+=c.q;if(r&&ctrRe.test(r.ox||""))o.ctr+=c.q;NEEDR.forEach(f=>{if(fl.includes(f))o.f[f]+=c.q});if(c.r==="Synergie")o.f.Synergie+=c.q;q+=c.q;sum+=c.c*c.q});
+  o.f.Terrains=o.lands;o.cmc=q?sum/q:0;return o}
+const candRec=n=>S.db[n.toLowerCase()];
+function candCard(x,why){const r=candRec(x.n);if(!r)return null;const cs=front(S.cmd?S.cmd.name:"").split(",")[0];
+  return{q:1,n:r.n,c:r.cmc,t:tmap(r.tl),r:roleOf(x.fn[0]),g:!!r.gc,mc:r.mc,l:false,w:`Ajoutée depuis Améliorer. Jouée dans ${x.pct} % des decks de ${cs}`+(x.syn>=5?` (synergie +${x.syn})`:"")+".",h:`Rôle : ${x.fn.join(", ")} · MV ${r.cmc}.`,k:why||"—"}}
+function amCands(role,all,outCard){
+  if(role==="Terrains"){const inD=new Set(S.cards.map(c=>c.n.toLowerCase())),o=(S.landc||[]).filter(x=>!inD.has(x.n.toLowerCase())).slice(0,3).map(x=>({n:x.n,pct:x.pct,syn:0,fn:["Terrain"],land:true}));
+    (S.cmd&&S.cmd.ci||[]).forEach(c=>{const nm={W:"Plains",U:"Island",B:"Swamp",R:"Mountain",G:"Forest"}[c];o.push({n:nm,pct:0,syn:0,fn:["Terrain"],land:true,basic:true})});
+    if(S.cmd&&!S.cmd.ci.length)o.push({n:"Wastes",pct:0,syn:0,fn:["Terrain"],land:true,basic:true});return o.slice(0,5)}
+  const inD=new Set(S.cards.map(c=>c.n.toLowerCase())),inR=new Set(S.res.map(c=>c.n.toLowerCase())),ex=new Set((S.p.p_excl||"").split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean));
+  const st=deckStats(S.cards.filter(c=>c!==outCard)),vol=S.p.p_vol||"Modéré",b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,maxTut=vol==="Casual"?0:vol==="Modéré"?3:99,maxCtr=vol==="Casual"?6:99,bud=+S.p.p_bud||0;
+  return(S.cand||[]).filter(x=>{const k=x.n.toLowerCase();if(inD.has(k)||inR.has(k)||ex.has(k))return false;
+    if(!all&&!(role==="Synergie"?roleOf(x.fn[0])==="Synergie":x.fn.includes(role)))return false;
+    if(x.gc&&st.gc>=maxGC)return false;if(x.fn.includes("Tuteur")&&st.tut>=maxTut)return false;if(x.ct&&st.ctr>=maxCtr)return false;if(bud&&x.p>bud*.15)return false;return !!candRec(x.n)}).sort((a,b)=>b.s-a.s).slice(0,5)}
+function suggestOut(pool){const st=deckStats(S.cards),sc=new Map((S.cand||[]).map(x=>[x.n.toLowerCase(),x.s]));let best=null,bk=1e9;
+  pool.forEach(i=>{const c=S.cards[i];if(!c||c.l)return;const k0=c.n.toLowerCase();let s=sc.has(k0)?sc.get(k0):(c.t==="Terrain"?(BASICS[c.n]?-5:20):500);
+    const f=fnList(c)[0],sur=NEEDR.includes(f)?st.f[f]-needOf(f):(c.r==="Synergie"?3:0),k=s-10*Math.max(0,sur)+(NEEDR.includes(f)&&sur<=0?25:0);if(k<bk){bk=k;best=i}});return best}
+function amStart(o){AM=Object.assign({mode:"add",role:"Synergie",outIdx:null,pickOut:false,all:false,sel:null,empty:false,inCard:null,fromRes:null},o);
+  if(AM.pickOut&&AM.outIdx==null&&(AM.mode==="rm"||total()>=99))AM.outIdx=suggestOut(amPool());go("ameliorer");render();const b=$("am_box");if(b&&b.scrollIntoView)b.scrollIntoView({block:"start"})}
+function amOut(){const m=AM;if(!m)return null;if(m.mode==="rm"||m.mode==="rep")return m.outIdx!=null?S.cards[m.outIdx]||null:null;return total()>=99&&m.outIdx!=null?S.cards[m.outIdx]||null:null}
+function amPool(){const m=AM,C=S.cards;return C.map((c,i)=>i).filter(i=>{const c=C[i];
+  if(m.mode==="rm"&&!m.inCard)return m.role==="Terrains"?c.t==="Terrain":c.t!=="Terrain"&&(m.role==="Synergie"?c.r==="Synergie":fnList(c).includes(m.role));
+  return m.inCard&&m.inCard.t==="Terrain"?true:c.t!=="Terrain"})}
+function amAfter(){const m=AM,out=amOut();let a=S.cards.filter(c=>c!==out);if(out&&out.q>1)a.push({...out,q:out.q-1});
+  let inc=null;if(m.inCard)inc=m.inCard;else if(m.sel&&!m.empty){const x=(m.lastC||[]).find(y=>y.n===m.sel);
+    if(x&&x.land)inc={q:1,n:x.n,c:0,t:"Terrain",r:"Autre",g:false,mc:"",w:x.basic?"Terrain de base ajouté depuis Améliorer.":`Joué dans ${x.pct} % des decks.`,h:"Terrain.",k:"—"};else if(x)inc=candCard(x)}
+  if(inc)a.push(inc);return{cards:a,inc}}
+function amUI(){
+  const st=deckStats(S.cards),b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,cur={};S.cards.filter(c=>c.t!=="Terrain").forEach(c=>{const k=Math.min(c.c,7);cur[k]=(cur[k]||0)+c.q});const mx=Math.max(1,...Object.values(cur));
+  $("am_banner").innerHTML=`<b>${st.tot} / 99</b> cartes · Game Changers ${st.gc}/${maxGC>90?"∞":maxGC} · coût moyen ${st.cmc.toFixed(2)}<div class="mc" aria-label="Courbe de mana">${[0,1,2,3,4,5,6,7].map(k=>`<div style="flex:1;text-align:center"><i style="display:block;height:${Math.max(2,(cur[k]||0)/mx*30)}px"></i><small class="mute">${k===7?"7+":k}</small></div>`).join("")}</div>`;
+  $("am_arch").innerHTML=ROWS.map(r=>{const n=st.f[r],tg=r==="Terrains"?+(S.p.p_lands||37):r==="Synergie"?null:needOf(r);
+    const dot=tg===null?"":Math.abs(n-tg)<=(r==="Terrains"?2:1)?"🟢":n<tg?"🔴":"🟠";if(r!=="Synergie"&&tg===0&&n===0)return"";
+    return`<tr><td>${r}</td><td>${n}</td><td>${tg===null?"—":tg}</td><td>${dot}</td><td><button class="mini" data-am="rm" data-r="${r}" aria-label="Retirer une carte ${r}">−</button> <button class="mini" data-am="add" data-r="${r}" aria-label="Ajouter une carte ${r}">+</button></td></tr>`}).join("");
+  $("am_undo").innerHTML=UNDO&&UNDO.pid===G.cur?`<button class="go sec" id="am_undo_b" style="margin-top:8px">↩ Annuler le dernier changement (${esc(UNDO.label)})</button>`:"";
+  const box=$("am_box");if(!AM){box.style.display="none";box.innerHTML="";return}box.style.display="block";
+  const m=AM,out=amOut(),full=total()>=99;let h="";
+  const title=m.inCard?`Ajouter <b>${esc(m.inCard.n)}</b>`:m.mode==="rm"?"Retirer une carte":m.mode==="rep"?`Remplacer <b>${esc(out?out.n:"")}</b>`:`Ajouter une carte (${esc(m.role)})`;
+  h+=`<h2>${title}</h2>`;
+  if(m.inCard||m.mode==="add"){if(full){h+=`<label>Le deck a déjà ${total()} cartes. Quelle carte retirer ?</label>`;h+=amOutSel(m)}else h+=`<div class="msg ok">Le deck a ${total()} cartes : il reste de la place, aucune carte à retirer.</div>`}
+  else if(m.pickOut){h+=`<label>Quelle carte retirer ?</label>`+amOutSel(m)}
+  else h+=`<p>Carte retirée : <b>${esc(out?out.n:"")}</b> <small class="mute">(elle ira en Réserve)</small></p>`;
+  if(!m.inCard){const cs=amCands(m.role,m.all,out);m.lastC=cs;
+    h+=`<label>${m.mode==="rm"?"Remplaçantes proposées":"Propositions"} <small class="mute">(${m.all?"toutes fonctions":"même fonction : "+esc(m.role)})</small></label>`;
+    h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:`${x.pct} % des decks`+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button>`}).join(""):`<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>`;
+    h+=`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="am_all" style="width:auto"${m.all?" checked":""}> Voir toutes les fonctions</label>`;
+    if(m.mode==="rm")h+=`<button class="prop${m.empty?" on":""}" data-empty="1">Laisser vide (le deck passera à ${total()-1} cartes)</button>`}
+  const ready=(m.inCard||m.sel||m.empty)&&(out||!full||!(m.inCard||m.mode==="add"));
+  if(m.inCard||m.sel||m.empty){const A=amAfter(),sb=st,sa=deckStats(A.cards),L=[];
+    ROWS.forEach(r=>{if(sb.f[r]!==sa.f[r])L.push(`${r} : ${sb.f[r]} → <b>${sa.f[r]}</b>${r!=="Synergie"?` (cible ${r==="Terrains"?(S.p.p_lands||37):needOf(r)})`:""}`)});
+    if(sb.gc!==sa.gc)L.push(`Game Changers : ${sb.gc} → <b>${sa.gc}</b>`);if(sb.tut!==sa.tut)L.push(`Tuteurs : ${sb.tut} → <b>${sa.tut}</b>`);if(sb.ctr!==sa.ctr)L.push(`Contre-sorts : ${sb.ctr} → <b>${sa.ctr}</b>`);
+    if(Math.abs(sb.cmc-sa.cmc)>=.01)L.push(`Coût moyen : ${sb.cmc.toFixed(2)} → <b>${sa.cmc.toFixed(2)}</b>`);L.push(`Cartes : ${sb.tot} → <b>${sa.tot}</b>`);
+    h+=`<h3>Avant / après</h3><div class="msg ok">${L.join("<br>")}</div>`;if(sa.tot<99)h+=`<div class="msg warn">Le deck n'aura que ${sa.tot} cartes : pense à en ajouter une.</div>`;
+    if(out&&out.l)h+=`<div class="msg warn">${esc(out.n)} est verrouillée 🔒 : tu la retires quand même.</div>`}
+  h+=`<div class="row"><button class="go" id="am_ok"${ready?"":" disabled"}>Appliquer</button><button class="go sec" id="am_x">Fermer</button></div>`;
+  box.innerHTML=h}
+function amOutSel(m){const pool=m.mode==="rm"&&!m.inCard?amPool():S.cards.map((c,i)=>i).filter(i=>S.cards[i].t!=="Terrain"),sug=suggestOut(pool);
+  const opts=[...pool].sort((a,b)=>(a===sug?-1:b===sug?1:0)).map(i=>{const c=S.cards[i];return`<option value="${i}"${i===m.outIdx?" selected":""}>${i===sug?"★ conseillée : ":""}${esc(c.n)} (${esc(c.r)}, MV ${c.c})${c.l?" 🔒":""}</option>`}).join("");
+  return`<select id="am_out">${opts}</select><small class="mute">★ = la carte que le Lab retirerait en premier (jamais une carte verrouillée).</small>`}
+function amApply(){const m=AM;if(!m)return;const out=amOut(),A=amAfter();
+  if(out&&out.l&&!confirm("Cette carte est verrouillée. La retirer quand même ?"))return;
+  UNDO={pid:G.cur,cards:JSON.stringify(S.cards),res:JSON.stringify(S.res),manual:!!S.manual,label:A.inc?(out?out.n+" → "+A.inc.n:"ajout de "+A.inc.n):"retrait de "+(out?out.n:"")};
+  if(m.fromRes!=null)S.res.splice(m.fromRes,1);
+  if(out){const idx=S.cards.indexOf(out);if(out.q>1)out.q--;else S.cards.splice(idx,1);
+    if(!(out.t==="Terrain"&&BASICS[out.n]))S.res.push({...out,q:1,l:false,why:A.inc?"Remplacée par "+A.inc.n+" (Améliorer)":"Retirée dans Améliorer",hist:[...(out.hist||[]),day()+" Deck → Réserve"]})}
+  if(A.inc){const f=S.cards.find(c=>c.n===A.inc.n&&c.t===A.inc.t&&A.inc.t==="Terrain");if(f)f.q++;else S.cards.push(A.inc)}
+  S.manual=true;AM=null;save();render();const bn=$("am_banner");if(bn&&bn.scrollIntoView)bn.scrollIntoView({block:"start"})}
+function amUndo(){if(!UNDO||UNDO.pid!==G.cur)return;S.cards=JSON.parse(UNDO.cards);S.res=JSON.parse(UNDO.res);S.manual=UNDO.manual;UNDO=null;AM=null;save();render()}
+async function verify(){const o={set innerHTML(h){$("v_out").innerHTML=h;$("v_out2").innerHTML=h}};o.innerHTML='<div class="msg">Vérification en cours…</div>';
   try{const names=[...new Set(S.cards.map(c=>c.n))],nf=[],ill=[],oi=[];
     for(let i=0;i<names.length;i+=75){const d=await sf("/cards/collection",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifiers:names.slice(i,i+75).map(name=>({name}))})});
       (d.not_found||[]).forEach(x=>nf.push(x.name));
@@ -833,15 +935,28 @@ function init(){
   document.addEventListener("click",e=>{
     const c=e.target.closest("[data-card]");if(c){e.preventDefault();showCard(c.dataset.card);return}
     if(e.target.id==="cv"||e.target.id==="cv_x")$("cv").style.display="none";
-    if(!e.target.closest("#sug")&&e.target.id!=="p_cmd")$("sug").style.display="none"});
+    if(!e.target.closest("#sug")&&e.target.id!=="p_cmd")$("sug").style.display="none";
+    if(!e.target.closest(".sugb")&&e.target.id!=="c_n"&&e.target.id!=="o_n")document.querySelectorAll(".sugb").forEach(b=>b.style.display="none")});
   $("plan_build").onclick=()=>{if(!S.p.p_cmd){alert("Choisis d'abord un commandant.");$("p_cmd").focus();return}go("construire");build()};
   $("o_add").onclick=()=>{const n=$("o_n").value.trim();if(!n){$("o_n").focus();return}S.obj=S.obj||[];S.obj.push({a:$("o_a").value,n,t:+$("o_t").value||5});$("o_n").value="";save();render()};
   $("o_list").onclick=e=>{const i=e.target.dataset.od;if(i!==undefined){S.obj.splice(+i,1);save();render()}};
   $("add").onclick=()=>{const n=$("c_n").value.trim();if(!n)return $("c_n").focus();
-    addCard({q:+$("c_q").value||1,n,c:+$("c_c").value||0,t:$("c_t").value,r:$("c_r").value});S.manual=true;
+    const nc={q:+$("c_q").value||1,n,c:+$("c_c").value||0,t:$("c_t").value,r:$("c_r").value};
+    if(total()+nc.q>99){nc.l=false;nc.w="Ajoutée à la main.";$("c_n").value="";$("c_q").value=1;amStart({mode:"add",role:nc.r,pickOut:true,inCard:nc});return}
+    addCard(nc);S.manual=true;
     $("c_n").value="";$("c_q").value=1;save();render();$("c_n").focus()};
-  $("c_n").addEventListener("keydown",e=>{if(e.key==="Enter")$("add").click()});
-  $("tb").onclick=e=>{const d=e.target.dataset;if(d.d!==undefined){S.cards.splice(+d.d,1);S.manual=true;save();render()}else if(d.m!==undefined)toRes(+d.m);else if(d.f!==undefined)fiche(+d.f)};
+  $("c_n").addEventListener("keydown",e=>{if(e.key==="Enter"){$("c_sug").style.display="none";$("add").click()}});
+  cardSugBind($("c_n"),$("c_sug"),c=>{const r=store(c),t=tmap(c.type_line);$("c_n").value=c.name;$("c_c").value=c.cmc||0;$("c_t").value=t;
+    $("c_r").value=t==="Terrain"?"Autre":roleOf(fnList({n:c.name,t,r:"Synergie"})[0]);$("c_q").focus()});
+  cardSugBind($("o_n"),$("o_sug"),c=>{$("o_n").value=c.name;$("o_t").focus()});
+  $("tb").onclick=e=>{const d=e.target.dataset;if(d.rp!==undefined){const c=S.cards[+d.rp];amStart({mode:"rep",outIdx:+d.rp,role:c.t==="Terrain"?"Terrains":fnList(c)[0]==="Autre"?"Synergie":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}
+    else if(d.rt!==undefined){const c=S.cards[+d.rt];amStart({mode:"rm",outIdx:+d.rt,role:c.t==="Terrain"?"Terrains":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}else if(d.f!==undefined)fiche(+d.f)};
+  $("am_arch").onclick=e=>{const d=e.target.dataset;if(d.am)amStart({mode:d.am,role:d.r,pickOut:true})};
+  $("am_box").onclick=e=>{const d=e.target.dataset,id=e.target.id;if(d.pick){AM.sel=d.pick;AM.empty=false;render()}else if(d.empty){AM.empty=true;AM.sel=null;render()}else if(id==="am_ok")amApply();else if(id==="am_x"){AM=null;render()}};
+  $("am_box").onchange=e=>{if(e.target.id==="am_all"){AM.all=e.target.checked;AM.sel=null;render()}else if(e.target.id==="am_out"){AM.outIdx=+e.target.value;render()}};
+  $("am_undo").onclick=e=>{if(e.target.id==="am_undo_b")amUndo()};
+  $("v_go2").onclick=verify;
+  $("f_first").innerHTML=TYPES.filter(t=>t!=="Terrain").map(t=>`<option>${t}</option>`).join("");$("f_first").onchange=e=>{F.first=e.target.value;render()};
   $("fiche").onclick=fiheClick;$("f_f").innerHTML='<option value="">Toutes fonctions</option>'+FUNCS.map(x=>`<option>${x}</option>`).join("");$("f_f").onchange=e=>{F.f=e.target.value;render()};
   $("tb").onchange=e=>{const d=e.target.dataset;if(d.l!==undefined)S.cards[+d.l].l=e.target.checked;if(d.g!==undefined)S.cards[+d.g].g=e.target.checked;save();render()};
   $("f_t").innerHTML='<option value="">Tous types</option>'+TYPES.map(x=>`<option>${x}</option>`).join("");
