@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test Commander Spellbook</title>
+<style>
+body{font-family:-apple-system,Arial,sans-serif;background:#14141c;color:#eee;margin:0;padding:16px;max-width:760px}
+h1{font-size:20px}button{font-size:18px;padding:14px 22px;border-radius:10px;border:0;background:#6c5ce7;color:#fff;margin:10px 0}
+.t{background:#22222e;border-radius:10px;padding:12px;margin:10px 0}.ok{color:#55efc4}.ko{color:#ff7675}
+pre{white-space:pre-wrap;word-break:break-all;font-size:12px;color:#aaa;margin:6px 0 0}
+</style></head><body>
+<h1>Test Commander Spellbook</h1>
+<p>Appuie sur le bouton et attends 10 secondes. Fais une capture d'écran du résultat complet et envoie-la-moi.</p>
+<button id="go">Lancer le test</button>
+<div id="out"></div>
+<script>
+const B="https://backend.commanderspellbook.com";
+const body={commanders:[{card:"Kinnan, Bonder Prodigy",quantity:1}],
+ main:["Basalt Monolith","Rings of Brighthearth","Sol Ring","Thassa's Oracle","Demonic Consultation","Command Tower"].map(c=>({card:c,quantity:1}))};
+const tests=[
+ ["1. Recherche de combos (GET)",()=>fetch(B+"/variants/?q="+encodeURIComponent('card:"Basalt Monolith" card:"Rings of Brighthearth"')+"&limit=3")],
+ ["2. Combos présents dans un deck (POST find-my-combos)",()=>fetch(B+"/find-my-combos",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})],
+ ["3. Estimation du Bracket (POST estimate-bracket)",()=>fetch(B+"/estimate-bracket",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})]
+];
+function add(h){const d=document.createElement("div");d.className="t";d.innerHTML=h;document.getElementById("out").appendChild(d);return d}
+document.getElementById("go").onclick=async()=>{
+ document.getElementById("out").innerHTML="";
+ for(const [name,fn] of tests){
+  const t0=Date.now();
+  try{
+   const r=await fn();const txt=await r.text();let info="";
+   try{const j=JSON.parse(txt);
+     if(j.results){info=(j.count!=null?j.count+" combo(s) trouvé(s). ":"")+(Array.isArray(j.results)?"":"")}
+     if(Array.isArray(j.results)){info="résultats : "+j.results.length}
+     else if(j.results&&j.results.included){info="combos inclus : "+j.results.included.length}
+     if(j.bracketTag)info+=" Bracket estimé : "+j.bracketTag;
+     if(j.bracket)info+=" Bracket estimé : "+JSON.stringify(j.bracket).slice(0,80);
+   }catch(e){}
+   add(`<b>${name}</b><br><span class="${r.ok?"ok":"ko"}">${r.ok?"✅ ça répond":"❌ erreur"} (HTTP ${r.status}, ${Date.now()-t0} ms)</span> ${info}<pre>${txt.slice(0,350).replace(/</g,"&lt;")}</pre>`);
+  }catch(e){
+   add(`<b>${name}</b><br><span class="ko">❌ bloqué : ${String(e).replace(/</g,"&lt;")}</span> (${Date.now()-t0} ms)`);
+  }
+ }
+ add("<b>Fin du test.</b>");
+};
+</script></body></html>
