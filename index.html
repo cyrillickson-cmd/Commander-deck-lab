@@ -162,6 +162,9 @@ details.tsec summary{cursor:pointer;padding:12px 0;font:700 1rem "Trebuchet MS",
 <div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="vmtog"></div><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="type">Trier : type</option><option value="cmc">Trier : coût de mana</option><option value="col">Trier : couleur</option><option value="role">Trier : rôle</option><option value="n">Trier : nom</option></select><select id="f_first" aria-label="Type en premier"></select></div><small class="mute">Verr. = jamais proposée au retrait. GC = Game Changer (à cocher toi-même). Remplacer / Retirer envoient la carte en Réserve.</small><div id="tvis"></div><div class="tw" id="tw_tb"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
 <div class="box"><h2>Vérifier</h2><small class="mute">Contrôle chaque carte sur Scryfall (nom réel, légalité, identité couleur).</small><br><button class="go sec" id="v_go2">Vérifier avec Scryfall</button><div id="v_out2" style="margin-top:8px"></div></div></section>
 <section id="decklist"><div class="box"><h2>Decklist</h2><div id="dl_info" class="mute"></div>
+<div class="row" style="margin-top:8px"><div style="flex:2 1 220px"><label for="dl_fmt">Format</label><select id="dl_fmt"><option value="txt">Texte simple (Moxfield, Archidekt, collage libre)</option><option value="arena">Magic Arena</option><option value="archi">Archidekt (1x Nom)</option><option value="scry">Scryfall (une carte par ligne)</option><option value="csv">Tableur (CSV)</option></select></div>
+<div style="flex:1 1 160px"><label style="display:flex;gap:8px;align-items:center;margin-top:30px"><input type="checkbox" id="dl_res" style="width:auto"> Ajouter la Réserve</label></div></div>
+<small id="dl_note" class="mute"></small>
 <textarea id="dl" readonly style="min-height:300px"></textarea>
 <button class="go" id="cp">Copier la decklist</button> <small id="cpm"></small></div></section>
 
@@ -258,8 +261,7 @@ function render(){
   $("cnt").textContent=total();
   const rw=rows();$("tb").innerHTML=rw.length?groupBy(rw,F.s,F.first,x=>x.c).map(([t,l])=>(t?`<tr><td colspan="9"><b>${esc(t)} (${l.reduce((a,x)=>a+x.c.q,0)})</b></td></tr>`:"")+l.map(({c,i})=>{const r=db(c),e=eff(c),mc=cardMana(c);return`<tr><td>${c.q}</td><td><button class="lnk" data-card="${esc(c.n)}">${esc(c.n)}</button> <button class="lnk" data-f="${i}" title="Fonctions détectées" aria-label="Fonctions détectées">ⓘ</button>${r&&r.sup.includes("Legendary")?" ★":""}</td><td>${mc?manaHtml(mc):""}</td><td>${c.c}</td><td>${esc(r?r.tl.split(" // ")[0]:c.t)}</td><td>${e.p}${e.s.length?" +"+e.s.length:""}${r&&r.fx?" ✎":""}</td><td><input type="checkbox" data-l="${i}" ${c.l?"checked":""} aria-label="Verrouiller"></td><td><input type="checkbox" data-g="${i}" ${c.g?"checked":""} aria-label="Game Changer"></td><td><button class="act" data-rp="${i}">Remplacer</button><button class="act" data-rt="${i}">Retirer</button></td></tr>`}).join("")).join(""):`<tr><td colspan="9" class="mute">Aucune carte.</td></tr>`;
   const t=total();
-  const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
-  $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\n`:"")+(S.p.p_comp==="1"&&S.p.p_compn?`Compagnon\n1 ${S.p.p_compn}\n\n`:"")+(S.p.p_cmd?"Deck\n":"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
+  $("dl").value=dlText();
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
   {const vis=VM==="vis";$("tw_tb").style.display=vis?"none":"";$("tvis").style.display=vis?"block":"none";
     $("tvis").innerHTML=vis?(rw.length?groupBy(rw,F.s,F.first,x=>x.c).map(([t,l])=>(t?`<h3>${esc(t)} (${l.reduce((a,x)=>a+x.c.q,0)})</h3>`:"")+`<div class="cg">${l.map(({c,i})=>ctile(c,i)).join("")}</div>`).join(""):'<small class="mute">Aucune carte.</small>'):""}
@@ -948,6 +950,15 @@ async function byNames(nm,all){const out=[];for(let i=0;i<nm.length;i+=75){const
 /* ===== Étape 4 : affichage Liste / Visuel, Fidélité au plan, page Tester ===== */
 let VM="list";try{VM=localStorage.getItem("cdl_vm")==="vis"?"vis":"list"}catch(e){}
 function vmUI(){document.querySelectorAll(".vmtog").forEach(el=>{const h=`<button type="button" data-vm="list" class="${VM==="list"?"on":""}">Liste</button><button type="button" data-vm="vis" class="${VM==="vis"?"on":""}">Visuel</button>`;if(el.dataset.h!==h){el.innerHTML=h;el.dataset.h=h}})}
+const DLN={txt:"Colle-la dans l'import de Moxfield ou d'Archidekt : les sections Commander et Deck sont reconnues par la plupart des sites.",arena:"Arena : Options → Compte → Decks → Importer. Les cartes à deux faces sont écrites avec leur première face.",archi:"Archidekt : Import → colle la liste (format 1x Nom).",scry:"Une carte par ligne, commandant en premier, sans titres de section.",csv:"À coller dans un tableur : Quantité, Nom, Type, Coût de mana, Rôle."};
+function dlText(){let f="txt";try{f=$("dl_fmt").value||"txt"}catch(e){}const withRes=$("dl_res").checked;$("dl_note").textContent=(DLN[f]||"")+" Si un site ne reconnaît pas le commandant, place-le toi-même.";
+  const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
+  const cmd=S.p.p_cmd||"",comp=S.p.p_comp==="1"&&S.p.p_compn?S.p.p_compn:"",nm=n=>f==="arena"?front(n):n,L=(q,n)=>f==="archi"?`${q}x ${n}`:`${q} ${n}`;
+  if(f==="csv"){const q=x=>'"'+String(x).replace(/"/g,'""')+'"';return[["Quantité","Nom","Type","Coût de mana","Rôle"],...(cmd?[[1,cmd,"Commandant","",""]]:[]),...sorted.map(c=>[c.q,c.n,c.t,c.c,c.r]),...(withRes?S.res.map(c=>[c.q,c.n,"Réserve",c.c,c.r]):[])].map(r=>r.map(q).join(",")).join("\n")}
+  const main=sorted.map(c=>L(c.q,nm(c.n))),rs=withRes?S.res.map(c=>L(c.q,nm(c.n))):[];let o="";
+  if(f==="scry")o=(cmd?`1 ${cmd}\n`:"")+main.join("\n");
+  else{if(cmd)o+=`Commander\n${L(1,nm(cmd))}\n\n`;if(comp)o+=`Companion\n${L(1,nm(comp))}\n\n`;o+=(cmd||comp?"Deck\n":"")+main.join("\n")}
+  if(rs.length)o+=(f==="scry"?"\n":"\n\n")+(f==="scry"?"":"Sideboard\n")+rs.join("\n");return o}
 function cardImg(n){const r=S.db[String(n).toLowerCase()]||S.db[front(n).toLowerCase()];return r?(r.imgfr||r.img||""):""}
 function ctile(c,i){const im=cardImg(c.n),bd=[];if(c.l)bd.push("🔒");if(c.g)bd.push("GC");if(c.pm)bd.push("★");
   return`<div class="tl"><button type="button" class="ct" data-card="${esc(c.n)}" aria-label="${esc(c.n)}">${im?`<img loading="lazy" src="${esc(im)}" alt="${esc(c.n)}">`:`<span class="noimg">${esc(c.n)}</span>`}${c.q>1?`<span class="qb">× ${c.q}</span>`:""}${bd.length?`<span class="bd">${bd.join(" ")}</span>`:""}</button>`+
@@ -1216,6 +1227,8 @@ function init(){
   $("v_go").onclick=verify;$("p_load").onclick=()=>loadCmd().catch(e=>{$("cmd_info").textContent="Erreur : "+e.message});$("s_go").onclick=()=>{simu();rep2()};
   $("impgo").onclick=()=>{if(parse($("imp").value)){$("imp").value="";S.manual=true;save();render();verify()}};
   $("cp").onclick=()=>copy($("dl"),$("cpm"));
+  try{const sf0=localStorage.getItem("cdl_fmt");if(sf0&&[...$("dl_fmt").options].some(o=>o.value===sf0))$("dl_fmt").value=sf0}catch(e){}
+  $("dl_fmt").onchange=()=>{try{localStorage.setItem("cdl_fmt",$("dl_fmt").value)}catch(e){}render()};$("dl_res").onchange=()=>render();
   ["pb_g","pb_k","pb_pl"].forEach(id=>$(id).addEventListener("input",probas));
   $("exc").onclick=()=>copy($("ex"));
   $("exr").onclick=()=>{try{const o=JSON.parse($("ex").value);if(o&&o.cards){Object.assign(G.db,o.db||{});S=o;S.p=S.p||{};S.res=S.res||[];S.db=G.db;save();render()}}catch(e){alert("Texte de sauvegarde invalide.")}};
