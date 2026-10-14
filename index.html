@@ -64,6 +64,23 @@ button.act{background:none;border:1px solid var(--line);color:var(--acc);border-
 button.seeb{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--acc);border-radius:6px;padding:0 12px;margin:6px 0;font:inherit;font-size:.85rem;cursor:pointer}
 button.prop{display:block;width:100%;text-align:left;background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:9px;margin:6px 0;cursor:pointer;font:inherit}button.prop.on{border-color:var(--acc);background:var(--bg)}
 .cr details{margin-top:4px}.cr summary{color:var(--mute);font-size:.82rem;cursor:pointer}.cr details p{margin:4px 0;font-size:.88rem}
+.vmtog{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:4px 0 10px}
+.vmtog button{background:none;border:0;color:var(--mute);padding:8px 16px;font:600 .85rem "Trebuchet MS",sans-serif;cursor:pointer}
+.vmtog button.on{background:var(--acc);color:var(--bg)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin:6px 0 12px}
+.tl{min-width:0}
+.ct{position:relative;display:block;width:100%;padding:0;border:0;background:none;border-radius:7px;cursor:pointer;color:var(--ink)}
+.ct img{display:block;width:100%;aspect-ratio:488/680;border-radius:7px;background:var(--line)}
+.noimg{display:flex;align-items:center;justify-content:center;text-align:center;width:100%;aspect-ratio:488/680;border:1px solid var(--line);border-radius:7px;padding:6px;font-size:.78rem;background:var(--bg);color:var(--ink)}
+.qb,.bd{position:absolute;background:rgba(0,0,0,.72);color:#fff;font:700 .7rem "Trebuchet MS",sans-serif;padding:2px 6px;border-radius:4px}
+.qb{top:5px;left:5px}.bd{bottom:5px;right:5px}
+.ta{display:flex;gap:4px;margin-top:4px}.ta .act{flex:1;margin:0;padding:6px 0;font-size:.9rem}
+.tr{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.tr:last-child{border-bottom:0}.td{flex:0 0 1.6em}.tb2{flex:1;min-width:0}
+details.tsec{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:0 14px}
+details.tsec summary{cursor:pointer;padding:12px 0;font:700 1rem "Trebuchet MS",sans-serif}
+.fb{position:relative;height:12px;background:var(--bg);border:1px solid var(--line);border-radius:6px;margin:6px 0}.fb i{display:block;height:100%;background:var(--acc);border-radius:5px}.fb b{position:absolute;top:-4px;margin-left:-1px;width:3px;height:18px;background:var(--ink);border-radius:2px}
+.cmb{padding:6px 0;border-bottom:1px solid var(--line)}
+.tv{border-left:6px solid var(--line)}.tv.ok{border-left-color:var(--ok)}.tv.warn{border-left-color:var(--warn)}.tv.bad{border-left-color:var(--bad)}
 </style>
 </head>
 <body>
@@ -109,7 +126,7 @@ button.prop{display:block;width:100%;text-align:left;background:none;border:1px 
 <small class="mute">Tout se sauvegarde automatiquement dans ce navigateur.</small></section>
 
 <section id="build"><div class="box"><h2>Déroulé de la construction</h2><div id="b_log"><small class="mute">Aucune construction pour l'instant. Règle ton plan, puis touche « Construire le deck » dans l'étape Plan.</small></div></div>
-<div class="box"><h2>Résultat (<span id="b_n">0</span> / 99)</h2>
+<div class="box"><h2>Résultat (<span id="b_n">0</span> / 99)</h2><div class="vmtog"></div>
 <div class="row"><div><label>Trier par</label><select id="b_sort"><option value="type">Type de carte</option><option value="cmc">Coût de mana</option><option value="col">Couleur</option><option value="role">Rôle</option></select></div><div id="b_first_w"><label>Type en premier</label><select id="b_first"></select></div></div>
 <div id="b_res" style="margin-top:8px"></div></div>
 <div class="box" id="b_extra"></div>
@@ -142,7 +159,7 @@ button.prop{display:block;width:100%;text-align:left;background:none;border:1px 
 <div class="row"><div><label>Type</label><select id="c_t"></select></div><div><label>Rôle</label><select id="c_r"></select></div></div>
 <button class="go" id="add">Ajouter</button></div>
 <div class="box" id="fiche" style="display:none"></div>
-<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="type">Trier : type</option><option value="cmc">Trier : coût de mana</option><option value="col">Trier : couleur</option><option value="role">Trier : rôle</option><option value="n">Trier : nom</option></select><select id="f_first" aria-label="Type en premier"></select></div><small class="mute">Verr. = jamais proposée au retrait. GC = Game Changer (à cocher toi-même). Remplacer / Retirer envoient la carte en Réserve.</small><div class="tw"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
+<div class="box"><h2>Cartes (<span id="cnt">0</span>)</h2><div class="vmtog"></div><div class="row"><input id="f_q" placeholder="Chercher un nom"><select id="f_t"></select><select id="f_f"></select><select id="f_s"><option value="type">Trier : type</option><option value="cmc">Trier : coût de mana</option><option value="col">Trier : couleur</option><option value="role">Trier : rôle</option><option value="n">Trier : nom</option></select><select id="f_first" aria-label="Type en premier"></select></div><small class="mute">Verr. = jamais proposée au retrait. GC = Game Changer (à cocher toi-même). Remplacer / Retirer envoient la carte en Réserve.</small><div id="tvis"></div><div class="tw" id="tw_tb"><table><thead><tr><th>Qté</th><th>Nom</th><th>Coût</th><th>MV</th><th>Type</th><th>Fonction</th><th>Verr.</th><th>GC</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>
 <div class="box"><h2>Vérifier</h2><small class="mute">Contrôle chaque carte sur Scryfall (nom réel, légalité, identité couleur).</small><br><button class="go sec" id="v_go2">Vérifier avec Scryfall</button><div id="v_out2" style="margin-top:8px"></div></div></section>
 <section id="decklist"><div class="box"><h2>Decklist</h2><div id="dl_info" class="mute"></div>
 <textarea id="dl" readonly style="min-height:300px"></textarea>
@@ -152,6 +169,8 @@ button.prop{display:block;width:100%;text-align:left;background:none;border:1px 
 <div class="box"><h2>Courbe de mana (hors terrains)</h2><div id="dg_curve"></div></div>
 <div class="box"><h2>Types</h2><div id="dg_types"></div></div>
 <div class="box"><h2>Rôles</h2><div id="dg_roles"></div></div></section>
+
+<section id="tst"><div id="tst_msg"></div><div id="tst_out"></div></section>
 
 <section id="probas"><div class="box"><h2>Probabilités de pioche</h2>
 <small class="mute">Chance d'avoir vu au moins 1 carte du groupe choisi, tour par tour (main de 7).</small>
@@ -181,7 +200,7 @@ button.prop{display:block;width:100%;text-align:left;background:none;border:1px 
 <script>
 const TYPES=["Terrain","Créature","Artefact","Enchantement","Éphémère","Rituel","Planeswalker","Autre"];
 const ROLES=["Ramp","Pioche","Interaction","Protection","Balayage","Synergie","Wincon","Autre"];
-const VIEWS={accueil:["accueil"],plan:["projet","export"],construire:["build","construction"],ameliorer:["amel","diagnostic"],tester:["probas","simu","classif","rapport"],decklist:["decklist"],reserve:["reserve"]};
+const VIEWS={accueil:["accueil"],plan:["projet","export"],construire:["build","construction"],ameliorer:["amel","diagnostic"],tester:["tst","probas","simu"],decklist:["decklist"],reserve:["reserve"]};
 const NAVB=[["plan","Plan"],["construire","Construire"],["ameliorer","Améliorer"],["tester","Tester"],["decklist","Decklist"],["reserve","Réserve"]];
 const DEF={p_br:"3",p_vol:"Modéré",p_lands:"36",p_cmc:"3",p_w1:"50",p_w2:"30",p_w3:"20",p_comp:""};let V="accueil";
 const TARGETS={Ramp:[8,12],Pioche:[8,12],Interaction:[6,10],Balayage:[2,4],Protection:[3,6]};
@@ -242,7 +261,9 @@ function render(){
   const sorted=[...S.cards].sort((a,b)=>TYPES.indexOf(a.t)-TYPES.indexOf(b.t)||a.c-b.c||a.n.localeCompare(b.n));
   $("dl").value=(S.p.p_cmd?`Commandant\n1 ${S.p.p_cmd}\n\n`:"")+(S.p.p_comp==="1"&&S.p.p_compn?`Compagnon\n1 ${S.p.p_compn}\n\n`:"")+(S.p.p_cmd?"Deck\n":"")+sorted.map(c=>`${c.q} ${c.n}`).join("\n");
   $("dl_info").textContent=`${t} cartes sur 99 (+ commandant)`+(t>99?" – trop de cartes":t<99?` – il en manque ${99-t}`:" – complet");
-  bt();amUI();diag();probas();fillObj();res();cls();rep2();
+  {const vis=VM==="vis";$("tw_tb").style.display=vis?"none":"";$("tvis").style.display=vis?"block":"none";
+    $("tvis").innerHTML=vis?(rw.length?groupBy(rw,F.s,F.first,x=>x.c).map(([t,l])=>(t?`<h3>${esc(t)} (${l.reduce((a,x)=>a+x.c.q,0)})</h3>`:"")+`<div class="cg">${l.map(({c,i})=>ctile(c,i)).join("")}</div>`).join(""):'<small class="mute">Aucune carte.</small>'):""}
+  bt();amUI();diag();probas();fillObj();res();cls();rep2();vmUI();if(V==="tester")tstUI();if(VM==="vis"&&(V==="construire"||V==="ameliorer"))ensureImgs();
   $("ex").value=JSON.stringify(S);
 }
 function diag(){
@@ -346,12 +367,12 @@ function analyze(r){const ox=r.ox||"",isLand=r.ty.includes("Land"),sents=ox.spli
   const tags=TAGS.filter(([t,re])=>re.test(ox)).map(x=>x[0]).concat(r.sub.filter(x=>/^[A-Z]/.test(x)).map(x=>"Tribu:"+x),r.kw||[]);
   const pc=dir.length||!con.length?null:con[0].cond;return{v:1,p,pc,s,c,tags:[...new Set(tags)]}}
 function mkRec(c){const fc=c.card_faces||[],ox=c.oracle_text||fc.map(x=>x.oracle_text).join("\n//\n"),tl=c.type_line||"",main=tl.split(" // ")[0].split(" — "),sub=main[1]?main[1].split(" "):[];
-  const r={id:c.id,oid:c.oracle_id,n:c.name,mc:c.mana_cost||(fc[0]&&fc[0].mana_cost)||"",cmc:c.cmc,tl,
+  const r={id:c.id,oid:c.oracle_id,n:c.name,img:((c.image_uris||(fc[0]||{}).image_uris)||{}).small||"",mc:c.mana_cost||(fc[0]&&fc[0].mana_cost)||"",cmc:c.cmc,tl,
    sup:(main[0].match(/Legendary|Basic|Snow|World|Tribal/g)||[]),ty:main[0].replace(/Legendary|Basic|Snow|World|Tribal/g,"").trim().split(/\s+/).filter(Boolean),sub,
    col:c.colors||[],ci:c.color_identity||[],ox,kw:c.keywords||[],leg:(c.legalities||{}).commander||"",gc:!!c.game_changer,rk:c.edhrec_rank||null,
    rel:[],syn:[],com:null,cls:{gc:!!c.game_changer}};
   r.an=analyze(r);return r}
-function store(c){const k=c.name.toLowerCase(),o=S.db[k],r=mkRec(c);if(o){["fx","rel","syn","com"].forEach(x=>{if(o[x])r[x]=o[x]})}S.db[k]=r;return r}
+function store(c){const k=c.name.toLowerCase(),o=S.db[k],r=mkRec(c);if(o){["fx","rel","syn","com","imgfr"].forEach(x=>{if(o[x])r[x]=o[x]})}S.db[k]=r;return r}
 const db=c=>S.db[(c.n||"").toLowerCase()];
 function eff(c){const r=db(c);if(!r)return{p:c.t==="Terrain"?"Terrain":c.r,s:[]};return r.fx||r.an}
 const fnList=c=>{const e=eff(c);return[e.p,...e.s]};
@@ -377,7 +398,7 @@ function bt(){$("b_n").textContent=total();
   const mode=$("b_sort").value||"type",first=$("b_first").value||"Créature";$("b_first_w").style.display=mode==="type"?"block":"none";
   const out=$("b_res");
   if(!S.cards.length){out.innerHTML='<small class="mute">Pas encore de deck. Règle ton plan, puis touche « Construire le deck » dans l\'étape Plan.</small>';$("b_extra").innerHTML="";return}
-  out.innerHTML=groupBy(S.cards,mode,first,c=>c).map(([t,l])=>`<h3>${esc(t)} (${l.reduce((a,c)=>a+c.q,0)})</h3>`+l.map(crow).join("")).join("");
+  out.innerHTML=(VM==="vis"?'<small class="mute">Touche une carte pour l\'agrandir et lire pourquoi le Lab l\'a choisie.</small>':"")+groupBy(S.cards,mode,first,c=>c).map(([t,l])=>`<h3>${esc(t)} (${l.reduce((a,c)=>a+c.q,0)})</h3>`+(VM==="vis"?`<div class="cg">${l.map(c=>ctile(c,null)).join("")}</div>`:l.map(crow).join(""))).join("");
   const rj=S.rej||[],nr=S.near||[];
   $("b_extra").innerHTML=`<h2>Ce que le Lab a écarté</h2><details><summary>Presque prises (${nr.length})</summary><small class="mute">Des cartes qui ont failli entrer, avec la carte qu'elles auraient remplacée (12 au maximum).</small>`+(nr.map(x=>`<p style="margin:6px 0"><button class="lnk" data-card="${esc(x.n)}">${esc(x.n)}</button>${x.rep?` <small class="mute">aurait remplacé</small> <button class="lnk" data-card="${esc(x.rep)}">${esc(x.rep)}</button>`:""}<br><small class="mute">${esc(x.why)}</small></p>`).join("")||'<p class="mute">Aucune.</p>')+`</details><details><summary>Cartes écartées, avec la raison (${rj.length})</summary><small class="mute">Cartes très jouées avec ce commandant que le Lab n'a pas pu ou voulu prendre.</small>`+(rj.map(x=>`<p style="margin:6px 0"><button class="lnk" data-card="${esc(x.n)}">${esc(x.n)}</button><br><small class="mute">${esc(x.why)}</small></p>`).join("")||'<p class="mute">Aucune.</p>')+`</details>`}
 const Q={Ramp:'(o:"search your library for a basic land" OR o:"search your library for up to two basic" OR o:"{T}: Add") cmc<=3 -t:land',
@@ -601,7 +622,7 @@ async function cardData(name){const k=name.toLowerCase();if(CC[k])return CC[k];l
   if(!out){let c;try{c=await sf("/cards/named?exact="+encodeURIComponent(name))}catch(e){c=await sf("/cards/named?fuzzy="+encodeURIComponent(name))}out=viewOf(c,"en")}
   return CC[k]=out}
 async function showCard(name){const o=$("cv"),b=$("cv_b");o.style.display="block";b.innerHTML='<p class="mute">Chargement…</p>';
-  try{const v=await cardData(name);b.innerHTML=`<img src="${esc(v.img)}" alt="${esc(v.name)}"><h3>${esc(v.name)} <small class="mute">${esc(v.mc)}</small></h3><p class="mute">${esc(v.tl)}</p><pre>${esc(v.text)}</pre><small class="mute">${v.lang==="fr"?"Texte français":"Texte anglais (pas de version française trouvée)"}</small>`}
+  try{const v=await cardData(name);b.innerHTML=`<img src="${esc(v.img)}" alt="${esc(v.name)}"><h3>${esc(v.name)} <small class="mute">${esc(v.mc)}</small></h3><p class="mute">${esc(v.tl)}</p><pre>${esc(v.text)}</pre><small class="mute">${v.lang==="fr"?"Texte français":"Texte anglais (pas de version française trouvée)"}</small>`+whyHtml(name)}
   catch(e){b.innerHTML=`<div class="msg bad">Carte introuvable ou connexion indisponible : ${esc(e.message||e)}</div>`}}
 let CMDLD="";
 function cmdCard(){const el=$("cmd_card");if(!S.cmd){el.innerHTML="";return}const v=S.cmd.view;
@@ -713,6 +734,7 @@ async function build(skip){
       try{if(s.k==="edh")m=edhParse(await edhGet("commanders/"+S.edh.slug+"/"+s.slug));
         else{src="scry";(await sfs(`${base} ${s.q}`)).slice(0,80).forEach(c=>{m[c.name]={pct:40,syn:0,tg:[]}})}}catch(e){say("warn","Stratégie « "+esc(s.lab)+" » : "+esc(e.message))}
       thm.push({m,src})}
+    S.thm=packThm(sel,thm);
     /* 2. Besoins de base d'après le deck moyen EDHREC */
     step("Lecture du deck moyen EDHREC…");const avg=await edhAvg(S.edh.slug),need={...DEFNEED};let avgN=0;
     const scry={},put=l=>l.forEach(c=>{scry[c.name.toLowerCase()]=c;scry[front(c.name).toLowerCase()]=c});
@@ -838,14 +860,14 @@ function amCands(role,all,outCard){
     (S.cmd&&S.cmd.ci||[]).forEach(c=>{const nm={W:"Plains",U:"Island",B:"Swamp",R:"Mountain",G:"Forest"}[c];o.push({n:nm,pct:0,syn:0,fn:["Terrain"],land:true,basic:true})});
     if(S.cmd&&!S.cmd.ci.length)o.push({n:"Wastes",pct:0,syn:0,fn:["Terrain"],land:true,basic:true});return o.slice(0,5)}
   const inD=new Set(S.cards.map(c=>c.n.toLowerCase())),inR=new Set(S.res.map(c=>c.n.toLowerCase())),ex=new Set((S.p.p_excl||"").split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean));
-  const st=deckStats(S.cards.filter(c=>c!==outCard)),vol=S.p.p_vol||"Modéré",b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,maxTut=vol==="Casual"?0:vol==="Modéré"?3:99,maxCtr=vol==="Casual"?6:99,bud=+S.p.p_bud||0;
+  const sT=AM&&AM.strat!=null&&S.thm&&S.thm.list[AM.strat]?new Set(S.thm.list[AM.strat].names):null,st=deckStats(S.cards.filter(c=>c!==outCard)),vol=S.p.p_vol||"Modéré",b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,maxTut=vol==="Casual"?0:vol==="Modéré"?3:99,maxCtr=vol==="Casual"?6:99,bud=+S.p.p_bud||0;
   return(S.cand||[]).filter(x=>{const k=x.n.toLowerCase();if(inD.has(k)||inR.has(k)||ex.has(k))return false;
-    if(!all&&!(role==="Synergie"?roleOf(x.fn[0])==="Synergie":x.fn.includes(role)))return false;
+    if(sT){if(!sT.has(k)&&!sT.has(front(x.n).toLowerCase()))return false}else if(!all&&!(role==="Synergie"?roleOf(x.fn[0])==="Synergie":x.fn.includes(role)))return false;
     if(x.gc&&st.gc>=maxGC)return false;if(x.fn.includes("Tuteur")&&st.tut>=maxTut)return false;if(x.ct&&st.ctr>=maxCtr)return false;if(bud&&x.p>bud*.15)return false;return !!candRec(x.n)}).sort((a,b)=>b.s-a.s).slice(0,5)}
 function suggestOut(pool){const st=deckStats(S.cards),sc=new Map((S.cand||[]).map(x=>[x.n.toLowerCase(),x.s]));let best=null,bk=1e9;
   pool.forEach(i=>{const c=S.cards[i];if(!c||c.l)return;const k0=c.n.toLowerCase();let s=sc.has(k0)?sc.get(k0):(c.t==="Terrain"?(BASICS[c.n]?-5:20):500);
-    const f=fnList(c)[0],sur=NEEDR.includes(f)?st.f[f]-needOf(f):(c.r==="Synergie"?3:0),k=s-10*Math.max(0,sur)+(NEEDR.includes(f)&&sur<=0?25:0);if(k<bk){bk=k;best=i}});return best}
-function amStart(o){AM=Object.assign({mode:"add",role:"Synergie",outIdx:null,pickOut:false,all:false,sel:null,empty:false,inCard:null,fromRes:null},o);
+    const f=fnList(c)[0],sur=NEEDR.includes(f)?st.f[f]-needOf(f):(c.r==="Synergie"?3:0),k=s-10*Math.max(0,sur)+(NEEDR.includes(f)&&sur<=0?25:0)+((AM&&AM.strat!=null&&S.thm&&S.thm.list.some(t=>t.names.includes(k0)||t.names.includes(front(c.n).toLowerCase())))?20:0);if(k<bk){bk=k;best=i}});return best}
+function amStart(o){AM=Object.assign({mode:"add",role:"Synergie",outIdx:null,pickOut:false,all:false,sel:null,empty:false,inCard:null,fromRes:null,strat:null},o);
   if(AM.pickOut&&AM.outIdx==null&&(AM.mode==="rm"||total()>=99))AM.outIdx=suggestOut(amPool());go("ameliorer");render();const b=$("am_box");if(b&&b.scrollIntoView)b.scrollIntoView({block:"start"})}
 function amOut(){const m=AM;if(!m)return null;if(m.mode==="rm"||m.mode==="rep")return m.outIdx!=null?S.cards[m.outIdx]||null:null;return total()>=99&&m.outIdx!=null?S.cards[m.outIdx]||null:null}
 function amPool(){const m=AM,C=S.cards;return C.map((c,i)=>i).filter(i=>{const c=C[i];
@@ -864,14 +886,14 @@ function amUI(){
   $("am_undo").innerHTML=UNDO&&UNDO.pid===G.cur?`<button class="go sec" id="am_undo_b" style="margin-top:8px">↩ Annuler le dernier changement (${esc(UNDO.label)})</button>`:"";
   const box=$("am_box");if(!AM){box.style.display="none";box.innerHTML="";return}box.style.display="block";
   const m=AM,out=amOut(),full=total()>=99;let h="";
-  const title=m.inCard?`Ajouter <button class="lnk" data-card="${esc(m.inCard.n)}"><b>${esc(m.inCard.n)}</b></button>`:m.mode==="rm"?"Retirer une carte":m.mode==="rep"?`Remplacer <button class="lnk" data-card="${esc(out?out.n:"")}"><b>${esc(out?out.n:"")}</b></button>`:`Ajouter une carte (${esc(m.role)})`;
+  const title=m.inCard?`Ajouter <button class="lnk" data-card="${esc(m.inCard.n)}"><b>${esc(m.inCard.n)}</b></button>`:m.mode==="rm"?"Retirer une carte":m.mode==="rep"?`Remplacer <button class="lnk" data-card="${esc(out?out.n:"")}"><b>${esc(out?out.n:"")}</b></button>`:m.strat!=null&&S.thm&&S.thm.list[m.strat]?`Renforcer la stratégie « ${esc(S.thm.list[m.strat].lab)} »`:`Ajouter une carte (${esc(m.role)})`;
   h+=`<h2>${title}</h2>`;
   if(m.inCard||m.mode==="add"){if(full){h+=`<label>Le deck a déjà ${total()} cartes. Quelle carte retirer ?</label>`;h+=amOutSel(m)}else h+=`<div class="msg ok">Le deck a ${total()} cartes : il reste de la place, aucune carte à retirer.</div>`}
   else if(m.pickOut){h+=`<label>Quelle carte retirer ?</label>`+amOutSel(m)}
   else h+=`<p>Carte retirée : <button class="lnk" data-card="${esc(out?out.n:"")}"><b>${esc(out?out.n:"")}</b></button> <small class="mute">(elle ira en Réserve)</small></p>`;
   if(!m.inCard){const cs=amCands(m.role,m.all,out);m.lastC=cs;
-    if(cs.length<5&&!m.all&&m.role!=="Terrains"&&!(S.moreR&&S.moreR[m.role]))setTimeout(()=>amFetchMore(m.role),0);
-    h+=`<label>${m.mode==="rm"?"Remplaçantes proposées":"Propositions"} <small class="mute">(${m.all?"toutes fonctions":"même fonction : "+esc(m.role)})</small></label>`;
+    if(cs.length<5&&!m.all&&m.strat==null&&m.role!=="Terrains"&&!(S.moreR&&S.moreR[m.role]))setTimeout(()=>amFetchMore(m.role),0);
+    h+=`<label>${m.mode==="rm"?"Remplaçantes proposées":"Propositions"} <small class="mute">(${m.strat!=null&&S.thm&&S.thm.list[m.strat]?"cartes de la stratégie « "+esc(S.thm.list[m.strat].lab)+" »":m.all?"toutes fonctions":"même fonction : "+esc(m.role)})</small></label>`;
     if(S.moreR&&S.moreR[m.role]==="loading")h+=`<div class="msg">Recherche d'autres cartes sur Scryfall (même fonction)…</div>`;
     h+=cs.length?cs.map(x=>{const r=candRec(x.n),mc=x.land?"":(r?r.mc:"");return`<div class="propw"><button class="prop${m.sel===x.n&&!m.empty?" on":""}" data-pick="${esc(x.n)}"><b>${esc(x.n)}</b> ${mc?manaHtml(mc):""}<br><small class="mute">${x.basic?"Terrain de base":x.land?`Terrain · joué dans ${x.pct} % des decks`:(x.ext?"Trouvée sur Scryfall (hors données EDHREC)":`${x.pct} % des decks`)+(x.syn>=5?` · synergie +${x.syn}`:"")+` · ${esc(x.fn.join(", "))}`}</small></button><button type="button" class="seeb" data-card="${esc(x.n)}" aria-label="Voir la carte ${esc(x.n)}">Voir la carte</button></div>`}).join(""):`${S.moreR&&S.moreR[m.role]==="loading"?"":'<div class="msg warn">Aucune carte conforme à tes réglages trouvée pour cette fonction. Essaie « toutes fonctions » ou ajoute une carte à la main.</div>'}`;
     h+=`<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="am_all" style="width:auto"${m.all?" checked":""}> Voir toutes les fonctions</label>`;
@@ -923,6 +945,211 @@ function fiheClick(e){const b=$("fiche"),i=+b.dataset.i,c=S.cards[i],r=c&&db(c),
 function objUI(){S.obj=S.obj||[];$("o_list").innerHTML=S.obj.map((o,i)=>`<div class="msg ok">${esc(o.a)} <button class="lnk" data-card="${esc(o.n)}"><b>${esc(o.n)}</b></button> au tour ${o.t}<button data-od="${i}" aria-label="Supprimer" style="float:right;background:none;border:0;color:var(--bad);cursor:pointer">✕</button></div>`).join("")||'<small class="mute">Aucun objectif pour l\'instant.</small>'}
 async function loadTribes(){try{const c=localStorage.getItem("cdl_tr");if(c){TRIBES=JSON.parse(c);return}const d=await sf("/catalog/creature-types");if(d.data&&d.data.length){TRIBES=d.data;localStorage.setItem("cdl_tr",JSON.stringify(TRIBES))}}catch(e){}}
 async function byNames(nm,all){const out=[];for(let i=0;i<nm.length;i+=75){const d=await sf("/cards/collection",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifiers:nm.slice(i,i+75).map(name=>({name}))})});out.push(...d.data.filter(c=>all||c.color_identity.every(x=>S.cmd.ci.includes(x))))}return out}
+/* ===== Étape 4 : affichage Liste / Visuel, Fidélité au plan, page Tester ===== */
+let VM="list";try{VM=localStorage.getItem("cdl_vm")==="vis"?"vis":"list"}catch(e){}
+function vmUI(){document.querySelectorAll(".vmtog").forEach(el=>{const h=`<button type="button" data-vm="list" class="${VM==="list"?"on":""}">Liste</button><button type="button" data-vm="vis" class="${VM==="vis"?"on":""}">Visuel</button>`;if(el.dataset.h!==h){el.innerHTML=h;el.dataset.h=h}})}
+function cardImg(n){const r=S.db[String(n).toLowerCase()]||S.db[front(n).toLowerCase()];return r?(r.imgfr||r.img||""):""}
+function ctile(c,i){const im=cardImg(c.n),bd=[];if(c.l)bd.push("🔒");if(c.g)bd.push("GC");if(c.pm)bd.push("★");
+  return`<div class="tl"><button type="button" class="ct" data-card="${esc(c.n)}" aria-label="${esc(c.n)}">${im?`<img loading="lazy" src="${esc(im)}" alt="${esc(c.n)}">`:`<span class="noimg">${esc(c.n)}</span>`}${c.q>1?`<span class="qb">× ${c.q}</span>`:""}${bd.length?`<span class="bd">${bd.join(" ")}</span>`:""}</button>`+
+  (i!=null?`<div class="ta"><button type="button" class="act" data-rp="${i}" aria-label="Remplacer ${esc(c.n)}">↔</button><button type="button" class="act" data-rt="${i}" aria-label="Retirer ${esc(c.n)}">✕</button><button type="button" class="act" data-lk="${i}" aria-label="${c.l?"Déverrouiller":"Verrouiller"} ${esc(c.n)}">${c.l?"🔓":"🔒"}</button></div>`:"")+`</div>`}
+function whyHtml(n){const k=S.cards.find(c=>c.n.toLowerCase()===String(n).toLowerCase()||front(c.n).toLowerCase()===front(n).toLowerCase());if(!k||!(k.w||k.h||k.k))return"";
+  return`<h3>Pourquoi cette carte ?${k.pm?" ★ pièce maîtresse":""}</h3><p><b>Pourquoi :</b> ${esc(k.w||"—")}</p><p><b>Comment :</b> ${esc(k.h||"—")}</p><p><b>Conséquence :</b> ${esc(k.k||"—")}</p>`}
+const IMG={busy:false,tried:new Set(),frTried:new Set()};
+async function ensureImgs(){if(IMG.busy)return;const names=[...new Set(S.cards.map(c=>c.n))];
+  const miss=names.filter(n=>!cardImg(n)&&!IMG.tried.has(n.toLowerCase())),frm=names.filter(n=>!BASICS[n]&&cardImg(n)&&!IMG.frTried.has(n.toLowerCase())&&!(S.db[n.toLowerCase()]||{}).imgfr);
+  if(!miss.length&&!frm.length)return;IMG.busy=true;
+  try{
+    if(miss.length){miss.forEach(n=>IMG.tried.add(n.toLowerCase()));
+      for(let i=0;i<miss.length;i+=75){const d=await sf("/cards/collection",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifiers:miss.slice(i,i+75).map(name=>({name}))})});(d.data||[]).forEach(c=>store(c))}}
+    else{const fl=frm.slice(0,90);fl.forEach(n=>IMG.frTried.add(n.toLowerCase()));
+      for(let i=0;i<fl.length;i+=15){const ch=fl.slice(i,i+15);
+        try{const q="lang:fr ("+ch.map(n=>'!"'+n.replace(/"/g,"")+'"').join(" or ")+")";
+          const d=await sf("/cards/search?include_multilingual=true&unique=prints&order=released&q="+encodeURIComponent(q));
+          (d.data||[]).forEach(c=>{if(c.lang!=="fr")return;const im=(c.image_uris||((c.card_faces||[])[0]||{}).image_uris||{}).small;if(!im)return;const r=S.db[c.name.toLowerCase()];if(r&&!r.imgfr)r.imgfr=im})}catch(e){}}}
+  }catch(e){}
+  IMG.busy=false;save();render()}
+
+/* ---- Fidélité au plan ---- */
+const thmKey=sel=>JSON.stringify(sel.map(s=>[s.lab,Math.round(s.w*100)]));
+async function thmFetch(sel){const base=`f:commander id<=${S.cmd.ci.join("")||"c"}`,out=[];
+  for(const s of sel){let m={},src="edh";
+    try{if(s.k==="edh")m=edhParse(await edhGet("commanders/"+S.edh.slug+"/"+s.slug));else{src="scry";(await sfs(`${base} ${s.q}`)).slice(0,80).forEach(c=>{m[c.name]={pct:40,syn:0,tg:[]}})}}catch(e){}
+    out.push({m,src})}
+  return out}
+function packThm(sel,thm){const g=(S.edh&&S.edh.cards)||{};
+  return{key:thmKey(sel),list:sel.map((s,i)=>{const t=thm[i]||{m:{},src:"edh"},o=[];
+    Object.entries(t.m).forEach(([n,e])=>{if(t.src==="scry"||e.syn>=5||(e.pct-((g[n]||{}).pct||0))>=10)o.push(n.toLowerCase())});
+    return{lab:s.lab,w:s.w,src:t.src,names:o}})}}
+const inStrat=(s,c)=>s.names.includes(c.n.toLowerCase())||s.names.includes(front(c.n).toLowerCase());
+function fidel(){const T=S.thm;if(!T||!T.list.length)return null;const nl=S.cards.filter(c=>c.t!=="Terrain");
+  const cnt=T.list.map(s=>nl.reduce((a,c)=>a+(inStrat(s,c)?c.q:0),0)),tot=cnt.reduce((a,b)=>a+b,0),plan=nl.reduce((a,c)=>a+(T.list.some(s=>inStrat(s,c))?c.q:0),0);
+  const rows=T.list.map((s,i)=>({i,lab:s.lab,w:s.w,sh:tot?cnt[i]/tot:0,n:cnt[i],d:((tot?cnt[i]/tot:0)-s.w)*100,miss:Math.max(0,Math.round(s.w*tot)-cnt[i])})).filter(r=>r.w>0);
+  rows.forEach(r=>{r.s=Math.abs(r.d)<=5?"g":Math.abs(r.d)<=12?"o":"r"});
+  const score=tot?rows.reduce((a,r)=>a+Math.min(r.sh,r.w),0):0;return{rows,tot,plan,score,s:hi(score*100,85,70)}}
+
+/* ---- Probabilités et simulation ---- */
+const ST={g:"🟢",o:"🟠",r:"🔴",n:"⚪"},TST={cLoad:false,thmTried:{},simKey:"",sim:null};
+const lfT=[0];for(let i=1;i<=130;i++)lfT[i]=lfT[i-1]+Math.log(i);
+const lCh=(n,k)=>k<0||k>n?-Infinity:lfT[n]-lfT[k]-lfT[n-k];
+function hyR(N,K,n,a,b){let p=0;for(let j=Math.max(a,0);j<=Math.min(b,K,n);j++){if(n-j>N-K)continue;p+=Math.exp(lCh(K,j)+lCh(N-K,n-j)-lCh(N,n))}return Math.min(1,p)}
+const hyP=(N,K,n,k)=>hyR(N,K,n,k,n);
+const pcT=x=>Math.round(x*100),f1=x=>(Math.round(x*10)/10).toString().replace(".",",");
+const hi=(v,g,o)=>v>=g?"g":v>=o?"o":"r",rg=(v,a,b,t)=>v>=a&&v<=b?"g":(v>=a-t&&v<=b+t)?"o":"r";
+const worst=a=>a.includes("r")?"r":a.includes("o")?"o":a.includes("g")?"g":"n";
+const NAMEC={W:"Blanc",U:"Bleu",B:"Noir",R:"Rouge",G:"Vert"};
+const pipsOf=mc=>{const o={};(String(mc||"").match(/\{[^}]+\}/g)||[]).forEach(s=>{(s.match(/[WUBRG]/g)||[]).forEach(k=>{o[k]=(o[k]||0)+1})});return o};
+function tstSim(){const C=S.cards,cm=S.cmd?S.cmd.cmc:+(S.p.p_cmc||3),obj=(S.obj||[]).map(o=>({o,c:C.find(c=>c.n.toLowerCase()===o.n.toLowerCase()||front(c.n).toLowerCase()===o.n.toLowerCase())}));
+  const key=JSON.stringify([C.map(c=>c.n+c.q),cm,(S.obj||[]).map(o=>[o.a,o.n,o.t])]);if(TST.simKey===key)return TST.sim;
+  const lib=[];C.forEach(c=>{for(let k=0;k<c.q;k++)lib.push(c)});if(lib.length<40){TST.simKey=key;TST.sim=null;return null}
+  const T=Math.min(12,Math.max(8,...obj.map(x=>+x.o.t||0))),N=4000,need=Math.min(lib.length,7+T),isR=c=>c.t!=="Terrain"&&c.c<=3&&fnList(c).includes("Ramp");
+  const cast=[0,1,2].map(()=>Array(T+1).fill(0)),oD=obj.map(()=>0),oP=obj.map(()=>0);let k1=0,k2=0;
+  const sh=()=>{for(let i=0;i<need;i++){const j=i+Math.floor(Math.random()*(lib.length-i));[lib[i],lib[j]]=[lib[j],lib[i]]}},ln=()=>{let l=0;for(let i=0;i<7;i++)if(lib[i].t==="Terrain")l++;return l};
+  for(let s=0;s<N;s++){sh();let l0=ln();const ok0=l0>=2&&l0<=5;if(ok0)k1++;if(!ok0){sh();l0=ln()}if(ok0||(l0>=2&&l0<=5))k2++;
+    let idx=0,ls=0,rh=[],rp=0;
+    for(let t=1;t<=T;t++){const seen=Math.min(lib.length,6+t);while(idx<seen){const c=lib[idx];if(c.t==="Terrain")ls++;else if(isR(c))rh.push(c.c);idx++}
+      const mana=Math.min(t,ls)+rp;[0,1,2].forEach(x=>{if(mana>=cm+2*x)cast[x][t]++});
+      obj.forEach((x,i)=>{if(!x.c||t!==+x.o.t)return;let dr=false;for(let q=0;q<seen;q++)if(lib[q]===x.c){dr=true;break}if(dr){oD[i]++;if(mana>=x.c.c)oP[i]++}});
+      rh.sort((a,b)=>a-b);let sp=0;const keep=[];rh.forEach(mv=>{if(mv<=mana-sp){sp+=mv;rp++}else keep.push(mv)});rh=keep}}
+  const r={N,T,cm,cast:cast.map(a=>a.map(v=>v/N)),k1:k1/N,k2:k2/N,obj:obj.map((x,i)=>({o:x.o,c:x.c,d:oD[i]/N,p:oP[i]/N}))};TST.simKey=key;TST.sim=r;return r}
+
+/* ---- Combos EDHREC ---- */
+function combosParse(d){const cl=((d.container||{}).json_dict||{}).cardlists||[],out=[];
+  cl.forEach(l=>{const cb=l.combo;if(!cb)return;const names=(l.cardviews||[]).map(v=>v.name).filter(Boolean);if(names.length<2)return;
+    out.push({n:names,r:(Array.isArray(cb.results)?cb.results:[]).map(x=>typeof x==="string"?x:(x&&(x.name||x.text||x.value))||"").filter(Boolean).slice(0,3),c:+cb.count||0})});
+  out.sort((a,b)=>b.c-a.c);return out}
+async function loadCombos(){const slug=S.edh.slug;
+  try{const list=combosParse(await edhGet("combos/"+slug));S.combos={slug,list:list.slice(0,200),total:list.length}}catch(e){S.combos={slug,list:[],err:String(e.message||e)}}save()}
+function tstAsync(){
+  if(S.cmd&&S.edh&&(!S.combos||S.combos.slug!==S.edh.slug)&&!TST.cLoad){TST.cLoad=true;loadCombos().finally(()=>{TST.cLoad=false;if(V==="tester")render()})}
+  const sel=S.cmd&&S.edh?stratSel(S):[];
+  if(sel.length){const k=thmKey(sel);if((!S.thm||S.thm.key!==k)&&!TST.thmTried[k]){TST.thmTried[k]=1;thmFetch(sel).then(t=>{S.thm=packThm(sel,t);save();if(V==="tester")render()}).catch(()=>{})}}}
+async function addFromTester(name,btn){if(btn){btn.disabled=true;btn.textContent="Recherche…"}
+  try{const c=await sf("/cards/named?exact="+encodeURIComponent(name));
+    if(c.legalities.commander!=="legal")throw new Error(c.name+" n'est pas légale en Commander.");
+    if(S.cmd&&!c.color_identity.every(x=>S.cmd.ci.includes(x)))throw new Error(c.name+" est hors de l'identité de couleur du commandant.");
+    if((c.released_at||"")>new Date().toISOString().slice(0,10))throw new Error(c.name+" n'est pas encore sortie.");
+    store(c);const t=tmap(c.type_line),nc={q:1,n:c.name,c:c.cmc,t,r:t==="Terrain"?"Autre":roleOf(fnList({n:c.name,t,r:"Synergie"})[0]),g:!!c.game_changer,mc:c.mana_cost||"",l:false,w:"Ajoutée depuis Tester : elle complète un combo EDHREC de ton deck.",h:"",k:"—"};
+    $("tst_msg").innerHTML="";
+    if(total()>=99){amStart({mode:"add",role:nc.r,pickOut:true,inCard:nc});return}
+    addCard(nc);S.manual=true;save();render()}
+  catch(e){$("tst_msg").innerHTML=`<div class="msg bad">${esc(e.message||e)}</div>`;if(btn){btn.disabled=false;btn.textContent="Réessayer"}}}
+
+/* ---- Page Tester ---- */
+const MLD=["armageddon","ravages of war","catastrophe","devastation","jokulhaups","obliterate","decree of annihilation","ruination","wildfire","apocalypse","boom // bust","impending disaster","sunder","tectonic break","global ruin","cataclysm","from the ashes"];
+const lkc=n=>`<button type="button" class="lnk" data-card="${esc(n)}">${esc(n)}</button>`;
+function tstBuild(){
+  const C=S.cards,nl=C.filter(c=>c.t!=="Terrain"),st=deckStats(C),N=Math.max(total(),20),b=+(S.p.p_br||3),maxGC=b<=2?0:b===3?3:99,vol=S.p.p_vol||"Modéré",maxTut=vol==="Casual"?0:vol==="Modéré"?3:99,maxCtr=vol==="Casual"?6:99;
+  const cm=S.cmd?S.cmd.cmc:+(S.p.p_cmc||3),avg=st.cmc,L=st.lands,need=S.need||{},sim=tstSim(),fid=fidel(),secs=[];
+  const nd=f=>need[f]!==undefined&&S.needSrc==="EDHREC"?` (deck moyen EDHREC : ${need[f]})`:"";
+  const sec=(id,t,items)=>secs.push({id,t,items,s:worst(items.map(i=>i.s))});
+  /* combos */
+  const have=new Set(C.map(c=>front(c.n).toLowerCase())),cmdF=S.cmd?front(S.cmd.name).toLowerCase():"";if(cmdF)have.add(cmdF);
+  const cb=S.combos&&S.edh&&S.combos.slug===S.edh.slug?S.combos:null,cdone=[],cnear=[];
+  if(cb)cb.list.forEach(x=>{const miss=x.n.filter(n=>!have.has(front(n).toLowerCase()));if(!miss.length)cdone.push(x);else if(miss.length===1)cnear.push({...x,miss:miss[0]})});
+  /* Objectifs */
+  {const it=[];
+    if(!(S.obj||[]).length)it.push({s:"n",t:"Objectifs",m:"Aucun objectif noté. Ajoute-en dans l'étape Plan (« Objectifs ») pour voir ici tes chances de les réussir."});
+    (sim?sim.obj:[]).forEach(x=>{if(!x.c){it.push({s:"o",t:`${esc(x.o.a)} ${esc(x.o.n)} au tour ${x.o.t}`,m:"Cette carte n'est pas dans le deck."});return}
+      const j=x.o.a==="Jouer";it.push({s:"n",t:`${esc(x.o.a)} ${esc(x.c.n)} au tour ${x.o.t}`,v:pcT(j?x.p:x.d)+" %",ref:`une carte sur ${N} : ${pcT((6+x.o.t)/N)} % de la piocher sans tuteur`,m:(j?`La piocher : ${pcT(x.d)} % · la piocher avec assez de mana : ${pcT(x.p)} %.`:`La piocher : ${pcT(x.d)} %.`)+" Les tuteurs et la pioche en plus augmentent ces chances (non simulés)."})});
+    const wc=st.f.Wincon,paths=wc+cdone.length;
+    it.push({s:hi(paths,3,2),t:"Chemins de victoire",v:`${wc} carte${wc>1?"s":""} de victoire${cb?` + ${cdone.length} combo${cdone.length>1?"s":""} EDHREC`:""}`,ref:"3 chemins différents ou plus"+nd("Wincon"),m:cb?"":"Les combos EDHREC ne sont pas encore chargés.",fx:paths<3?"add:Wincon":""});
+    sec("obj","Objectifs",it)}
+  /* Commandant */
+  {const it=[];
+    if(!S.cmd)it.push({s:"o",t:"Commandant",m:"Charge un commandant dans l'étape Plan."});
+    else{it.push({s:"n",t:"Coût du commandant",v:`MV ${cm}`,m:`Avec la taxe : MV ${cm+2} au 2e lancer, MV ${cm+4} au 3e.`});
+      if(sim){const tt=Math.min(cm+1,sim.T),P=sim.cast[0][tt];
+        it.push({s:hi(P*100,70,55),t:`Lançable au tour ${tt}`,v:pcT(P)+" %",ref:"70 % ou plus",m:"Terrains et ramp de MV 3 ou moins comptés. Les couleurs ne sont pas simulées (voir Mana et couleurs).",fx:P<.7?"add:Ramp":""});
+        const f=a=>{for(let t=1;t<=sim.T;t++)if(a[t]>=.75)return"tour "+t;return"après le tour "+sim.T};
+        it.push({s:"n",t:"Tour où il devient lançable (75 % des parties)",m:`1er lancer (MV ${cm}) : ${f(sim.cast[0])} · 2e (MV ${cm+2}) : ${f(sim.cast[1])} · 3e (MV ${cm+4}) : ${f(sim.cast[2])}.`})}}
+    sec("cmd","Commandant",it)}
+  /* Mana et couleurs */
+  {const it=[],g0=avg<2.5?[34,36]:avg<=3.5?[36,38]:[38,40],el=S.edh&&S.edh.land?Math.round(S.edh.land):0,lr=el?[Math.min(g0[0],el),Math.max(g0[1],el)]:g0;
+    it.push({s:rg(L,lr[0],lr[1],1),t:"Terrains",v:L,ref:`${lr[0]} à ${lr[1]} (guides selon le coût moyen ${f1(avg)}${el?`, plus la moyenne EDHREC : ${el}`:""})`,fx:L<lr[0]?"add:Terrains":L>lr[1]?"rm:Terrains":""});
+    const rmp=nl.filter(c=>fnList(c).includes("Ramp")),lr2=rmp.filter(c=>/search your library for[^.]*land/i.test((db(c)||{}).ox||"")).reduce((a,c)=>a+c.q,0);
+    it.push({s:hi(st.f.Ramp,10,8),t:"Ramp",v:`${st.f.Ramp} (dont ${lr2} qui cherchent un terrain)`,ref:"10 à 12"+nd("Ramp"),m:`Avec les ${L} terrains : ${L+st.f.Ramp} sources de mana.`,fx:st.f.Ramp<10?"add:Ramp":""});
+    const big=nl.filter(c=>c.c>=6).reduce((a,c)=>a+c.q,0);
+    it.push({s:avg<=3.5?"g":avg<=3.9?"o":"r",t:"Coût moyen des sorts",v:f1(avg),ref:"3,5 ou moins",m:`${big} carte${big>1?"s":""} de MV 6 ou plus.`});
+    const lands=C.filter(c=>c.t==="Terrain"),pips={},cpips=pipsOf(S.cmd&&S.cmd.mc);nl.forEach(c=>{const p=pipsOf(cardMana(c));Object.keys(p).forEach(k=>{pips[k]=(pips[k]||0)+p[k]*c.q})});
+    const unk=lands.filter(c=>!BASICS[c.n]&&!db(c)).reduce((a,c)=>a+c.q,0),src={};
+    WUBRG.split("").forEach(k=>{src[k]=lands.reduce((a,c)=>a+(landCols(c.n).includes(k)?c.q:0),0)});
+    WUBRG.split("").filter(k=>(pips[k]||0)+(cpips[k]||0)>0).forEach(k=>{const p1=hyP(N,src[k],9,1),heavy=(pips[k]||0)>=12,p2=heavy?hyP(N,src[k],11,2):1,bad=p1<.9||(heavy&&p2<.85);
+      it.push({s:worst([hi(p1*100,90,80),heavy?hi(p2*100,85,70):"g"]),t:`${NAMEC[k]} : ${src[k]} sources`,v:`${pcT(p1)} % d'avoir 1 source au tour 3${heavy?` · 2 sources au tour 5 : ${pcT(p2)} %`:""}`,ref:"90 % ou plus"+(heavy?" (85 % pour 2 sources au tour 5)":""),m:`${pips[k]||0} symbole${(pips[k]||0)>1?"s":""} ${NAMEC[k].toLowerCase()} dans ton deck. Repère simplifié, pas la table complète de Frank Karsten.`,fx:bad?"add:Terrains":""})});
+    if(S.cmd){const ks=Object.keys(cpips).filter(k=>cpips[k]>0);
+      if(ks.length){const tt=Math.max(cm,...ks.map(k=>cpips[k]))+1,ps=ks.map(k=>hyP(N,src[k],6+tt,cpips[k])),pm=Math.min(...ps);
+        it.push({s:hi(pm*100,85,70),t:"Couleurs du commandant",v:pcT(pm)+" % au tour "+tt,ref:"85 % ou plus",m:ks.map((k,i)=>`${NAMEC[k]} (${cpips[k]} symbole${cpips[k]>1?"s":""}) : ${pcT(ps[i])} %`).join(" · "),fx:pm<.85?"add:Terrains":""})}}
+    if(unk)it.push({s:"o",t:"Terrains non analysés",v:unk,m:"Ces terrains n'ont pas de données, leurs couleurs ne sont pas comptées. Lance « Vérifier avec Scryfall » dans Construire."});
+    sec("mana","Mana et couleurs",it)}
+  /* Pioche et moteur */
+  {const it=[],dr=nl.filter(c=>fnList(c).includes("Pioche")),rep=dr.filter(c=>!["Éphémère","Rituel"].includes(c.t)&&/whenever|at the beginning of|\{T\}/i.test((db(c)||{}).ox||"")).reduce((a,c)=>a+c.q,0);
+    it.push({s:hi(st.f.Pioche,10,7),t:"Pioche",v:st.f.Pioche,ref:"10 ou plus"+nd("Pioche"),m:`Dont ${rep} permanent${rep>1?"s":""} qui pioche${rep>1?"nt":""} de façon répétée.`,fx:st.f.Pioche<10?"add:Pioche":""});
+    it.push({s:"n",t:"Voir au moins une carte de pioche au tour 4",v:pcT(hyP(N,st.f.Pioche,10,1))+" %",m:"Probabilité sur 10 cartes vues (à l'initiative)."});
+    it.push({s:"n",t:"Tuteurs",v:st.tut,m:"La limite de ta volonté de jeu est contrôlée dans Bracket et conformité."});
+    sec("draw","Pioche et moteur",it)}
+  /* Interaction et protection */
+  {const it=[],bw=st.f.Balayage;
+    it.push({s:hi(st.f.Interaction,8,6),t:"Interaction",v:st.f.Interaction,ref:"8 ou plus"+nd("Interaction"),m:`Retrait, contre-sorts, rebonds (dont ${st.ctr} contre-sort${st.ctr>1?"s":""}).`,fx:st.f.Interaction<8?"add:Interaction":""});
+    it.push({s:hi(st.f.Protection,3,2),t:"Protection",v:st.f.Protection,ref:"3 ou plus"+nd("Protection"),m:"Cartes qui protègent tes pièces maîtresses (hexproof, indestructible, phasing…).",fx:st.f.Protection<3?"add:Protection":""});
+    it.push({s:bw>=2&&bw<=4?"g":(bw<=1||bw===5)?"o":"r",t:"Balayages",v:bw,ref:"2 à 4"+nd("Balayage"),m:bw===0?"Aucun balayage : est-ce voulu ? Sans balayage, il est difficile de revenir quand on est dépassé.":"",fx:bw<2?"add:Balayage":bw>4?"rm:Balayage":""});
+    sec("int","Interaction et protection",it)}
+  /* Mains de départ */
+  {const it=[],p1=hyR(N,L,7,2,5),p2=1-(1-p1)**2,p0=hyR(N,L,7,0,1),p6=hyR(N,L,7,6,7),eng=nl.filter(c=>{const f=fnList(c);return f.includes("Ramp")||f.includes("Pioche")}).reduce((a,c)=>a+c.q,0);
+    it.push({s:hi(p1*100,75,65),t:"Main de 7 jouable (2 à 5 terrains)",v:pcT(p1)+" %",ref:"75 % ou plus",m:`${pcT(p0)} % de mains avec 0 ou 1 terrain, ${pcT(p6)} % avec 6 ou 7.`,fx:p1<.75?(p0>p6?"add:Terrains":"rm:Terrains"):""});
+    it.push({s:hi(p2*100,90,85),t:"Main jouable avec le mulligan gratuit",v:pcT(p2)+" %",ref:"90 % ou plus",m:"Au Commander, le premier mulligan est gratuit : on repioche 7 cartes."});
+    it.push({s:"n",t:"Terrains dans la main de 7",v:f1(7*L/N)+" en moyenne"});
+    it.push({s:"n",t:"Au moins une carte de ramp ou de pioche dans les 9 premières cartes (tour 3)",v:pcT(hyP(N,eng,9,1))+" %"});
+    sec("hand","Mains de départ",it)}
+  /* Bracket et conformité */
+  {const it=[],mld=C.filter(c=>MLD.includes(c.n.toLowerCase())||MLD.includes(front(c.n).toLowerCase())),xt=nl.filter(c=>/extra turn/i.test((db(c)||{}).ox||"")).reduce((a,c)=>a+c.q,0);
+    const two=cdone.filter(x=>x.n.filter(n=>front(n).toLowerCase()!==cmdF).length<=2&&x.r.some(r=>/infinit|win the game|opponent loses|lose the game/i.test(r)));
+    const why=[];let mn=st.gc>0?3:2,mx=mn;
+    if(st.gc>0)why.push(`${st.gc} Game Changer${st.gc>1?"s":""}`);
+    if(st.gc>3){mn=mx=4;why.push("plus de 3 Game Changers")}
+    if(mld.length){mn=mx=4;why.push("destruction de terrains en masse : "+mld.map(c=>esc(c.n)).join(", "))}
+    if(xt>=3){mn=mx=4;why.push(xt+" cartes à tour supplémentaire")}else if(xt>0){mn=Math.max(mn,3);mx=Math.max(mx,3);why.push(xt+" carte"+(xt>1?"s":"")+" à tour supplémentaire")}
+    if(two.length){mn=Math.max(mn,3);mx=Math.max(mx,4);why.push(`combo à 2 cartes (${two.length}) : Bracket 3 s'il arrive tard dans la partie, 4 sinon`)}
+    const est=mn===mx?`${mn}`:`${mn} à ${mx}`;
+    it.push({s:mn>b?"r":mx>b?"o":"g",t:"Bracket estimé",v:est,ref:`ton maximum : ${b}`,m:(why.length?why.join(" · ")+". ":"Aucun Game Changer, aucune destruction de terrains en masse, aucun combo détecté. ")+"Estimation du Lab d'après les règles officielles des Brackets : ton groupe de jeu peut en juger autrement."});
+    it.push({s:st.gc<=maxGC?"g":"r",t:"Game Changers",v:st.gc,ref:maxGC>90?"illimités":`${maxGC} au maximum (Bracket ${b})`,m:C.filter(c=>c.g).map(c=>lkc(c.n)).join(", "),go:st.gc>maxGC});
+    it.push({s:st.tut<=maxTut?"g":"r",t:"Tuteurs",v:st.tut,ref:maxTut>90?"illimités":`${maxTut} au maximum (volonté ${vol})`,go:st.tut>maxTut});
+    it.push({s:st.ctr<=maxCtr?"g":"r",t:"Contre-sorts",v:st.ctr,ref:maxCtr>90?"illimités":`${maxCtr} au maximum (volonté ${vol})`,go:st.ctr>maxCtr});
+    const ill=[],oci=[];let unv=0;C.forEach(c=>{if(BASICS[c.n])return;const r=db(c);if(!r){unv++;return}if(r.leg&&r.leg!=="legal")ill.push(c.n);if(S.cmd&&r.ci&&!r.ci.every(x=>S.cmd.ci.includes(x)))oci.push(c.n)});
+    const dup=C.filter(c=>c.q>1&&!BASICS[c.n]).map(c=>c.n),nb=ill.length+oci.length+dup.length;
+    it.push({s:nb?"r":unv?"o":"g",t:"Légalité et identité de couleur",v:nb?`${nb} problème${nb>1?"s":""}`:unv?`${unv} carte${unv>1?"s":""} non vérifiée${unv>1?"s":""}`:"tout est bon",
+      m:[ill.length?"Non légales : "+ill.map(lkc).join(", "):"",oci.length?"Hors identité de couleur : "+oci.map(lkc).join(", "):"",dup.length?"Doublons : "+dup.map(lkc).join(", "):"",unv?"Lance « Vérifier avec Scryfall » dans Construire pour contrôler les autres cartes.":""].filter(Boolean).join("<br>"),go:nb>0});
+    let ch="";
+    if(!cb)ch=TST.cLoad?"Chargement des combos EDHREC…":"Combos EDHREC pas encore chargés.";
+    else if(cb.err||!cb.list.length)ch="EDHREC n'a pas de combos lisibles pour ce commandant.";
+    else{const cLine=x=>`<div class="cmb">${x.n.map(lkc).join(" + ")}<br><small class="mute">${esc(x.r.join(" ; ")||"effet non précisé")} · ${x.c} decks</small></div>`;
+      ch=(cdone.length?`<details data-k="cdone"><summary>${cdone.length} combo${cdone.length>1?"s":""} complet${cdone.length>1?"s":""} dans ton deck</summary>${cdone.slice(0,8).map(cLine).join("")}</details>`:"<div>Aucun combo complet dans ton deck.</div>")+
+        (cnear.length?`<details data-k="cnear"><summary>${cnear.length} combo${cnear.length>1?"s":""} à une carte près</summary>${cnear.slice(0,8).map(x=>`<div class="cmb">${x.n.map(n=>n===x.miss?`<b>${esc(n)}</b>`:lkc(n)).join(" + ")}<br><small class="mute">${esc(x.r.join(" ; ")||"effet non précisé")} · ${x.c} decks</small><br><button type="button" class="act" data-addc="${esc(x.miss)}">Ajouter ${esc(x.miss)}</button></div>`).join("")}</details>`:"")+
+        `<small class="mute">Combos listés par EDHREC pour ce commandant (${cb.total} connus). Un combo absent de cette liste n'est pas détecté.</small>`}
+    it.push({s:"n",t:"Combos (EDHREC)",html:ch});
+    sec("brk","Bracket et conformité",it)}
+  return{secs,fid}}
+function tstRow(it){return`<div class="tr"><span class="td">${ST[it.s]}</span><div class="tb2"><b>${it.t}</b>${it.v!==undefined?` : ${it.v}`:""}${it.ref?` <small class="mute">· repère : ${it.ref}</small>`:""}${it.m?`<br><small>${it.m}</small>`:""}${it.html?`<div>${it.html}</div>`:""}${it.fx?` <button type="button" class="act" data-fx="${it.fx}">Corriger dans Améliorer</button>`:""}${it.go?` <button type="button" class="act" data-tgo="1">Voir dans Améliorer</button>`:""}</div></div>`}
+function tstUI(){const out=$("tst_out");if(!out)return;
+  if(!S.cards.length){out.innerHTML='<div class="box"><h2>Tester</h2><small class="mute">Pas encore de deck à tester. Construis-le d\'abord dans l\'étape Plan.</small></div>';return}
+  const was={};out.querySelectorAll("details[data-k]").forEach(d=>{was[d.dataset.k]=d.open});
+  const R=tstBuild(),all=[];R.secs.forEach(s=>s.items.forEach(i=>{if(i.s!=="n")all.push({...i,sec:s.t})}));
+  if(R.fid)all.push({s:R.fid.s,t:"Fidélité au plan",v:pcT(R.fid.score)+" %",ref:"85 % ou plus",sec:"Fidélité"});
+  const nr=all.filter(i=>i.s==="r").length,no=all.filter(i=>i.s==="o").length,ng=all.filter(i=>i.s==="g").length;
+  const vc=nr?"bad":no?"warn":"ok",vt=nr?"À corriger avant de jouer":no?"Solide, quelques points à surveiller":"Prêt à jouer";
+  const prob=[...all.filter(i=>i.s==="r"),...all.filter(i=>i.s==="o")].slice(0,8);
+  let h=`<div class="box tv ${vc}"><h2>${ST[nr?"r":no?"o":"g"]} ${vt}</h2><div>${nr} à corriger · ${no} à surveiller · ${ng} bons</div>`+
+    (prob.length?`<h3>À regarder en premier</h3>`+prob.map(i=>`<div style="padding:4px 0">${ST[i.s]} <b>${i.t}</b>${i.v!==undefined?" : "+i.v:""} <small class="mute">${i.sec}${i.ref?" · repère : "+i.ref:""}</small>${i.fx?` <button type="button" class="act" data-fx="${i.fx}">Corriger</button>`:""}</div>`).join(""):"")+`</div>`;
+  const f=R.fid;
+  h+=`<div class="box"><h2>Fidélité au plan <small class="mute">· la touche du Lab</small></h2>`;
+  if(!f)h+=`<small class="mute">${S.cmd&&S.edh&&stratSel(S).length?"Calcul des stratégies en cours…":"Choisis au moins une stratégie dans l'étape Plan pour mesurer la fidélité du deck à ton plan."}</small>`;
+  else{h+=`<div><span class="big">${pcT(f.score)} %</span> ${ST[f.s]} <small class="mute">repère : 85 % ou plus</small></div><small class="mute">Pour chaque stratégie : la part des cartes du deck qui la servent, comparée à la part que tu avais réglée (trait blanc).</small>`;
+    h+=f.rows.map(r=>`<div style="margin-top:10px"><div><b>${esc(r.lab)}</b> ${ST[r.s]} <small class="mute">cible ${pcT(r.w)} % · réel ${pcT(r.sh)} % (${r.n} carte${r.n>1?"s":""})</small></div><div class="fb"><i style="width:${Math.min(100,pcT(r.sh))}%"></i><b style="left:${Math.min(99,pcT(r.w))}%"></b></div>${r.s!=="g"&&r.miss>0?`<small>Il manque environ ${r.miss} carte${r.miss>1?"s":""} pour atteindre ta cible. <button type="button" class="act" data-fs="${r.i}">Renforcer</button></small>`:""}</div>`).join("");
+    h+=`<p><small class="mute">${f.plan} carte${f.plan>1?"s":""} du deck servent au moins une stratégie (repère : environ 30). Une carte qui sert deux stratégies compte pour les deux. Le Lab reconnaît les cartes d'une stratégie grâce aux listes EDHREC : une carte absente de ces listes n'est pas comptée.</small></p>`}
+  h+=`</div>`;
+  R.secs.forEach(s=>{const k=s.id,op=was[k]!==undefined?was[k]:(s.s==="r"||s.s==="o"),nbad=s.items.filter(i=>i.s==="r").length,nwarn=s.items.filter(i=>i.s==="o").length;
+    h+=`<details class="tsec" data-k="${k}"${op?" open":""}><summary>${ST[s.s]} ${s.t} <small class="mute">${nbad?nbad+" à corriger":nwarn?nwarn+" à surveiller":"rien à signaler"}</small></summary>${s.items.map(tstRow).join("")}</details>`});
+  h+=`<details class="tsec" data-k="lim"${was.lim?" open":""}><summary>Ce que ce test sait faire, et ne sait pas faire</summary><div style="padding-bottom:12px"><p><b>Il sait :</b> calculer des probabilités exactes (mains de départ, couleurs) et jouer 4 000 parties simplifiées pour le mana, le commandant et tes objectifs.</p><p><b>Il ne sait pas :</b> jouer une vraie partie. Il ne tient pas compte des effets des cartes (sauf le ramp de MV 3 ou moins, compté +1 mana), des tuteurs, de la pioche en cours de partie, des adversaires ni des couleurs dans la simulation du commandant. Les repères viennent de guides de la communauté : ce sont des points de comparaison, pas des règles. Un deck peut très bien être orange ou rouge exprès.</p></div></details>`;
+  out.innerHTML=h;tstAsync()}
+
 function init(){
   load();S.db=S.db||{};S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
   $("nav").innerHTML=NAVB.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join("");
@@ -947,7 +1174,9 @@ function init(){
   $("p_cmd").addEventListener("input",sugInput);
   $("p_cmd").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();clearTimeout(sugT);sugN++;loadCmd().catch(er=>{$("cmd_info").textContent="Erreur : "+er.message})}});
   $("sug").onclick=e=>{const b=e.target.closest("[data-sug]");if(!b)return;$("p_cmd").value=b.dataset.sug;S.p.p_cmd=b.dataset.sug;$("sug").style.display="none";loadCmd().catch(er=>{$("cmd_info").textContent="Erreur : "+er.message})};
+  document.addEventListener("error",e=>{const t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".ct")){const sp=document.createElement("span");sp.className="noimg";sp.textContent=t.alt||"";t.replaceWith(sp)}},true);
   document.addEventListener("click",e=>{
+    const vb=e.target.closest("[data-vm]");if(vb){VM=vb.dataset.vm==="vis"?"vis":"list";try{localStorage.setItem("cdl_vm",VM)}catch(x){}render();return}
     const c=e.target.closest("[data-card]");if(c){e.preventDefault();showCard(c.dataset.card);return}
     if(e.target.id==="cv"||e.target.id==="cv_x")$("cv").style.display="none";
     if(!e.target.closest("#sug")&&e.target.id!=="p_cmd")$("sug").style.display="none";
@@ -964,8 +1193,12 @@ function init(){
   cardSugBind($("c_n"),$("c_sug"),c=>{const r=store(c),t=tmap(c.type_line);$("c_n").value=c.name;$("c_c").value=c.cmc||0;$("c_t").value=t;
     $("c_r").value=t==="Terrain"?"Autre":roleOf(fnList({n:c.name,t,r:"Synergie"})[0]);$("c_q").focus()});
   cardSugBind($("o_n"),$("o_sug"),c=>{$("o_n").value=c.name;$("o_t").focus()});
-  $("tb").onclick=e=>{const d=e.target.dataset;if(d.rp!==undefined){const c=S.cards[+d.rp];amStart({mode:"rep",outIdx:+d.rp,role:c.t==="Terrain"?"Terrains":fnList(c)[0]==="Autre"?"Synergie":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}
-    else if(d.rt!==undefined){const c=S.cards[+d.rt];amStart({mode:"rm",outIdx:+d.rt,role:c.t==="Terrain"?"Terrains":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}else if(d.f!==undefined)fiche(+d.f)};
+  const rowAct=d=>{if(d.rp!==undefined){const c=S.cards[+d.rp];amStart({mode:"rep",outIdx:+d.rp,role:c.t==="Terrain"?"Terrains":fnList(c)[0]==="Autre"?"Synergie":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}
+    else if(d.rt!==undefined){const c=S.cards[+d.rt];amStart({mode:"rm",outIdx:+d.rt,role:c.t==="Terrain"?"Terrains":(NEEDR.includes(fnList(c)[0])?fnList(c)[0]:"Synergie")})}else if(d.f!==undefined)fiche(+d.f);else if(d.lk!==undefined){const c=S.cards[+d.lk];c.l=!c.l;save();render()}};
+  $("tb").onclick=e=>rowAct(e.target.dataset);$("tvis").onclick=e=>{const b=e.target.closest("[data-rp],[data-rt],[data-lk]");if(b)rowAct(b.dataset)};
+  $("tst_out").onclick=e=>{const b=e.target.closest("[data-fx],[data-fs],[data-addc],[data-tgo]");if(!b)return;const d=b.dataset;
+    if(d.tgo){go("ameliorer");return}if(d.fx){const[m,r]=d.fx.split(":");amStart({mode:m,role:r,pickOut:true})}
+    else if(d.fs!==undefined)amStart({mode:"add",role:"Synergie",pickOut:true,strat:+d.fs});else if(d.addc)addFromTester(d.addc,b)};
   $("am_arch").onclick=e=>{const d=e.target.dataset;if(d.am)amStart({mode:d.am,role:d.r,pickOut:true})};
   $("am_box").onclick=e=>{const d=e.target.dataset,id=e.target.id;if(d.pick){AM.sel=d.pick;AM.empty=false;render()}else if(d.empty){AM.empty=true;AM.sel=null;render()}else if(id==="am_ok")amApply();else if(id==="am_x"){AM=null;render()}};
   $("am_box").onchange=e=>{if(e.target.id==="am_all"){AM.all=e.target.checked;AM.sel=null;render()}else if(e.target.id==="am_out"){AM.outIdx=+e.target.value;render()}};
