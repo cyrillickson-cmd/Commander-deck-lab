@@ -92,7 +92,9 @@ details.tsec summary{cursor:pointer;padding:12px 0;font:700 1rem "Trebuchet MS",
 <div class="row"><div style="flex:3 1 200px"><input id="np_n" placeholder="Nom du commandant (ex. Cendreline, l'illimitée)"></div><div><button class="go" id="np_go" style="margin:0">Nouveau projet</button></div></div></div>
 <div id="ac_list"></div>
 <div class="box"><h2>Comparer deux versions</h2><small class="mute">Coche deux projets dans la liste, puis appuie sur Comparer.</small><br><button class="go sec" id="cmp_go">Comparer</button><div id="cmp_out" class="tw" style="margin-top:10px"></div></div></section>
-<section id="projet"><div class="box"><h2>1. Commandant</h2>
+<section id="projet"><div class="box"><h2>Tu as un deck précon ?</h2><small class="mute">Tape le nom du précon (ou de son commandant) : la liste complète arrive d'un coup, sans passer par Construire. Tu peux ensuite la modifier dans Améliorer et l'analyser dans Tester.</small>
+<input id="pc_q" placeholder="Ex. Avengers Assemble, Lorehold Legacies, Blame Game…" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="pc_sug" class="sugb"></div><div id="pc_msg" class="mute" style="margin-top:6px"></div></div>
+<div class="box"><h2>1. Commandant</h2>
 <label>Commandant</label>
 <div class="row"><div style="flex:4 1 220px"><input id="p_cmd" placeholder="Commence à écrire le nom (ex. Cendreline)" autocomplete="off" autocapitalize="off" spellcheck="false"></div><div style="flex:1 1 110px"><button class="go sec" id="p_load" style="margin:0;width:100%">Charger</button></div></div>
 <div id="sug"></div>
@@ -1164,8 +1166,59 @@ function tstUI(){const out=$("tst_out");if(!out)return;
   h+=`<details class="tsec" data-k="lim"${was.lim?" open":""}><summary>Ce que ce test sait faire, et ne sait pas faire</summary><div style="padding-bottom:12px"><p><b>Il sait :</b> calculer des probabilités exactes (mains de départ, couleurs) et jouer 4 000 parties simplifiées pour le mana, le commandant et tes objectifs.</p><p><b>Il ne sait pas :</b> jouer une vraie partie. Il ne tient pas compte des effets des cartes (sauf le ramp de MV 3 ou moins, compté +1 mana), des tuteurs, de la pioche en cours de partie, des adversaires ni des couleurs dans la simulation du commandant. Les repères viennent de guides de la communauté et fonctionnent par zones : vert dans la zone, orange juste à côté, rouge plus loin. Ce sont des points de comparaison, pas des règles. Un deck peut très bien être orange ou rouge exprès.</p></div></details>`;
   out.innerHTML=h;tstAsync()}
 
+/* ===== Import d'un précon (liste complète EDHREC) ===== */
+const PC={idx:null,busy:false,list:[]};
+const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+async function pcIndex(){if(PC.idx)return PC.idx;const d=await edhGet("precon"),out=[];
+  (((d.container||{}).json_dict||{}).cardlists||[]).forEach(l=>(l.cardviews||[]).forEach(v=>{const sl=String(v.url||"").split("/").filter(Boolean).pop();if(!sl)return;
+    out.push({slug:sl,deck:v.label||sl.replace(/-/g," ").replace(/\b\w/g,x=>x.toUpperCase()),cmd:v.name||(v.names||[]).join(" // "),prod:l.header||"",k:norm([v.label,sl.replace(/-/g," "),v.name,(v.names||[]).join(" "),l.header].join(" "))})}));
+  if(!out.length)throw new Error("liste des précons vide");PC.idx=out;return out}
+function pcFind(q){const w=norm(q).split(" ").filter(Boolean);if(!w.length||!PC.idx)return[];
+  return PC.idx.map(x=>({x,s:w.every(t=>x.k.includes(t))?(norm(x.deck).includes(norm(q))?2:1):0})).filter(r=>r.s).sort((a,b)=>b.s-a.s).slice(0,8).map(r=>r.x)}
+async function pcCands(){/* propositions d'Améliorer pour un deck importé : cartes jouées avec le commandant (EDHREC) */
+  const e=(S.edh&&S.edh.cards)||{},today=new Date().toISOString().slice(0,10),inD=new Set(S.cards.map(c=>c.n.toLowerCase()));
+  const names=Object.keys(e).filter(n=>!inD.has(n.toLowerCase())).sort((a,b)=>(e[b].pct+1.5*Math.max(0,e[b].syn))-(e[a].pct+1.5*Math.max(0,e[a].syn))).slice(0,260);
+  if(!names.length)return;const got=await byNames(names,true),cand=[],landc=[],cn=S.cmd.name.toLowerCase();
+  got.forEach(c=>{store(c);if(c.name.toLowerCase()===cn||(c.released_at||"")>today||c.legalities.commander!=="legal"||!c.color_identity.every(x=>S.cmd.ci.includes(x)))return;
+    const x=e[c.name]||e[front(c.name)]||{pct:0,syn:0};if(/Land/.test(c.type_line)){if(!BASICS[c.name])landc.push({n:c.name,pct:x.pct});return}
+    const fn=fnList({n:c.name,t:tmap(c.type_line),r:"Synergie"});cand.push({n:c.name,s:Math.round((.6*x.pct+(x.syn>0?.8*x.syn:.3*x.syn)+2*Math.max(0,fn.length-1))*10)/10,pct:x.pct,syn:x.syn,fn,gc:!!c.game_changer,ct:isCounter(c),p:+(c.prices&&(c.prices.eur||c.prices.usd))||0})});
+  S.cand=cand.sort((a,b)=>b.s-a.s);S.landc=landc.sort((a,b)=>b.pct-a.pct)}
+async function pcImport(it){const msg=$("pc_msg");if(PC.busy)return;
+  if(S.cards.length&&!confirm("Ce projet contient déjà un deck. L'import le remplace entièrement (la Réserve n'est pas touchée). Continuer ?"))return;
+  PC.busy=true;const say=t=>msg.innerHTML=t;
+  try{say("Lecture de la liste « "+esc(it.deck)+" » sur EDHREC…");
+    const d=await edhGet("precon/"+it.slug),dk=d.deck||{};
+    let cmds=(dk.commander||[]).slice();if(!cmds.length)cmds=(dk.commander_v2||[]).map(x=>x[0]||x.name).filter(Boolean);
+    if(!cmds.length&&it.cmd)cmds=[it.cmd];if(!cmds.length)throw new Error("commandant introuvable dans la liste");
+    const rows=[];Object.values(dk.cards||{}).forEach(a=>(a||[]).forEach(x=>{if(Array.isArray(x)&&x[0])rows.push({n:x[0],q:+x[1]||1})}));
+    if(!rows.length)throw new Error("liste de cartes vide");
+    S.p.p_cmd=cmds[0];S.p.p_sman=false;S.p.p_wman=false;S.p.p_s1=S.p.p_s2=S.p.p_s3="";S.p.p_tt="";S.p.p_compn="";S.p.p_comp="";$("p_cmd").value=cmds[0];
+    say("Chargement du commandant et des thèmes EDHREC…");await loadCmd();
+    const partner=cmds.slice(1);partner.forEach(n=>{if(!rows.some(r=>r.n===n))rows.push({n,q:1})});
+    say("Lecture des cartes sur Scryfall…");const scry={};(await byNames([...new Set(rows.map(r=>r.n))],true)).forEach(c=>{scry[c.name.toLowerCase()]=c;scry[front(c.name).toLowerCase()]=c});
+    S.cards=[];const miss=[];
+    rows.forEach(r=>{const c=scry[r.n.toLowerCase()]||scry[front(r.n).toLowerCase()];if(!c){miss.push(r.n);return}
+      const rec=store(c),t=tmap(c.type_line),fn=fnList({n:c.name,t,r:"Synergie"}),e=(S.edh&&S.edh.cards&&S.edh.cards[c.name])||null;
+      addCard({q:r.q,n:c.name,c:t==="Terrain"?0:c.cmc,t,r:t==="Terrain"?"Autre":roleOf(fn[0]),g:!!c.game_changer,mc:t==="Terrain"?"":rec.mc,l:false,
+        w:"Carte du précon « "+it.deck+" »."+(e?` Jouée dans ${e.pct} % des decks de ${front(S.cmd.name).split(",")[0]}.`:""),h:`Rôle : ${fn[0]}${fn.length>1?" + "+fn.slice(1).join(", "):""} · MV ${c.cmc}.`,k:"Tu peux la remplacer dans Améliorer : le Lab propose des cartes de même fonction.",pm:""})});
+    S.res=S.res||[];S.thm=null;S.need=null;S.needSrc="";S.rej=[];S.near=[];S.moreR={};S.combos=null;S.manual=true;S.pre={name:it.deck,slug:it.slug};
+    S.p.p_lands=String(cnt("t","Terrain"));S.p.p_lman=true;save();render();
+    say("Recherche des cartes de remplacement possibles…");try{await pcCands()}catch(e){}
+    save();render();
+    const tot=total();say(`<span class="ok">« ${esc(it.deck)} » importé : ${tot} cartes${tot===99?"":" (le précon en compte 99 avec le commandant à part : vérifie la liste)"}.</span>`+(miss.length?` Cartes introuvables sur Scryfall : ${miss.map(esc).join(", ")}.`:"")+(cmds.length>1?` Commandant partenaire « ${esc(cmds.slice(1).join(", "))} » ajouté aux 99 cartes.`:"")+` <button class="go sec" id="pc_go" style="margin:6px 0 0">Voir le deck dans Améliorer</button>`);
+    $("pc_go").onclick=()=>go("ameliorer")}
+  catch(e){say(`<span class="bad">Import impossible : ${esc(e.message||e)}. Vérifie ta connexion, puis réessaie.</span>`)}
+  PC.busy=false}
+let prT=null;
+function pcInit(){const q=$("pc_q"),box=$("pc_sug");
+  q.addEventListener("input",()=>{clearTimeout(prT);const v=q.value.trim();if(v.length<2){box.style.display="none";return}
+    prT=setTimeout(async()=>{try{await pcIndex()}catch(e){$("pc_msg").innerHTML=`<span class="bad">Liste des précons indisponible : ${esc(e.message)}.</span>`;return}
+      $("pc_msg").textContent="";PC.list=pcFind(v);
+      if(!PC.list.length){box.innerHTML='<div class="mute" style="padding:8px">Aucun précon trouvé. Essaie le nom du commandant.</div>';box.style.display="block";return}
+      box.innerHTML=PC.list.map((x,i)=>`<button type="button" data-pc="${i}">${esc(x.deck)} <small class="mute">${esc(x.cmd)} · ${esc(x.prod)}</small></button>`).join("");box.style.display="block"},250)});
+  box.addEventListener("click",e=>{const b=e.target.closest("[data-pc]");if(!b)return;const it=PC.list[+b.dataset.pc];box.style.display="none";if(it){q.value=it.deck;pcImport(it)}})}
 function init(){
-  load();S.db=S.db||{};S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
+  load();pcInit();S.db=S.db||{};S.p=S.p||{};S.cards=S.cards||[];S.res=S.res||[];
   $("nav").innerHTML=NAVB.map(([k,l])=>`<button data-k="${k}">${l}</button>`).join("");
   $("nav").onclick=e=>{if(e.target.dataset.k)go(e.target.dataset.k)};
   $("home_btn").onclick=()=>go("accueil");
